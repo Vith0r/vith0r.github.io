@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/50.png" type="image/x-icon">
+  <title>Random-Things</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    pre {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../text_style.css">
+  <link rel="stylesheet" href="../dimensao.css">
+  <link rel="stylesheet" href="../background.css">
+  <link rel="stylesheet" href="../head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="../images/50.png" height="40" alt="Vith0r logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="../whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="../posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="../projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 10000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+
+  <body>
+    <div class="grain-header"></div>
+    <main>
+      <div class="box">
+        <h1
+          style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+          Coisas Aleatórias</h1>
+        <br>
+        <p>Posted Sep 13, 2024. 13 min read</p>
+        <br>
+        <div class="post-author">
+          <a href="https://github.com/Vith0r" target="_blank">
+            <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+            <span>Vithor</span>
+          </a>
+        </div>
+
+        <article>
+          <div style="font-size: 16px;">
+            <p>Neste post bem aleatório, vou mostrar algumas coisas que devemos saber ou conhecer para realizar uma
+              evasão de antivírus (AV).<br> Se você é iniciante e quer conhecer algumas coisas este conteúdo é para
+              você.</p>
+            <br>
+            <div style="padding: 10px; background-color: rgba(60, 122, 255, 0.2); color: white; margin-bottom: 10px;">
+              ⚠️ As informações que você encontrar neste post, técnicas, códigos, provas de conceito ou qualquer outra
+              coisa são estritamente para fins educacionais.
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Começo de tudo!
+            </h2>
+            <p>Se você é iniciante e decidiu procurar um mapa mental para entender os processos necessários para
+              contornar antivírus, pode se deparar com a seguinte situação:</p>
+            <p><img src="https://raw.githubusercontent.com/matro7sh/BypassAV/main/img/Bypass-AV.png" alt="BypassAV"
+                style="max-width: 100%; height: 510px; width: 870px; display: block; margin: 20px auto;"><br><br><br>Então,
+              você olha para isso e fica de boca aberta :O<br>Mas calma, amigo! Não se preocupe tanto assim. Esses
+              especialistas nerds querem tudo perfeito, eles usam siglas para fazer você questionar sua própria
+              existência.<br>Obs: Não estou julgando o mapa apresentado pelo <a
+                href="https://github.com/matro7sh/BypassAV/" href="https://github.com/matro7sh/BypassAV/"
+                style="color: #9E2525;">matro7sh</a>, até recomendo que de uma olhada nele, eu apenas estou dando um
+              exemplo de uma situação que poderia ocorrer com um iniciante.<br>Então, você tem que entender tudo que
+              está nesse mapa mental e testar tudo? A resposta curta é não, mas, se você tiver bastante tempo livre, eu
+              recomendaria fazer isso.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Principal
+              Problema com iniciantes</h2>
+            <p>Bom, o principal problema que iniciantes enfrentam é achar que você precisa criar algo totalmente novo
+              para contornar alguns antivírus. É como se eles não conseguissem entender que, muitas vezes, não é
+              necessário criar algo do zero, apenas modificar pequenas partes do código existente já pode ser suficiente
+              para torná-lo indetectável novamente.<br> Ou seja:</p>
+            <p><img src="https://i.imgur.com/BiPfHOx.gif" alt="THANKS"
+                style="max-width: 100%; height: 400px; width: 700px; display: block; margin: 20px auto;"></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contornar é
+              fácil!</h2>
+            <p>Bom, eu não sou um anjo que vai pegar na sua mão e fazer você sair daqui contornando qualquer antivírus.
+              Pode até parecer que estou ironizando os antivírus ao dizer que é fácil contorná-los, mas isso pode ser
+              porque já faço isso há um tempo. Para um iniciante, pode ser complexo entender o que deve ser modificado
+              no código.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Porque ficou
+              detectável?</h2>
+            <p>Postaram um projeto que conseguia contornar alguns antivírus, e em menos de dois dias já estava sendo
+              detectado. Por que isso aconteceu?<br> A resposta para isso é o envio de amostras.<br><br>Caso você não
+              saiba, o próprio Windows vem com essa opção habilitada por padrão.<br> Basicamente, ele realiza o envio de
+              amostras de arquivos suspeitos que estão presentes no seu computador para serviços de segurança, como o
+              Windows Defender. Isso permite que os antivírus atualizem suas assinaturas e detectem novos malwares com
+              base nas amostras enviadas:</p>
+            <p><img
+                src="https://filestore.community.support.microsoft.com/api/images/62aba54d-0dfd-4f51-87c9-c54c9d797abd?upload=true"
+                alt="AMOSTRA" style="max-width: 100%; height: auto; width: 600px; display: block; margin: 20px auto;">
+            </p>
+            <br>
+            <p>Além disso, existem plataformas como o <a href="https://www.virustotal.com/gui/"
+                href="https://www.virustotal.com/gui/" style="color: #9E2525;">VirusTotal</a>. que quando você faz o
+              upload de um arquivo para o VirusTotal, ele é analisado por múltiplos antivírus e motores de detecção. Se
+              o arquivo é identificado como malicioso por algum dos motores, essa informação pode ser compartilhada com
+              os fornecedores de antivírus, atualizando suas bases de dados e aumentando a probabilidade de detecção de
+              novas versões do mesmo malware.<br>Portanto, mesmo que você consiga criar um código que contorne antivírus
+              no início, o envio de amostras e a análise por múltiplas ferramentas de segurança pode rapidamente levar à
+              detecção e à atualização das assinaturas antivírus.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Evitar o envio
+              de amostra!</h2>
+            <p>Bom, para que seu arquivo consiga permanecer indetectável por mais tempo, você vai precisar aprender a
+              contornar máquinas virtuais. Esse processo pode ser bastante desafiador e tedioso, mas é essencial. Após
+              criar um malware indetectável, fazer com que ele consiga contornar máquinas virtuais. caso contrário, você
+              estará basicamente jogando seu trabalho no &quot;lixo&quot;.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Técnicas de
+              Detecção de Carregadores</h2>
+            <p>Existem três técnicas principais para detecção de carregadores:</p>
+            <ul>
+              <li style="margin-left: 0;"><strong></strong> <strong>Verificação de Arquivos</strong>:<br>Verificação de
+                assinaturas (por exemplo, usando regras <span style="color: #9E2525;">YARA</span>) para arquivos.</li>
+              <li style="margin-left: 0;"><strong></strong> <strong>Varredura de Memória</strong>:<br>Varredura de
+                assinaturas (por exemplo, usando regras <span style="color: #9E2525;">YARA</span>) para a memória de
+                processo.</li>
+              <li style="margin-left: 0;"><strong></strong> <strong>Telemetria/Comportamento</strong>:<br>Análise das
+                ações executadas pelo processo, principalmente via sistema operacional.</li>
+            </ul>
+            <p>A maioria dos implantes de arquivo .exe gerados prontos para uso por <span
+                style="color: #9E2525;">frameworks C2</span> são assinados e, portanto, não são úteis. Portanto, o
+              primeiro passo é ofuscar o código, o que é difícil. Ou usar um carregador, que carrega o implante como
+              carga útil, Na maioria das vezes, essa técnica usa uma <span style="color: #9E2525;">shellcode</span>
+              gerado pelo C2 (alternativa, a DLL gerada pode ser usada com um carregador de DLL ou o EXE convertendo-o
+              em Shellcode ou DLL). A vantagem é que a carga útil pode ser criptografada, então a única coisa que
+              precisa ser ofuscada da varredura de assinatura de arquivo AV é o próprio carregador real.<br>Em vez de
+              escanear um arquivo, o AV também pode escanear a memória dos processos. Isso derrota os carregadores, pois
+              o código de carga útil precisa ser descriptografado na memória para ser executado. Para evitar a detecção
+              na memória, o processo precisa criptografar suas regiões de memória quando estiver dormindo. Então, no
+              momento em que o AV escaneia o processo, nada suspeito deve estar na memória. O escaneamento de memória é
+              uma operação intensiva em desempenho e só é feito se o AV achar que vale a pena. Isso se baseia na
+              telemetria coletada ou em intervalos regulares.<br>A maioria dos casos de uso de detecção depende de
+              telemetria: Chamadas de função importantes no Windows geram eventos que são processados, correlacionados e
+              analisados ​​pelo AV. Como alteração de permissões de regiões de memória, criação de processos e threads,
+              cópia de memória e similares.<br>Por exemplo, se usarmos um carregador para ignorar o AV e simplesmente
+              alocar uma região de memória para nosso shellcode, não geraremos muita telemetria para o AV. Mas o payload
+              será detectável por um scanner de memória. Se introduzirmos criptografia de memória para ignorar o scanner
+              de memória, então geraremos mais telemetria, que por sua vez pode ser usada para detectar a criptografia
+              de memória.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Técnicas de
+              detecção</h2>
+            <p>Quando um arquivo está sendo gravado no disco, ele será escaneado pelo antivírus (AV). O AV possui um
+              banco de dados de assinaturas com malwares conhecidos (como regras do Yara). Eventos de gravação de
+              arquivos são gerados pelo Sistema Operacional (SO) e entregues ao AV através de AMSI ou callbacks do
+              kernel / ETW. O AV então escaneará os arquivos recém-criados.<br><span style="color: #9E2525;">ETW (Event
+                Tracing for Windows)</span>: Um mecanismo de rastreamento de eventos do Windows que permite ao sistema e
+              aos aplicativos gerar eventos para análise e depuração. Por exemplo, quando um arquivo é criado ou
+              modificado, o ETW pode gerar um evento que informa ao antivírus que uma nova operação de arquivo ocorreu,
+              permitindo que ele faça a varredura.<br><span style="color: #9E2525;">AMSI (Antimalware Scan
+                Interface)</span>: Uma interface fornecida pelo Windows para permitir que aplicativos e scripts se
+              integrem com software antivírus para realizar varreduras de malware. Por exemplo, se um script PowerShell
+              tentar baixar e executar um arquivo, o AMSI pode interceptar essa ação e solicitar ao antivírus que faça
+              uma varredura no arquivo antes da execução.<br>A varredura de assinatura é baseada no conteúdo estático do
+              arquivo. Isso significa que o antivírus analisa os dados do arquivo, incluindo seus cabeçalhos e seções,
+              antes de ser executado.<br><span style="color: #9E2525;">Cabeçalhos PE (Portable Executable)</span>: São
+              estruturas de dados no arquivo que fornecem informações sobre a organização do arquivo executável. Por
+              exemplo, um antivírus pode analisar os cabeçalhos PE para verificar se há algo suspeito, como strings de
+              código malicioso ou seções incomuns.</p>
+            <br>
+            <p><img src="https://onlyf8.com/assets/pe101-1.png" alt="PE"
+                style="max-width: 100%; height: 420px; width: 810; display: block; margin: 20px auto;"></p>
+            <br>
+            <p><span style="color: #9E2525;">Conteúdo das Seções PE</span>: As seções de um arquivo PE podem conter
+              código executável, dados e recursos. O antivírus examina essas seções para procurar padrões conhecidos de
+              malware. Por exemplo, pode verificar se há seções com tamanho anormalmente grande ou com padrões de bytes
+              que correspondem a assinaturas de malware conhecidas.<br><br>Isso acontece antes que o EXE seja executado.
+              Após uma detecção positiva, o arquivo será removido antes da execução para evitar que o malware seja
+              ativado.<br></p>
+            <p>Um exemplo de detecção:<br><br>Vou utilizar o projeto <a href="https://github.com/VirusTotal/yara"
+                href="https://github.com/VirusTotal/yara" style="color: #9E2525;">yara</a> para detectar um binario
+              gerado pelo <a href="https://github.com/TheWover/donut" href="https://github.com/TheWover/donut"
+                style="color: #9E2525;">donut</a>, utilizando as regras do <a
+                href="https://github.com/elastic/protections-artifacts/tree/main/yara/rules"
+                href="https://github.com/elastic/protections-artifacts/tree/main/yara/rules"
+                style="color: #9E2525;">elastic</a>, lembrando que o Yara pode escanear executáveis, binários e
+              processos em execução etc:</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">rule Windows_Trojan_Donutloader_f40e3759 {
+    meta:
+        author = &quot;Elastic Security&quot;
+        id = &quot;f40e3759-2531-4e21-946a-fb55104814c0&quot;
+        fingerprint = &quot;a6b9ccd69d871de081759feca580b034e3c5cec788dd5b3d3db033a5499735b5&quot;
+        creation_date = &quot;2021-09-15&quot;
+        last_modified = &quot;2022-01-13&quot;
+        threat_name = &quot;Windows.Trojan.Donutloader&quot;
+        severity = 100
+        arch_context = &quot;x86&quot;
+        scan_context = &quot;file, memory&quot;
+        license = &quot;Elastic License v2&quot;
+        os = &quot;windows&quot;
+    strings:
+        $x64 = { 06 B8 03 40 00 80 C3 4C 8B 49 10 49 8B 81 30 08 00 00 }
+        $x86 = { 04 75 EE 89 31 F0 FF 46 04 33 C0 EB 08 83 21 00 B8 02 }
+    condition:
+        any of them
+}
+</pre>
+            <br>
+            <p>Para realizar essa análise, vamos executar o Yara com o primeiro argumento sendo o local onde está nossa
+              regra Yara, que, neste caso, deixei no mesmo diretório, e o segundo argumento sendo o arquivo no qual
+              queremos aplicar a regra.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">Usage: yara [OPTION]... [NAMESPACE:]RULES_FILE... FILE | DIR | PID
+PS C:\yara: .\yara64.exe donut.yar loader.bin
+Windows_Trojan_Donutloader_f40e3759 loader.bin (Detectou!)
+</pre>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Scanners de
+              memória</h2>
+            <p>Scanners de memória típicos são:<br><a href="https://github.com/hasherezade/pe-sieve"
+                href="https://github.com/hasherezade/pe-sieve" style="color: #9E2525;">PE-sieve</a> e o <a
+                href="https://github.com/forrest-orr/moneta" href="https://github.com/forrest-orr/moneta"
+                style="color: #9E2525;">Moneta</a> que eu já mostrei o uso no post: <span
+                style="color: #9E2525;">Malware-Analysis-2</span>.<br>Os scanners de memória servem basicamente para
+              ajudar a detectar algum tipo de malware. Obviamente, não são ferramentas utilizadas por leigos, mas têm
+              como objetivo realizar uma análise do processo escaneado e identificar shellcodes, hooks e patches
+              realizados na memória do processo. Caso ainda não tenha testado esses projetos, recomendo fortemente que
+              experimente.</p>
+            <br>
+            <p><strong>Para conseguir contornar esses scanners de memória pode ser utilizado</strong>:<br><a
+                href="https://oldboy21.github.io/posts/2024/05/swappala-why-change-when-you-can-hide/"
+                href="https://oldboy21.github.io/posts/2024/05/swappala-why-change-when-you-can-hide/"
+                style="color: #9E2525;">SWAPPALA</a> / <a href="https://github.com/JLospinoso/gargoyle"
+                href="https://github.com/JLospinoso/gargoyle" style="color: #9E2525;">Gargoyle</a> / <a
+                href="https://github.com/Cracked5pider/Ekko" href="https://github.com/Cracked5pider/Ekko"
+                style="color: #9E2525;">Ekko</a> / <a href="https://github.com/Idov31/Cronos"
+                href="https://github.com/Idov31/Cronos" style="color: #9E2525;">Cronos</a> / <a
+                href="https://github.com/y11en/FOLIAGE" href="https://github.com/y11en/FOLIAGE"
+                style="color: #9E2525;">Foliage</a></p>
+            <p>Caso já for experiente recomendo fortemente que teste esses projetos e leia o artigo escrito pelo
+              <strong>Bakki</strong>:<br> <a href="https://sillywa.re/posts/flower-da-flowin-shc/"
+                href="https://sillywa.re/posts/flower-da-flowin-shc/" style="color: #9E2525;">Naively bypassing new
+                memory scanning POCs</a> e o artigo escrito pelo <strong>oldboy21</strong> <a
+                href="https://oldboy21.github.io/posts/2024/09/timer-callbacks-spoofing-to-improve-your-sleap-and-swappala-untold/"
+                href="https://oldboy21.github.io/posts/2024/09/timer-callbacks-spoofing-to-improve-your-sleap-and-swappala-untold/"
+                style="color: #9E2525;">Timer Callbacks Spoofing to Improve your SLEAP and SWAPPALA Untold</a>, Caso
+              contrário, deixe isso para depois, pois pode ser bastante complexo para um iniciante.<br>Mas você pode
+              abordar o uso de algumas técnicas de sono utilizando o <a href="https://havocframework.com/"
+                href="https://havocframework.com/" style="color: #9E2525;">Havoc Framework</a>, já que ele tem técnicas
+              de ofuscação do sono.
+            </p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Análise de pilha
+              de chamadas</h2>
+            <p>Quando um processo chama uma função do Windows, é possível descobrir as funções pai que levam a essa
+              chamada. Isso é chamado de callstack.</p>
+            <br>
+            <p><img src="https://telegra.ph/file/bbeeb6aaebc666ddb0d68.gif" alt="STACK"
+                style="max-width: 100%; height: 510px; width: 870px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Um exemplo de como funciona uma análise de pilha de chamadas:</p>
+            <br>
+            <p><img src="https://i.imgur.com/YeRX9Ih.png" alt="STACK"
+                style="max-width: 100%; height: 410px; width: 910px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p><strong>Falsificação de pilha de chamadas</strong>:<br><a
+                href="https://github.com/mgeeky/ThreadStackSpoofer" href="https://github.com/mgeeky/ThreadStackSpoofer"
+                style="color: #9E2525;">ThreadStackSpoofer</a> / <a
+                href="https://github.com/WithSecureLabs/CallStackSpoofer"
+                href="https://github.com/WithSecureLabs/CallStackSpoofer" style="color: #9E2525;">VulcanRaven</a> / <a
+                href="https://github.com/Cobalt-Strike/CallStackMasker"
+                href="https://github.com/Cobalt-Strike/CallStackMasker" style="color: #9E2525;">Máscara de pilha de
+                chamadas</a> / <a href="https://dtsec.us/2023-09-15-StackSpoofin/"
+                href="https://dtsec.us/2023-09-15-StackSpoofin/" style="color: #9E2525;">An Introduction into Stack
+                Spoofing</a></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">O que poderia
+              desencadear uma varredura de memória?</h2>
+            <p>Lembrando que isso não é uma regra, sempre é bom considerar que diferentes antivírus e EDRs podem ter
+              comportamentos variados para essas operações.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-code">			      ┌──────────────────────────────────────────────────────────────────────────────────────┐ 
+			      |   O que             | Aciona a varredura?  |                 Notas                   |
+			      |---------------------|----------------------|-----------------------------------------|
+			      | VirtualAlloc()      | Não?                 | Muito comum, exceto quando RWX          |
+			      | WriteProcessMemory()| Talvez               | Muito comum                             |
+			      | VirtualProtect()    | Não?                 | RWX ou RW-&gt;RX podem ser gatilhos        |
+			      | CreateRemoteThread()| Sim                  | Deve acionar a varredura de memória     |
+			      └──────────────────────────────────────────────────────────────────────────────────────┘ 
+</span></pre>
+            <br>
+            <p><span style="color: #9E2525;">VirtualAlloc()</span> e <span
+                style="color: #9E2525;">WriteProcessMemory()</span> são comumente chamadas. <span
+                style="color: #9E2525;">CreateRemoteThread()</span> Não só é menos chamada, como também é um indicador
+              mais claro de comportamento potencialmente malicioso.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Hooking</h2>
+            <p>Um hook pode ser usado por um AV/EDR para monitorar e modificar chamadas de funções em APIs do sistema,
+              como as fornecidas pela <span style="color: #9E2525;">kernel32.dll</span>. por exemplo um antivírus pode
+              usar hooks para interceptar chamadas a funções como <span style="color: #9E2525;">CreateFile</span> ou
+              <span style="color: #9E2525;">ReadFile</span> para detectar atividades suspeitas de malware, caso queira
+              saber mais sobre recomendo que leia meu post: <a href="creating-edr-av.html"
+                href="creating-edr-av.html" style="color: #9E2525;">Creating-EDR-AV</a>.
+            </p>
+            <br>
+            <p><img src="https://telegra.ph/file/9e0be2c0844129fedcc9a.png" alt="hooking"
+                style="max-width: 100%; height: auto; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Caso queria entender melhor sobre como realizar unhooking leia meu post <span
+                style="color: #9E2525;">Unhooking-Windows-API</span>.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Criação do seu
+              próprio shellcode!</h2>
+            <p>Criar seu próprio shellcode pode ser uma tarefa bastante difícil e complexa. No entanto, é algo a se
+              considerar, especialmente quando falamos sobre acesso inicial, onde não precisamos de algo tão
+              sofisticado. Abordei brevemente a criação de shellcode no post <span style="color: #9E2525;">Writing and
+                Compiling Shellcode in C</span>.<br> Se você deseja explorar mais sobre o assunto:<br><br><a
+                href="https://github.com/vxunderground/VXUG-Papers/blob/main/From%20a%20C%20project%20through%20assembly%20to%20shellcode.pdf"
+                href="https://github.com/vxunderground/VXUG-Papers/blob/main/From%20a%20C%20project%20through%20assembly%20to%20shellcode.pdf"
+                style="color: #9E2525;">From a C project through assembly to shellcode</a><br><a
+                href="https://mohamed-fakroud.gitbook.io/red-teamings-dojo/shellcoding/leveraging-from-pe-parsing-technique-to-write-x86-shellcode#finding-kernel32-base-address"
+                href="https://mohamed-fakroud.gitbook.io/red-teamings-dojo/shellcoding/leveraging-from-pe-parsing-technique-to-write-x86-shellcode#finding-kernel32-base-address"
+                style="color: #9E2525;">Leveraging from PE parsing technique to write x86 shellcode</a><br><a
+                href="https://securitycafe.ro/2015/10/30/introduction-to-windows-shellcode-development-part1/"
+                href="https://securitycafe.ro/2015/10/30/introduction-to-windows-shellcode-development-part1/"
+                style="color: #9E2525;">introduction-to-windows-shellcode-development-part1/</a><br><a
+                href="https://securitycafe.ro/2015/12/14/introduction-to-windows-shellcode-development-part-2/"
+                href="https://securitycafe.ro/2015/12/14/introduction-to-windows-shellcode-development-part-2/"
+                style="color: #9E2525;">Introduction to Windows shellcode development – Part 2</a><br><a
+                href="https://securitycafe.ro/2016/02/15/introduction-to-windows-shellcode-development-part-3/"
+                href="https://securitycafe.ro/2016/02/15/introduction-to-windows-shellcode-development-part-3/"
+                style="color: #9E2525;">Introdução ao desenvolvimento de shellcode do Windows – Parte 3</a><br><a
+                href="https://www.bordergate.co.uk/windows-x64-shellcode-development/"
+                href="https://www.bordergate.co.uk/windows-x64-shellcode-development/" style="color: #9E2525;">Windows
+                x64 Shellcode Development</a><br><a
+                href="https://idafchev.github.io/exploit/2017/09/26/writing_windows_shellcode.html"
+                href="https://idafchev.github.io/exploit/2017/09/26/writing_windows_shellcode.html"
+                style="color: #9E2525;">Basics of Windows shellcode writing</a><br><a
+                href="https://cocomelonc.github.io/tutorial/2021/10/27/windows-shellcoding-1.html"
+                href="https://cocomelonc.github.io/tutorial/2021/10/27/windows-shellcoding-1.html"
+                style="color: #9E2525;">Windows shellcoding - part 1. Simple example</a><br><a
+                href="https://cocomelonc.github.io/tutorial/2021/10/30/windows-shellcoding-2.html"
+                href="https://cocomelonc.github.io/tutorial/2021/10/30/windows-shellcoding-2.html"
+                style="color: #9E2525;">Windows shellcoding - part 2. Find kernel32 address</a><br><a
+                href="https://cocomelonc.github.io/tutorial/2021/10/31/windows-shellcoding-3.html"
+                href="https://cocomelonc.github.io/tutorial/2021/10/31/windows-shellcoding-3.html"
+                style="color: #9E2525;">Windows shellcoding - part 3. PE file format</a></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Indirect
+              syscalls</h2>
+            <p>A técnica de syscall indireta é mais ou menos uma evolução da técnica de <span
+                style="color: #9E2525;">syscall direta</span>. Comparadas as <span style="color: #9E2525;">syscalls
+                diretas</span>, as <span style="color: #9E2525;">syscalls indiretas</span> podem resolver os seguintes
+              problemas de evasão de AV/EDR.<BR></p>
+            <p>Primeiro, a execução do comando syscall ocorre na memória do <span
+                style="color: #9E2525;">ntdll.dll</span> e, portanto, é legítima para o AV/EDR.<br>Por outro lado, a
+              execução da instrução return ocorre na memória do <span style="color: #9E2525;">ntdll.dll</span> e aponta
+              da memória do ntdll.dll para a memória do assembly de <span style="color: #9E2525;">syscall
+                indireta</span>.</p>
+            <br>
+            <p><img src="https://i.imgur.com/jduNVcE.png" alt="DETECT"
+                style="max-width: 100%; height: 420px; width: 910px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p><span style="color: #9E2525;">Chamada de sistema direta</span>: basta fazer a chamada de sistema você
+              mesmo (com o número de chamada de sistema correto).<br><span style="color: #9E2525;">Chamada de sistema
+                indireta</span>: Reutilize partes do hooked ntdll.dll, invoque a chamada de sistema, mas não o hook:</p>
+            <br>
+            <p><img src="https://i.imgur.com/kBBanai.png" alt="INDIRECT"
+                style="max-width: 100%; height: 420px; width: 910px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p><span style="color: #9E2525;">Syscalls indiretas</span> oferecem uma aparência mais legítima no contexto
+              da <span style="color: #9E2525;">pilha de chamadas de thread</span>. Com <span
+                style="color: #9E2525;">syscalls indiretas</span>, tanto a execução da syscall quanto a instrução de
+              retorno ocorrem dentro da memória de <span style="color: #9E2525;">ntdll.dll</span>, que é o comportamento
+              esperado em processos normais de aplicativos.<br> Ao substituir <span style="color: #9E2525;">syscalls
+                diretas</span> por <span style="color: #9E2525;">indiretas</span>, a pilha de chamadas resultante imita
+              um padrão de execução mais convencional. Isso pode ser útil para contornar sistemas AV/EDR que examinam a
+              área de memória onde syscalls e seus retornos são executados.</p>
+            <p>Vários experimentos com diferentes EDRs mostraram que syscalls diretos ainda podem funcionar, mas também
+              são cada vez mais detectados dependendo do EDR. Com base em IOCs no contexto de syscalls diretos, syscalls
+              indiretos podem ser uma solução útil, pois resolvem os seguintes problemas em comparação</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Resumo:</h3>
+            <p>Primeiro, a execução do comando syscall ocorre na memória do <span
+                style="color: #9E2525;">ntdll.dll</span> e, portanto, é legítima para o AV/EDR.<br>Por outro lado, a
+              execução da declaração return ocorre dentro da memória de <span style="color: #9E2525;">ntdll.dll</span> e
+              aponta da memória de <span style="color: #9E2525;">ntdll.dll</span> para a memória do assembly syscall
+              indireto. Esse comportamento é pelo menos mais legítimo do que o comportamento com <span
+                style="color: #9E2525;">syscalls diretos</span>, mas ainda pode levar a IOCs dependendo do AV/EDR, por
+              exemplo, se o AV/EDR também verificar a pilha de chamadas.<br><span style="color: #9E2525;">Syscalls
+                indiretas</span> são uma melhoria em relação a <span style="color: #9E2525;">syscalls diretas</span>,
+              mas têm suas limitações e também têm certos IOCs que agora são usados ​​por fornecedores de AV/EDR para
+              gerar regras de detecção. Por exemplo, com <span style="color: #9E2525;">syscalls indiretas</span> é
+              possível falsificar o endereço de retorno, o que coloca o endereço de memória do retorno subsequente no
+              topo da pilha de chamadas e ignora a verificação de retorno do AV/EDR. No entanto, se um AV/EDR estiver
+              usando ETW, ele pode verificar adicionalmente a própria pilha de chamadas para comportamento impróprio.
+              <span style="color: #9E2525;">Syscalls indiretas</span> sozinhas não são mais suficientes para evasão de
+              EDR no caso de um EDR também usar ETW, e você precisa dar uma olhada mais de perto na falsificação de
+              pilha de chamadas. Um bom artigo sobre isso:<br><a
+                href="https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/"
+                href="https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/"
+                style="color: #9E2525;">Hiding In PlainSight - Indirect Syscall is Dead! Long Live Custom Call
+                Stacks</a>. Part1<br><a href="https://0xdarkvortex.dev/hiding-in-plainsight"
+                href="https://0xdarkvortex.dev/hiding-in-plainsight" style="color: #9E2525;">Hiding In PlainSight -
+                Indirect Syscall is Dead! Long Live Custom Call Stacks</a>. Part2
+            </p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com";
+      }
+    </script>
+  </body>
+
+</html>

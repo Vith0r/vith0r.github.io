@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../images/50.png" type="image/x-icon">
+    <title>Creating-EDR/AV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        html {
+            scrollbar-color: #555 #333;
+            scrollbar-width: thin;
+        }
+    </style>
+    <style>
+        pre {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../text_style.css">
+    <link rel="stylesheet" href="../dimensao.css">
+    <link rel="stylesheet" href="../background.css">
+    <link rel="stylesheet" href="../head_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header style="height: 55px;">
+        <div class="logo">
+            <img src="../images/50.png" height="40" alt="Vith0r logo"
+                style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+            <h2>
+                <a href="https://vith0r.github.io"
+                    style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+                    &nbsp;VITHOR
+                </a>
+            </h2>
+        </div>
+        <nav>
+            <div class="toggle-container">
+                <a href="../whoami.html">
+                    <button class="tutorials-toggle"><i></i>Whoami</button>
+                </a>
+                <a href="../posts.html">
+                    <button class="tools-toggle"><i></i>Posts</button>
+                </a>
+                <a href="../projects.html">
+                    <button class="tools-toggle"><i></i>Projects</button>
+                </a>
+            </div>
+        </nav>
+    </header>
+    <script>
+        const element = document.querySelector('.logo h2 a');
+        const targetWord = "VITHOR";
+
+        function getRandomString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        function animateRandomization(element, targetWord) {
+            const originalWord = targetWord.split('');
+            let iterations = 0;
+            const maxIterations = 15;
+            let currentWord = getRandomString(targetWord.length).split('');
+            let currentIndex = 0;
+
+            element.style.display = 'inline-block';
+            element.style.width = `${element.offsetWidth}px`;
+            element.style.position = 'relative';
+            element.style.left = '5px';
+
+            const interval = setInterval(() => {
+                if (iterations < maxIterations) {
+                    currentWord = getRandomString(targetWord.length).split('');
+                    iterations++;
+                } else {
+                    if (currentIndex < targetWord.length) {
+                        currentWord[currentIndex] = originalWord[currentIndex];
+                        currentIndex++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }
+                element.textContent = currentWord.join('');
+            }, 60);
+        }
+
+        setInterval(() => {
+            animateRandomization(element, targetWord);
+        }, 10000);
+
+        element.addEventListener('mouseover', () => {
+            animateRandomization(element, targetWord);
+        });
+
+        animateRandomization(element, targetWord);
+    </script>
+
+    <body>
+        <div class="grain-header"></div>
+        <main>
+            <div class="box">
+                <h1
+                    style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+                    Criando um EDR/AV Part-1</h1>
+                <br>
+                <p>Posted Aug 6, 2024. 12 min read</p>
+                <br>
+                <div class="post-author">
+                    <a href="https://github.com/Vith0r" target="_blank">
+                        <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+                        <span>Vithor</span>
+                    </a>
+                </div>
+
+                <article>
+                    <div style="font-size: 16px;">
+                        <p>Bom, neste post vou criar uma ideia para o começo de um <span
+                                style="color: #9E2525;">EDR/AV</span> básico que provavelmente eu nunca vou
+                            terminar.<br> A ideia principal agora é criar uma DLL simples que utilize a <span
+                                style="color: #9E2525;">MinHook</span> para conseguir realizar um hook em APIs.</p>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Como
+                            vai funcionar?</h2>
+                        <p>Primeiro vamos fazer o código principal que será responsável por injetar nossa <span
+                                style="color: #9E2525;">dll</span> no executavel que queremos monitorar.<br>O principal
+                            intuito vai ser monitorar as APIs utilizadas por loaders. O intuito é apenas monitorar as
+                            chamadas de API da kernel32.<br>Ou seja, se o programa utilizar técnicas como syscalls
+                            indiretas ou diretas, nosso <span style="color: #9E2525;">EDR/AV</span> não terá como
+                            detectar o loader.</p>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código Principal:</h2>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código que obtém o ID do processo com o nome fornecido:</h3><br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">DWORD <span class="hljs-title">GetProcessIdByName</span><span class="hljs-params">(<span class="hljs-type">const</span> wstring&amp; processName)</span> </span>{
+    DWORD processId = <span class="hljs-number">0</span>;
+    HANDLE snapshot = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="hljs-number">0</span>);
+    PROCESSENTRY32 processEntry = { <span class="hljs-built_in">sizeof</span>(PROCESSENTRY32) };
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Process32First</span>(snapshot, &amp;processEntry)) {
+        <span class="hljs-keyword">do</span> {
+            <span class="hljs-keyword">if</span> (processName == processEntry.szExeFile) {
+                processId = processEntry.th32ProcessID;
+                <span class="hljs-keyword">break</span>;
+            }
+        } <span class="hljs-keyword">while</span> (<span class="hljs-built_in">Process32Next</span>(snapshot, &amp;processEntry));
+    }
+    <span class="hljs-built_in">CloseHandle</span>(snapshot);
+    <span class="hljs-keyword">return</span> processId;
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código para Injeção da DLL:</h3>
+                        <ol style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-left: 0;"><strong>1</strong> <span style="color: #9E2525;">Abertura do
+                                    Processo Alvo:</span> Utiliza a API <span style="color: #9E2525;">OpenProcess</span>
+                                para obter um identificador para o processo alvo, especificado pelo <span
+                                    style="color: #9E2525;">processId</span>.</li>
+                            <li style="margin-left: 0;"><strong>2</strong> <span style="color: #9E2525;">Localização da
+                                    Função LoadLibraryW:</span> Obtém o endereço da função <span
+                                    style="color: #9E2525;">LoadLibraryW</span> na biblioteca <span
+                                    style="color: #9E2525;">kernel32.dll</span> que será utilizada para carregar a DLL
+                                no processo alvo.</li>
+                            <li style="margin-left: 0;"><strong>3</strong> <span style="color: #9E2525;">Alocação de
+                                    Memória no Processo Alvo:</span> Usa <span
+                                    style="color: #9E2525;">VirtualAllocEx</span> para alocar memória no processo alvo
+                                para armazenar o caminho da DLL.</li>
+                            <li style="margin-left: 0;"><strong>4</strong> <span style="color: #9E2525;">Escrita do
+                                    Caminho da DLL na Memória do Processo Alvo:</span> Com <span
+                                    style="color: #9E2525;">WriteProcessMemory</span>.</li>
+                            <li style="margin-left: 0;"><strong>5</strong> <span style="color: #9E2525;">Criação de um
+                                    Novo Thread:</span> Cria um novo thread no processo alvo com <span
+                                    style="color: #9E2525;">CreateRemoteThread</span>, que executa a função <span
+                                    style="color: #9E2525;">LoadLibraryW</span> para carregar a DLL.</li>
+                            <li style="margin-left: 0;"><strong>6</strong> <span style="color: #9E2525;">Aguarda a
+                                    Conclusão da Injeção:</span> Utiliza <span
+                                    style="color: #9E2525;">WaitForSingleObject</span> para aguardar o término do
+                                thread.</li>
+                            <li style="margin-left: 0;"><strong>7</strong> <span style="color: #9E2525;">Limpeza e
+                                    Fechamento:</span> Após a execução, libera a memória alocada com <span
+                                    style="color: #9E2525;">VirtualFreeEx</span> e fecha o handle do processo e do
+                                thread com <span style="color: #9E2525;">CloseHandle</span>.</li>
+                        </ol><br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">InjectDll</span><span class="hljs-params">(DWORD processId, <span class="hljs-type">const</span> wstring&amp; dllPath)</span> </span>{
+    HANDLE processHandle = <span class="hljs-built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, FALSE, processId);
+    <span class="hljs-keyword">if</span> (processHandle == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    LPVOID loadLibraryAddress = (LPVOID)<span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-string">L&quot;kernel32.dll&quot;</span>), <span class="hljs-string">&quot;LoadLibraryW&quot;</span>);
+    <span class="hljs-keyword">if</span> (loadLibraryAddress == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">CloseHandle</span>(processHandle);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-2</span>;
+    }
+
+    <span class="hljs-type">size_t</span> pathLength = (dllPath.<span class="hljs-built_in">size</span>() + <span class="hljs-number">1</span>) * <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">wchar_t</span>);
+    LPVOID remoteDllPath = <span class="hljs-built_in">VirtualAllocEx</span>(processHandle, <span class="hljs-literal">NULL</span>, pathLength, MEM_COMMIT, PAGE_READWRITE);
+    <span class="hljs-keyword">if</span> (remoteDllPath == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">CloseHandle</span>(processHandle);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-3</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">WriteProcessMemory</span>(processHandle, remoteDllPath, dllPath.<span class="hljs-built_in">c_str</span>(), pathLength, <span class="hljs-literal">NULL</span>)) {
+        <span class="hljs-built_in">VirtualFreeEx</span>(processHandle, remoteDllPath, <span class="hljs-number">0</span>, MEM_RELEASE);
+        <span class="hljs-built_in">CloseHandle</span>(processHandle);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-4</span>;
+    }
+
+    HANDLE threadHandle = <span class="hljs-built_in">CreateRemoteThread</span>(processHandle, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, (LPTHREAD_START_ROUTINE)loadLibraryAddress, remoteDllPath, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">if</span> (threadHandle == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">VirtualFreeEx</span>(processHandle, remoteDllPath, <span class="hljs-number">0</span>, MEM_RELEASE);
+        <span class="hljs-built_in">CloseHandle</span>(processHandle);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-5</span>;
+    }
+
+    <span class="hljs-built_in">WaitForSingleObject</span>(threadHandle, INFINITE);
+
+    DWORD exitCode = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">GetExitCodeThread</span>(threadHandle, &amp;exitCode);
+
+    <span class="hljs-built_in">CloseHandle</span>(threadHandle);
+    <span class="hljs-built_in">VirtualFreeEx</span>(processHandle, remoteDllPath, <span class="hljs-number">0</span>, MEM_RELEASE);
+    <span class="hljs-built_in">CloseHandle</span>(processHandle);
+
+    <span class="hljs-keyword">return</span> exitCode;
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            NamedPipeServer para Comunicação:</h3>
+                        <p>O <a href="https://learn.microsoft.com/en-us/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication"
+                                href="https://learn.microsoft.com/en-us/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication"
+                                style="color: #9E2525;">NamedPipeServer</a> é basicamente responsável por criar um
+                            servidor de Named Pipe que escuta por conexões e processa mensagens recebidas.</p>
+                        <p>Explicação do Código:</p>
+                        <ol style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-left: 0;"><strong>1</strong> <span style="color: #9E2525;">Criação do
+                                    Named Pipe:</span> Utiliza CreateNamedPipe para criar um pipe nomeado (MyPipe) que
+                                aceita conexões. Configurado para acesso de entrada (PIPE_ACCESS_INBOUND), com suporte a
+                                mensagens e leitura no modo de mensagens.</li>
+                            <li style="margin-left: 0;"><strong>2</strong> <span style="color: #9E2525;">Conexão com o
+                                    Pipe:</span> ConnectNamedPipe aguarda a conexão de um cliente ao pipe. Se falhar, o
+                                erro é exibido e o pipe é fechado.</li>
+                            <li style="margin-left: 0;"><strong>3</strong> <span style="color: #9E2525;">Leitura de
+                                    Dados:</span> Usa ReadFile para ler os dados do pipe. Se ocorrer um erro de leitura
+                                ou o pipe for quebrado (ERROR_BROKEN_PIPE), o loop de leitura é interrompido. Se a
+                                leitura for bem-sucedida, os dados são exibidos no console.</li>
+                            <li style="margin-left: 0;"><strong>4</strong> <span style="color: #9E2525;">Fechamento e
+                                    Repetição:</span> Após a leitura ou se a conexão falhar, o handle do pipe é fechado.
+                                O servidor continua a executar e criar novos pipes em um loop infinito.</li>
+                        </ol><br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">StartNamedPipeServer</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+        HANDLE hPipe = <span class="hljs-built_in">CreateNamedPipe</span>(
+            <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;\\\\.\\pipe\\MyPipe&quot;</span>),
+            PIPE_ACCESS_INBOUND,
+            PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+            <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+
+        <span class="hljs-keyword">if</span> (hPipe == INVALID_HANDLE_VALUE) {
+            cerr &lt;&lt; <span class="hljs-string">&quot;Failed to create named pipe. Error: &quot;</span> &lt;&lt; <span class="hljs-built_in">GetLastError</span>() &lt;&lt; endl;
+            <span class="hljs-keyword">return</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">ConnectNamedPipe</span>(hPipe, <span class="hljs-literal">NULL</span>) != FALSE) {
+            <span class="hljs-type">char</span> buffer[<span class="hljs-number">1024</span>];
+            DWORD bytesRead;
+
+            <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+                <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">ReadFile</span>(hPipe, buffer, <span class="hljs-built_in">sizeof</span>(buffer) - <span class="hljs-number">1</span>, &amp;bytesRead, <span class="hljs-literal">NULL</span>)) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">GetLastError</span>() == ERROR_BROKEN_PIPE) {
+                        <span class="hljs-keyword">break</span>;
+                    }
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">GetLastError</span>() != ERROR_MORE_DATA) {
+                        cerr &lt;&lt; <span class="hljs-string">&quot;ReadFile failed. Error: &quot;</span> &lt;&lt; <span class="hljs-built_in">GetLastError</span>() &lt;&lt; endl;
+                        <span class="hljs-keyword">break</span>;
+                    }
+                }
+                <span class="hljs-keyword">else</span> {
+                    buffer[bytesRead] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+                    cout &lt;&lt; <span class="hljs-string">&quot;Received: &quot;</span> &lt;&lt; buffer &lt;&lt; endl;
+                }
+            }
+        }
+        <span class="hljs-keyword">else</span> {
+            cerr &lt;&lt; <span class="hljs-string">&quot;Failed to connect to named pipe. Error: &quot;</span> &lt;&lt; <span class="hljs-built_in">GetLastError</span>() &lt;&lt; endl;
+            <span class="hljs-built_in">CloseHandle</span>(hPipe);
+            <span class="hljs-keyword">break</span>;
+        }
+
+        <span class="hljs-built_in">CloseHandle</span>(hPipe);
+    }
+}
+</pre>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">PrintBanner</span>();
+
+    cout &lt;&lt; <span class="hljs-string">&quot;Escolha o modo de operacao:&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;1. Fornecer caminho completo do executavel&quot;</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="hljs-string">&quot;Digite sua escolha (1): &quot;</span>;
+    <span class="hljs-type">int</span> choice;
+    cin &gt;&gt; choice;
+    cin.<span class="hljs-built_in">ignore</span>();
+
+    wstring exePathW;
+    DWORD processId = <span class="hljs-number">0</span>;
+    <span class="hljs-function">wstring <span class="hljs-title">dllName</span><span class="hljs-params">(<span class="hljs-string">L&quot;hook.dll&quot;</span>)</span></span>;
+
+    <span class="hljs-keyword">if</span> (choice == <span class="hljs-number">1</span>) {
+        cout &lt;&lt; <span class="hljs-string">&quot;Digite o caminho completo do executavel para abrir e escanear: &quot;</span>;
+        string exePath;
+        <span class="hljs-built_in">getline</span>(cin, exePath);
+        exePathW = <span class="hljs-built_in">wstring</span>(exePath.<span class="hljs-built_in">begin</span>(), exePath.<span class="hljs-built_in">end</span>());
+
+        STARTUPINFO si = { <span class="hljs-built_in">sizeof</span>(si) };
+        PROCESS_INFORMATION pi;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreateProcess</span>(<span class="hljs-literal">NULL</span>, &amp;exePathW[<span class="hljs-number">0</span>], <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, FALSE, CREATE_SUSPENDED, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, &amp;si, &amp;pi)) {
+            cerr &lt;&lt; <span class="hljs-string">&quot;Falha ao iniciar o processo. Erro: &quot;</span> &lt;&lt; <span class="hljs-built_in">GetLastError</span>() &lt;&lt; endl;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        }
+
+        <span class="hljs-type">int</span> result = <span class="hljs-built_in">InjectDll</span>(pi.dwProcessId, dllName);
+        <span class="hljs-keyword">if</span> (result &lt; <span class="hljs-number">0</span>) {
+            cout &lt;&lt; <span class="hljs-string">&quot;Falha na injecao da DLL. Codigo de erro: &quot;</span> &lt;&lt; result &lt;&lt; endl;
+            <span class="hljs-built_in">TerminateProcess</span>(pi.hProcess, result);
+            <span class="hljs-built_in">CloseHandle</span>(pi.hProcess);
+            <span class="hljs-built_in">CloseHandle</span>(pi.hThread);
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        }
+
+        <span class="hljs-built_in">ResumeThread</span>(pi.hThread);
+        <span class="hljs-built_in">CloseHandle</span>(pi.hProcess);
+        <span class="hljs-built_in">CloseHandle</span>(pi.hThread);
+
+        cout &lt;&lt; <span class="hljs-string">&quot;Injecao realizada com sucesso. DLL conectada.&quot;</span> &lt;&lt; endl;
+    }
+    <span class="hljs-keyword">else</span> {
+        cerr &lt;&lt; <span class="hljs-string">&quot;Opcao invalida. Por favor, escolha 1.&quot;</span> &lt;&lt; endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    <span class="hljs-built_in">StartNamedPipeServer</span>();
+
+    cout &lt;&lt; <span class="hljs-string">&quot;Pressione Enter para sair...&quot;</span>;
+    cin.<span class="hljs-built_in">get</span>();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+                        <br>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código Responsavel pelo hook:</h2>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Inclusão da MinHook:</h3>
+                        <p>Este trecho de código inclui a biblioteca <span style="color: #9E2525;">MinHook</span>, uma
+                            popular biblioteca de hooking para a API do Windows.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;MinHook.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _WIN64</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(lib, <span class="hljs-string">&quot;minhook.x64.lib&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">elif</span> _WIN32</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(lib, <span class="hljs-string">&quot;minhook.x32.lib&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</pre>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Funções:</h3>
+                        <p>Aqui definidos tipos de função para algumas das APIs do Windows que serão <span
+                                style="color: #9E2525;">hooked</span>.<br>Cada tipo de função corresponde a uma função
+                            da API do Windows que será substituída por uma função personalizada para monitorar ou
+                            modificar seu comportamento.</p>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">BOOL</span><span class="hljs-params">(WINAPI* fnWriteProcessMemory)</span><span class="hljs-params">(
+    HANDLE hProcess,
+    LPVOID lpBaseAddress,
+    LPCVOID lpBuffer,
+    SIZE_T nSize,
+    SIZE_T* lpNumberOfBytesWritten)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">BOOL</span><span class="hljs-params">(WINAPI* fnOpenProcess)</span><span class="hljs-params">(
+    WORD dwDesiredAccess,
+    BOOL  bInheritHandle,
+    DWORD dwProcessId
+)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">BOOL</span><span class="hljs-params">(WINAPI* fnVirtualAllocEx)</span><span class="hljs-params">(
+    HANDLE hProcess,
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD  flAllocationType,
+    DWORD  flProtect
+)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">BOOL</span><span class="hljs-params">(WINAPI* fnCreateRemoteThread)</span><span class="hljs-params">(
+    HANDLE                 hProcess,
+    LPSECURITY_ATTRIBUTES  lpThreadAttributes,
+    SIZE_T                 dwStackSize,
+    LPTHREAD_START_ROUTINE lpStartAddress,
+    LPVOID                 lpParameter,
+    DWORD                  dwCreationFlags,
+    LPDWORD                lpThreadId
+)</span></span>;
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Ponteiros para as funções originais:</h3>
+                        <p>Essa parte define ponteiros para as funções originais da API do Windows que serão
+                            substituídas pelos hooks. Esses ponteiros são necessários para que o código possa chamar as
+                            funções originais após interceptá-las.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">fnWriteProcessMemory g_WriteProcessMemory = <span class="hljs-literal">NULL</span>;
+fnOpenProcess g_OpenProcess = <span class="hljs-literal">NULL</span>;
+fnVirtualAllocEx g_VirtualAllocEx = <span class="hljs-literal">NULL</span>;
+fnCreateRemoteThread g_CreateRemoteThread = <span class="hljs-literal">NULL</span>;
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Enviar Mensagem para o Named Pipe:</h3>
+                        <p>Essa parte é responsável por enviar mensagens para o nosso <span
+                                style="color: #9E2525;">Named Pipe</span>.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">SendMessageToPipe</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* message)</span> </span>{
+    HANDLE hPipe = <span class="hljs-built_in">CreateFile</span>(
+        <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;\\\\.\\pipe\\MyPipe&quot;</span>),
+        GENERIC_WRITE,
+        <span class="hljs-number">0</span>,
+        <span class="hljs-literal">NULL</span>,
+        OPEN_EXISTING,
+        <span class="hljs-number">0</span>,
+        <span class="hljs-literal">NULL</span>);
+
+    <span class="hljs-keyword">if</span> (hPipe != INVALID_HANDLE_VALUE) {
+        DWORD bytesWritten;
+        BOOL result = <span class="hljs-built_in">WriteFile</span>(hPipe, message, <span class="hljs-built_in">strlen</span>(message), &amp;bytesWritten, <span class="hljs-literal">NULL</span>);
+
+        <span class="hljs-keyword">if</span> (!result) {
+            <span class="hljs-type">char</span> errorMsg[<span class="hljs-number">128</span>];
+            <span class="hljs-built_in">snprintf</span>(errorMsg, <span class="hljs-built_in">sizeof</span>(errorMsg), <span class="hljs-string">&quot;Failed to write to pipe. Error: %lu\n&quot;</span>, <span class="hljs-built_in">GetLastError</span>());
+            <span class="hljs-built_in">WriteFile</span>(hPipe, errorMsg, <span class="hljs-built_in">strlen</span>(errorMsg), &amp;bytesWritten, <span class="hljs-literal">NULL</span>);
+        }
+
+        <span class="hljs-built_in">CloseHandle</span>(hPipe);
+    }
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-type">char</span> errorMsg[<span class="hljs-number">128</span>];
+        <span class="hljs-built_in">snprintf</span>(errorMsg, <span class="hljs-built_in">sizeof</span>(errorMsg), <span class="hljs-string">&quot;Failed to open pipe. Error: %lu\n&quot;</span>, <span class="hljs-built_in">GetLastError</span>());
+        HANDLE hPipeError = <span class="hljs-built_in">CreateFile</span>(
+            <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;\\\\.\\pipe\\MyPipe&quot;</span>),
+            GENERIC_WRITE,
+            <span class="hljs-number">0</span>,
+            <span class="hljs-literal">NULL</span>,
+            OPEN_EXISTING,
+            <span class="hljs-number">0</span>,
+            <span class="hljs-literal">NULL</span>);
+        <span class="hljs-keyword">if</span> (hPipeError != INVALID_HANDLE_VALUE) {
+            DWORD bytesWrittenError;
+            <span class="hljs-built_in">WriteFile</span>(hPipeError, errorMsg, <span class="hljs-built_in">strlen</span>(errorMsg), &amp;bytesWrittenError, <span class="hljs-literal">NULL</span>);
+            <span class="hljs-built_in">CloseHandle</span>(hPipeError);
+        }
+    }
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código Responsavel por terminar o processo:</h3>
+                        <p>Essa parte do código exibe uma caixa de mensagem de alerta e em seguida encerra o processo
+                            atual.<br>essa função será usada para bloquear a execução do processo caso ele faça uso de
+                            uma API que consideramos maliciosa.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">BlockExecution</span><span class="hljs-params">(BOOL showMessageBox)</span> </span>{
+    <span class="hljs-keyword">if</span> (showMessageBox) {
+        <span class="hljs-built_in">MessageBox</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;Acao maliciosa detectada! O processo sera encerrado.&quot;</span>), <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;EDR Alerta&quot;</span>), MB_ICONWARNING | MB_OK);
+    }
+
+    <span class="hljs-built_in">TerminateProcess</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), <span class="hljs-number">1</span>);
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Função para o hook OpenProcess:</h3>
+                        <p>Esta parte é uma função de um hook para a função <span
+                                style="color: #9E2525;">OpenProcess</span>. Ela vai interceptar as chamadas para a API
+                            <span style="color: #9E2525;">OpenProcess</span>, então vai enviar uma mensagem com o ID do
+                            processo alvo para nosso <span style="color: #9E2525;">Named Pipe</span>, e depois irá
+                            chamar a função original do <span style="color: #9E2525;">OpenProcess</span>.
+                        </p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">BOOL WINAPI <span class="hljs-title">Hooked_OpenProcess</span><span class="hljs-params">(
+    WORD dwDesiredAccess,
+    BOOL  bInheritHandle,
+    DWORD dwProcessId)</span> </span>{
+
+    <span class="hljs-type">char</span> message[<span class="hljs-number">512</span>];
+    <span class="hljs-built_in">snprintf</span>(message, <span class="hljs-built_in">sizeof</span>(message), <span class="hljs-string">&quot;[#] OpenProcess Detected! Process ID: %lu&quot;</span>, dwProcessId);
+    <span class="hljs-built_in">SendMessageToPipe</span>(message);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">g_OpenProcess</span>(dwDesiredAccess, bInheritHandle, dwProcessId);
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Função para o hook WriteProcessMemory:</h3>
+                        <p>Essa é outra função de hook mas para a API <span
+                                style="color: #9E2525;">WriteProcessMemory</span>. essa parte registra detalhes sobre o
+                            endereço de memória que está sendo modificado e envia para o nosso <span
+                                style="color: #9E2525;">Named Pipe</span>, e depois chama a função original <span
+                                style="color: #9E2525;">WriteProcessMemory</span> para garantir que a operação de
+                            escrita ocorra normalmente.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">BOOL WINAPI <span class="hljs-title">Hooked_WriteProcessMemory</span><span class="hljs-params">(
+    HANDLE hProcess,
+    LPVOID lpBaseAddress,
+    LPCVOID lpBuffer,
+    SIZE_T nSize,
+    SIZE_T* lpNumberOfBytesWritten)</span> </span>{
+
+    <span class="hljs-type">char</span> message[<span class="hljs-number">512</span>];
+    <span class="hljs-built_in">snprintf</span>(message, <span class="hljs-built_in">sizeof</span>(message), <span class="hljs-string">&quot;[#] WriteProcessMemory Detected! Address: %p&quot;</span>, lpBaseAddress);
+    <span class="hljs-built_in">SendMessageToPipe</span>(message);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">g_WriteProcessMemory</span>(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Função para o hook VirtualAllocEx:</h3><br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">BOOL WINAPI <span class="hljs-title">Hooked_VirtualAllocEx</span><span class="hljs-params">(
+    HANDLE hProcess,
+    LPVOID lpAddress,
+    SIZE_T dwSize,
+    DWORD  flAllocationType,
+    DWORD  flProtect)</span> </span>{
+
+    <span class="hljs-type">char</span> message[<span class="hljs-number">512</span>];
+    <span class="hljs-built_in">snprintf</span>(message, <span class="hljs-built_in">sizeof</span>(message), <span class="hljs-string">&quot;[#] VirtualAllocEx Detected!&quot;</span>);
+    <span class="hljs-built_in">SendMessageToPipe</span>(message);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">g_VirtualAllocEx</span>(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Função para o hook CreateRemoteThread:</h3>
+                        <p>Essa é outra função de hook, mas para a API <span
+                                style="color: #9E2525;">CreateRemoteThread</span>. Diferente das outras, essa irá chamar
+                            a função <span style="color: #9E2525;">BlockExecution</span> que irá barrar a execução do
+                            programa e em seguida, chamará a função original <span
+                                style="color: #9E2525;">CreateRemoteThread</span>.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">BOOL WINAPI <span class="hljs-title">HookedCreateRemoteThread</span><span class="hljs-params">(
+    HANDLE                 hProcess,
+    LPSECURITY_ATTRIBUTES  lpThreadAttributes,
+    SIZE_T                 dwStackSize,
+    LPTHREAD_START_ROUTINE lpStartAddress,
+    LPVOID                 lpParameter,
+    DWORD                  dwCreationFlags,
+    LPDWORD                lpThreadId)</span> </span>{
+
+    <span class="hljs-type">char</span> message[<span class="hljs-number">512</span>];
+    <span class="hljs-built_in">snprintf</span>(message, <span class="hljs-built_in">sizeof</span>(message), <span class="hljs-string">&quot;[#] CreateRemoteThread Detected! Process: %ls&quot;</span>);
+    <span class="hljs-built_in">SendMessageToPipe</span>(message);
+
+    <span class="hljs-built_in">BlockExecution</span>(TRUE);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">g_CreateRemoteThread</span>(hProcess, lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Função para Implementar o hook:</h3>
+                        <p>Agora nossa função <span style="color: #9E2525;">SetupHook</span> vai configurar todos os
+                            hooks necessários utilizando a biblioteca <span style="color: #9E2525;">MinHook</span>.
+                            então ela irá criar os hooks para <span style="color: #9E2525;">VirtualAllocEx</span>, <span
+                                style="color: #9E2525;">CreateRemoteThread</span>, <span
+                                style="color: #9E2525;">OpenProcess</span>, e <span
+                                style="color: #9E2525;">WriteProcessMemory</span>, e finalmente habilita todos os hooks
+                            criados. Se houver falhas em qualquer uma dessas operações, uma mensagem de erro é enviada
+                            para o <span style="color: #9E2525;">Named Pipe</span>.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">SetupHook</span><span class="hljs-params">()</span> </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">MH_Initialize</span>() != MH_OK) {
+        <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Failed to initialize MinHook.\n&quot;</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">MH_CreateHookApi</span>(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;kernel32&quot;</span>), <span class="hljs-string">&quot;VirtualAllocEx&quot;</span>, Hooked_VirtualAllocEx, (LPVOID*)&amp;g_VirtualAllocEx) != MH_OK) {
+        <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Failed to create hook for VirtualAllocEx.\n&quot;</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">MH_CreateHookApi</span>(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;kernel32&quot;</span>), <span class="hljs-string">&quot;CreateRemoteThread&quot;</span>, HookedCreateRemoteThread, (LPVOID*)&amp;g_CreateRemoteThread) != MH_OK) {
+        <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Failed to create hook for CreateRemoteThread.\n&quot;</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">MH_CreateHookApi</span>(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;kernel32&quot;</span>), <span class="hljs-string">&quot;OpenProcess&quot;</span>, Hooked_OpenProcess, (LPVOID*)&amp;g_OpenProcess) != MH_OK) {
+        <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Failed to create hook for OpenProcess.\n&quot;</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">MH_CreateHookApi</span>(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;kernel32&quot;</span>), <span class="hljs-string">&quot;WriteProcessMemory&quot;</span>, Hooked_WriteProcessMemory, (LPVOID*)&amp;g_WriteProcessMemory) != MH_OK) {
+        <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Failed to create hook for WriteProcessMemory.\n&quot;</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">MH_EnableHook</span>(MH_ALL_HOOKS) != MH_OK) {
+        <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Failed to enable hook.\n&quot;</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-built_in">SendMessageToPipe</span>(<span class="hljs-string">&quot;Hook enabled.\n&quot;</span>);
+}
+</pre>
+                        <br>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Iniciar thread após a dll ser carregada:</h3>
+                        <p>Agora por fim a função <span style="color: #9E2525;">DllMain</span> é o ponto de entrada para
+                            a DLL. Quando a DLL é carregada <span style="color: #9E2525;">DLL_PROCESS_ATTACH</span>, ela
+                            desativa as chamadas de thread para a DLL e configura os hooks. Quando a DLL é descarregada
+                            <span style="color: #9E2525;">DLL_PROCESS_DETACH</span>, ela desativa todos os hooks e
+                            desinicializa a biblioteca <span style="color: #9E2525;">MinHook</span>.
+                        </p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _WINDLL</span>
+<span class="hljs-function"><span class="hljs-type">bool</span> __stdcall <span class="hljs-title">DllMain</span><span class="hljs-params">(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)</span> </span>{
+    <span class="hljs-keyword">switch</span> (fdwReason) {
+    <span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:
+        <span class="hljs-built_in">DisableThreadLibraryCalls</span>(hinstDLL);
+        <span class="hljs-built_in">SetupHook</span>();
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:
+        <span class="hljs-built_in">MH_DisableHook</span>(MH_ALL_HOOKS);
+        <span class="hljs-built_in">MH_Uninitialize</span>();
+        <span class="hljs-keyword">break</span>;
+    }
+    <span class="hljs-keyword">return</span> TRUE;
+}
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</pre>
+                        <br>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Entendendo o que fizemos:</h2>
+                        <p>O código que fizemos implementa um sistema de hooking para monitorar e controlar chamadas
+                            para funções críticas da API do Windows, como <span
+                                style="color: #9E2525;">OpenProcess</span>, <span
+                                style="color: #9E2525;">WriteProcessMemory</span>, <span
+                                style="color: #9E2525;">VirtualAllocEx</span>, e <span
+                                style="color: #9E2525;">CreateRemoteThread</span>.<br>O uso de hooks nos permite
+                            interceptar essas funções para detectar e bloquear ações que possam indicar comportamento
+                            malicioso.<br>e enviar mensagens de alerta sobre o uso dessas APIs para o nosso
+                            &quot;painel&quot;.</p>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Prova de Conceito:</h2><br>
+                        <div align="center">
+                            <iframe width="980" height="615" src="https://www.youtube.com/embed/Zr8241Tnn90"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+        <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+            <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+        </footer>
+        <script>
+            function isMobileDevice() {
+                return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+            }
+
+            if (isMobileDevice()) {
+                alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+                window.location.href = "https://www.google.com";
+            }
+        </script>
+    </body>
+
+</html>

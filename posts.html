@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/50.png" type="image/x-icon">
+  <title>Home | Posts</title>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    img {
+      height: 350px;
+    }
+
+    .text p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="background.css">
+  <link rel="stylesheet" href="head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="images/50.png" height="40" alt="VITHOR logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <br>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 6000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+  <div class="grain-header"></div>
+
+  <body>
+    <main class="posts-main">
+      <article class="post">
+
+        <a href="blog/bem-vindo.html">
+          <h1>Bem vindo(a) ao meu blog!</h1>
+        </a>
+        <p class="meta-info">Posted Sep 22, 2024, 4 min read</p>
+        <div class="text">
+          <p>
+            Seja bem-vindo(a) ao meu humilde blog. Neste post, vou indicar um caminho para quem se interessar
+            pelo conteúdo e falar sobre algumas coisas...
+          </p>
+        </div>
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">Caminho</span>
+          </div>
+        </div>
+        <br>
+
+        <a href="blog/Reverse-Shell.html">
+          <h1>Reverse Shell Simples</h1>
+        </a>
+
+        <p class="meta-info">Posted Oct 12, 2024, 11 min read</p>
+        <div class="text">
+          <p>Neste post, vamos explorar a criação de um Reverse Shell simples, com o objetivo de contornar alguns
+            AVs/EDRs. O objetivo deste post é focado em entender o funcionamento básico de uma Reverse Shell...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">windows</span>
+            <span class="tag">reverse-shell</span>
+            <span class="tag">evasion</span>
+          </div>
+        </div>
+
+        <br>
+
+        <a href="blog/Indirect-syscalls.html">
+          <h1>Indirect Syscalls</h1>
+        </a>
+
+        <p class="meta-info">Posted Oct 5, 2024, 18 min read</p>
+        <div class="text">
+          <p>Percebi que já havia abordado o tema de syscalls indiretos em outros posts, mas nunca tinha feito um post
+            específico sobre o assunto. Então, neste post, vamos criar um loader que utiliza syscalls indiretos...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">indirect-syscalls</span>
+            <span class="tag">windows</span>
+            <span class="tag">evasion</span>
+            <span class="tag">loader</span>
+          </div>
+        </div>
+
+        <a href="blog/coisas-aleatorias.html">
+          <h1>coisas-aleatorias</h1>
+        </a>
+
+        <p class="meta-info">Posted Sep 13, 2024, 13 min read</p>
+        <div class="text">
+          <p>Neste post bem aleatório, vou mostrar algumas coisas que devemos saber ou conhecer para realizar uma evasão
+            de antivírus (AV). Se você é iniciante e quer conhecer algumas coisas este conteúdo é para você...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">random-things</span>
+          </div>
+        </div>
+
+        <a href="blog/creating-loader.html">
+          <h1>Criando carregador para contornar AV/EDR</h1>
+        </a>
+
+        <p class="meta-info">Posted Sep 1, 2024, 12 min read</p>
+        <div class="text">
+          <p>Bom, no post de hoje vou mostrar um carregador simples que fiz para conseguir contornar alguns antivírus...
+          </p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">evasion</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/unhooking.html">
+          <h1>Unhooking Windows-API</h1>
+        </a>
+
+        <p class="meta-info">Posted Aug 25, 2024, 7 min read</p>
+        <div class="text">
+          <p>Bom ao longo dos anos, os antivírus têm melhorado cada vez mais suas técnicas de detecção. Uma dessas
+            técnicas é realizar um hooking nas DLLs no Windows, que podem ser utilizadas por malwares...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">evasion</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/memory-powershell.html">
+          <h1>Bypassing Defender with PowerShell In-Memory Execution</h1>
+        </a>
+
+        <p class="meta-info">Posted Aug 7, 2024, 7 min read</p>
+        <div class="text">
+          <p>Bom, neste post estarei mostrando como executar um executável na memória do PowerShell para contornar o
+            Windows Defender. Eu já vi várias vezes pela internet pessoas venderem Crypters que têm...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">patch-amsi</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/creating-edr-av.html">
+          <h1>Criando um EDR/AV Part1</h1>
+        </a>
+
+        <p class="meta-info">Posted Aug 6, 2024, 12 min read</p>
+        <div class="text">
+          <p>Bom, neste post vou criar uma ideia para o começo de um EDR/AV básico que provavelmente eu nunca...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">antivirus</span>
+            <span class="tag">hooking</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/amsi-patch.html">
+          <h1>Patch-AMSI</h1>
+        </a>
+
+        <p class="meta-info">Posted Jul 25, 2024, 3 min read</p>
+        <div class="text">
+          <p>Bom, neste post estarei mostrando como realizar uma técnica para fazer um patch na amsi.dll do Windows,
+            essa técnica pode ser realizada no Windows 10 e 11...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">evasion</span>
+            <span class="tag">patch-amsi</span>
+          </div>
+        </div>
+
+        <a href="blog/creanting-loader-fud.html">
+          <h1>Criando um Carregador</h1>
+        </a>
+
+        <p class="meta-info">Posted Sep 13, 2024, 13 min read</p>
+        <div class="text">
+          <p>Bom, acredito que um dos objetivos ao criar um malware é que seu arquivo não seja detectado, por exemplo,
+            no...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">evasion</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/building-shellcode.html">
+          <h1>Writing and Compiling Shellcode in C</h1>
+        </a>
+
+        <p class="meta-info">Posted Jul 23, 2024, 4 min read</p>
+        <div class="text">
+          <p>Bom nesse post vou mostrar rapidamente como utilizar o projeto masm_shc...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">shellcode</span>
+            <span class="tag">evasion</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/creating-simple-loader-2.html">
+          <h1>Criando Um Carregador Simples Part-2</h1>
+        </a>
+
+        <p class="meta-info">Posted jul 22, 2024, 30 min read</p>
+        <div class="text">
+          <p>Bom nesse post vamos melhorar e aprimorar nosso shellcode loader, já que vimos no post passado que esse
+            nosso código está muito simples...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">evasion</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/creating-simple-loader-1.html">
+          <h1>Criando Um Carregador Simples Part-1</h1>
+        </a>
+
+        <p class="meta-info">Posted Jul 22, 2024, 11 min read</p>
+        <div class="text">
+          <p>Bom, neste post vamos criar um shellcode loader simples, esse post é mais focado para iniciantes...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">loader</span>
+            <span class="tag">evasion</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/malware-analysis-3.html">
+          <h1>Análise de Malware 3</h1>
+        </a>
+
+        <p class="meta-info">Posted Apr 25, 2024. 4 min read</p>
+        <div class="text">
+          <p>Em alguns casos, quando vamos analisar um programa, pode ser de nosso interesse ver quais importações ele
+            utiliza.</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">Malware-Analysis</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/malware-analysis-2.html">
+          <h1>Análise de Malware 2</h1>
+        </a>
+
+        <p class="meta-info">Posted Apr 23, 2024. 4 min read</p>
+        <div class="text">
+          <p>Neste post eu vou criar e analisar um malware simples, para isso vamos estar "sequestrando" uma Dll...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">Malware-Analysis</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/malware-analysis-1.html">
+          <h1>Análise de Malware 1</h1>
+        </a>
+
+        <p class="meta-info">Posted Apr 23, 2024. 4 min read</p>
+        <div class="text">
+          <p>Eu já baixei muitos programas crackeados na internet, então é normal que a grande maioria esteja infectada
+            com algum malware...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">Malware-Analysis</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/dll-loader.html">
+          <h1>Creating DLL LOADER</h1>
+        </a>
+
+        <p class="meta-info">Posted Sep 13, 2024, 13 min read</p>
+        <div class="text">
+          <p>Podemos transformar um executável em uma DLL?
+            A resposta é sim, podemos fazer isso, e não é muito difícil, Para isso, podemos usar um projeto...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">malware</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+        <a href="blog/api-hooking.html">
+          <h1>API-Hooking</h1>
+        </a>
+
+        <p class="meta-info">Posted Jan 13, 2023. 8 min read</p>
+        <div class="text">
+          <p>Neste post irei compartilhar um artigo meu feito em 2023 para um site que não está mais online, mas que
+            salvei no meu HD. Neste post, vou abordar como ocultar um processo utilizando a libMinHook...</p>
+        </div>
+
+        <div class="posts-content">
+          <div class="tags">
+            <span class="tag">hooking</span>
+            <span class="tag">rootkit</span>
+            <span class="tag">windows</span>
+          </div>
+        </div>
+
+      </article>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com";
+      }
+    </script>
+  </body>
+
+</html>

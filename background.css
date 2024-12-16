@@ -1,0 +1,44 @@
+  
+header {
+    position: relative;
+    z-index: 10;
+}
+
+footer {
+    position: relative;
+    z-index: 9;
+}
+
+main {
+    position: relative;
+    z-index: 8;
+}
+
+.sidebar {
+    z-index: 7;
+}
+
+.grain-header:after {
+    animation: grain 1s steps(50) infinite;
+    background-image: url(images/ruido.jpg);
+    content: "";
+    height: 300%;
+    left: -50%;
+    opacity: 0.5;
+    position: fixed;
+    top: -110%;
+    width: 300%;
+}
+  
+@keyframes grain {
+    0%, 100% { transform:translate(0, 0) }
+    10% { transform:translate(-5%, -10%) }
+    20% { transform:translate(-15%, 5%) }
+    30% { transform:translate(7%, -25%) }
+    40% { transform:translate(-5%, 25%) }
+    50% { transform:translate(-15%, 10%) }
+    60% { transform:translate(15%, 0%) }
+    70% { transform:translate(0%, 15%) }
+    80% { transform:translate(3%, 35%) }
+    90% { transform:translate(-10%, 10%) }
+  }

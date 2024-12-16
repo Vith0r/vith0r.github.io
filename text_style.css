@@ -1,0 +1,95 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Quantico', sans-serif;
+}
+
+section h3.section-subheading {
+    font-family: 'Montserrat', sans-serif;
+}
+
+#mainNav .navbar-toggler, 
+#mainNav .navbar-brand, 
+#mainNav .navbar-nav .nav-item .nav-link {
+    font-family: 'Montserrat', sans-serif;
+}
+
+footer span.copyright, 
+footer ul.quicklinks {
+    font-family: 'Montserrat', sans-serif;
+}
+
+section h2.section-heading {
+    font-size: 40px;
+}
+
+section h3.section-subheading {
+    font-size: 16px;
+}
+
+header.masthead .intro-text .intro-heading {
+    font-size: 3em;
+}
+
+header.masthead .intro-text .intro-sub {
+    font-size: 1em;
+}
+
+footer span.copyright, 
+footer ul.quicklinks {
+    font-size: 90%;
+}
+
+table {
+    font-size: 0.6rem;
+}
+
+@media (min-width: 1200px) {
+    table {
+        font-size: 1rem;
+    }
+}
+
+p > img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 15px;
+    border-top: none;
+    box-shadow: 
+        0 2px 12px rgba(60, 122, 255, 0.3),
+        0 -2px 12px rgba(60, 122, 255, 0.3);
+}
+
+p > img {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: block;
+    margin: 20px auto;
+}
+
+p > img:hover {
+    transform: scale(1.05);
+}
+
+pre {overflow: auto;background-color: #19364E;border: 1px dashed rgba(60, 122, 255, 0.5);padding: 4pt;color: #f8f9fa;}
+
+.box {
+    background-color: rgba(33, 37, 41, 0.6);
+    color: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    margin: 0 auto;
+}
+
+.box h1 {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.box .post-author {
+    margin-bottom: 20px;
+}

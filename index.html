@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/50.png" type="image/x-icon">
+  <title>Home | Vith0r</title>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    @keyframes tremor {
+      0% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px);
+      }
+
+      50% {
+        transform: translateX(5px);
+      }
+
+      75% {
+        transform: translateX(-5px);
+      }
+
+      100% {
+        transform: translateX(5px);
+      }
+    }
+
+    img.tremor {
+      animation: tremor 0.1s linear infinite;
+      display: inline-block;
+    }
+  </style>
+  <style>
+    #jobTitle {
+      font-family: monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 3.5s steps(40, end);
+      color: #ffffff;
+      border-right: 0.15em solid rgb(255, 255, 255);
+      position: relative;
+    }
+
+    @keyframes typing {
+      from {
+        width: 0
+      }
+
+      to {
+        width: 100%
+      }
+    }
+
+    #framed-character {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 30%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      border: 0px solid #ffffff;
+    }
+
+    img {
+      height: 350px;
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="text_style.css">
+  <link rel="stylesheet" href="background.css">
+  <link rel="stylesheet" href="head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="images/50.png" height="80" alt="VITHOR logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 6000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+  <div class="grain-header"></div>
+  <main>
+    <article>
+      <center>
+        <br><br>
+        <img id="imagem" src="images/raw.png" alt="Imagem" class="tremor" />
+
+        <script>
+          const imagens = [
+            'images/raw.png',
+            'images/raw1.png',
+            'images/raw2.png',
+            'images/raw3.png',
+            'images/raw4.png',
+            'images/raw5.png',
+            'images/raw6.png',
+            'images/raw11.png'
+          ];
+          let indice = 0;
+
+          const siteUrl = 'https://www.youtube.com/watch?v=PhcIgcm1LlQ';
+
+          document.getElementById('imagem').addEventListener('click', function () {
+            window.location.href = siteUrl;
+          });
+
+          setInterval(function () {
+            const imagem = document.getElementById('imagem');
+            imagem.classList.remove('tremor');
+
+            imagem.src = imagens[indice];
+
+            imagem.classList.add('tremor');
+
+            indice = (indice + 1) % imagens.length;
+          }, 4000);
+        </script>
+      </center>
+
+      <br>
+      <p>Olá! Seja bem-vindo(a), aqui você irá encontrar artigos sobre: <span id="jobTitle"></span></p>
+      <script>const titles=['Desenvolvimento de malware.','Análise de malware.'];let jobTitle=document.getElementById('jobTitle');let titleIndex=0;const redColor='rgb(135, 16, 139)';jobTitle.textContent='|';jobTitle.style.color=redColor;function typeText(){const text=titles[titleIndex];jobTitle.textContent='';let charIndex=0;function type(){if(charIndex<text.length){jobTitle.textContent+=text.charAt(charIndex);charIndex++;setTimeout(type,30);}else{setTimeout(deleteText,1200);}}function deleteText(){if(jobTitle.textContent.length>0){jobTitle.textContent=jobTitle.textContent.slice(0,-1);setTimeout(deleteText,50);}else{titleIndex=(titleIndex+1)%titles.length;jobTitle.textContent='|';setTimeout(typeText,200);}}type();}setTimeout(typeText,1000);</script>
+      <br>
+      <p>Aqui você pode obter as minhas informações mais recentes sobre <a href="posts.html"
+          style="color:rgb(135, 16, 139);">posts do blog</a>, tutoriais, etc. Além disso, você pode explorar
+        meus <a href="projects.html" style="color:rgb(135, 16, 139);">projetos</a> no GitHub, onde entrego
+        fases do meu aprendizado. Para saber mais sobre mim, visite minha página <a href="whoami.html"
+          style="color: rgb(135, 16, 139);">Whoami</a>.</p>
+      <br>
+      <div
+        style="padding: 10px; background-color: rgba(135, 16, 139, 0.4); color: white; margin-bottom: 10px; opacity: 0.6;">
+        ⚠️ O site não foi tão bem otimizado para telas pequenas, o que pode resultar em um layout não tão agradável em
+        dispositivos com dimensões reduzidas.<br>
+        Para melhorar a visualização, você pode ajustar manualmente a exibição utilizando o atalho <span
+          style="color: #a04eec; font-weight: bold;">Ctrl -</span> se necessário.
+      </div>
+    </article>
+  </main>
+  <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+    <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+  </footer>
+  <script>
+    function isMobileDevice() {
+      return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+    }
+
+    if (isMobileDevice()) {
+      alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+      window.location.href = "https://www.google.com";
+    }
+  </script>
+</body>
+
+</html>

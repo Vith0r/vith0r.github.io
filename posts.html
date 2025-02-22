@@ -38,6 +38,115 @@
       color: rgba(255, 255, 255, 0.7);
     }
   </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0D1117;
+      color: #C9D1D9;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    /*
+      .modules-container {
+        display: grid;
+        position: relative;
+        z-index: 100;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      } 
+      */
+
+    .modules-container {
+      display: grid;
+      position: relative;
+      z-index: 100;
+      grid-template-columns: repeat(5, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+      grid-auto-rows: 1fr;
+    }
+
+    .post-card {
+      background-color: #161B22;
+      border: 1px solid #30363D;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 95%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .post-card:hover {
+      transform: scale(1.05) rotate(3deg);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .post-card a {
+      text-decoration: none;
+      color: #8b5cf6;
+    }
+
+    .post-card a h1 {
+      font-size: 1.2rem;
+      margin: 0 0 5px 0;
+    }
+
+    .meta-info {
+      color: #aaa;
+      font-size: 0.8rem;
+      margin: 0 0 5px 0;
+    }
+
+    .text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin: 0 0 5px 0;
+    }
+
+    .posts-content {
+      margin-top: 5px;
+    }
+
+    .posts-content .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .posts-content .tag {
+      background-color: #21262D;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    /*
+    Aumentar a luminosidade dos cards;
+    .modules-container {
+      filter: brightness(1.2);
+    }
+    */
+  </style>
+
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="background.css">
   <link rel="stylesheet" href="head_style.css">
@@ -125,36 +234,36 @@
   <div class="grain-header"></div>
 
   <body>
-    <main class="posts-main">
-      <article class="post">
-
+    <div class="modules-container">
+      <!-- Post 1 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/c7/1e/58/c71e58a30e797d4c20ede227edef7ec0.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/bem-vindo.html">
           <h1>Bem vindo(a) ao meu blog!</h1>
         </a>
         <p class="meta-info">Posted Sep 22, 2024, 4 min read</p>
         <div class="text">
-          <p>
-            Seja bem-vindo(a) ao meu humilde blog. Neste post, vou indicar um caminho para quem se interessar
-            pelo conteúdo e falar sobre algumas coisas...
-          </p>
+          <p>Seja bem-vindo(a) ao meu humilde blog. Neste post, vou indicar um caminho para quem se interessar pelo
+            conteúdo e falar sobre algumas coisas...</p>
         </div>
         <div class="posts-content">
           <div class="tags">
             <span class="tag">Caminho</span>
           </div>
         </div>
-        <br>
+      </div>
 
+      <!-- Post 2 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/47/df/48/47df4886eb8ffbb1eacbf5388f8d3be5.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/Reverse-Shell.html">
           <h1>Reverse Shell Simples</h1>
         </a>
-
         <p class="meta-info">Posted Oct 12, 2024, 11 min read</p>
         <div class="text">
           <p>Neste post, vamos explorar a criação de um Reverse Shell simples, com o objetivo de contornar alguns
             AVs/EDRs. O objetivo deste post é focado em entender o funcionamento básico de uma Reverse Shell...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -163,19 +272,19 @@
             <span class="tag">evasion</span>
           </div>
         </div>
+      </div>
 
-        <br>
-
+      <!-- Post 3 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/d5/a2/ce/d5a2cee92aaeaad6369eca00f821a8df.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/Indirect-syscalls.html">
           <h1>Indirect Syscalls</h1>
         </a>
-
         <p class="meta-info">Posted Oct 5, 2024, 18 min read</p>
         <div class="text">
           <p>Percebi que já havia abordado o tema de syscalls indiretos em outros posts, mas nunca tinha feito um post
             específico sobre o assunto. Então, neste post, vamos criar um loader que utiliza syscalls indiretos...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -185,33 +294,37 @@
             <span class="tag">loader</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 4 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/8b/d4/eb/8bd4ebefce427b805c75c5e4e6b50e9f.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/coisas-aleatorias.html">
           <h1>coisas-aleatorias</h1>
         </a>
-
         <p class="meta-info">Posted Sep 13, 2024, 13 min read</p>
         <div class="text">
           <p>Neste post bem aleatório, vou mostrar algumas coisas que devemos saber ou conhecer para realizar uma evasão
             de antivírus (AV). Se você é iniciante e quer conhecer algumas coisas este conteúdo é para você...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">random-things</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 5 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/0a/b9/1c/0ab91ce2f368c992d812754a2c9123aa.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/creating-loader.html">
           <h1>Criando carregador para contornar AV/EDR</h1>
         </a>
-
         <p class="meta-info">Posted Sep 1, 2024, 12 min read</p>
         <div class="text">
           <p>Bom, no post de hoje vou mostrar um carregador simples que fiz para conseguir contornar alguns antivírus...
           </p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -220,17 +333,19 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 6 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/3b/97/fe/3b97fed34b555ed3d5866ded455a61b9.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/unhooking.html">
           <h1>Unhooking Windows-API</h1>
         </a>
-
         <p class="meta-info">Posted Aug 25, 2024, 7 min read</p>
         <div class="text">
           <p>Bom ao longo dos anos, os antivírus têm melhorado cada vez mais suas técnicas de detecção. Uma dessas
             técnicas é realizar um hooking nas DLLs no Windows, que podem ser utilizadas por malwares...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -239,17 +354,19 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 7 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/e2/16/ca/e216ca9328db2fa5cfd92d7a2e3e413f.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/memory-powershell.html">
           <h1>Bypassing Defender with PowerShell In-Memory Execution</h1>
         </a>
-
         <p class="meta-info">Posted Aug 7, 2024, 7 min read</p>
         <div class="text">
           <p>Bom, neste post estarei mostrando como executar um executável na memória do PowerShell para contornar o
             Windows Defender. Eu já vi várias vezes pela internet pessoas venderem Crypters que têm...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -258,16 +375,19 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 8 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/0a/c9/75/0ac9756d5c35ec79a19fa277d30f4d8f.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/creating-edr-av.html">
           <h1>Criando um EDR/AV Part1</h1>
         </a>
-
         <p class="meta-info">Posted Aug 6, 2024, 12 min read</p>
         <div class="text">
-          <p>Bom, neste post vou criar uma ideia para o começo de um EDR/AV básico que provavelmente eu nunca...</p>
+          <p>Bom, neste post vou criar uma ideia para o começo de um EDR/AV básico, A ideia principal agora é criar uma
+            DLL simples que utilize a MinHook para conseguir realizar um hook em APIs....</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">antivirus</span>
@@ -275,17 +395,19 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 9 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/ca/de/97/cade97e5489a31eb3547f8fbe5b8690b.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/amsi-patch.html">
           <h1>Patch-AMSI</h1>
         </a>
-
         <p class="meta-info">Posted Jul 25, 2024, 3 min read</p>
         <div class="text">
           <p>Bom, neste post estarei mostrando como realizar uma técnica para fazer um patch na amsi.dll do Windows,
             essa técnica pode ser realizada no Windows 10 e 11...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -294,17 +416,19 @@
             <span class="tag">patch-amsi</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 10 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/1a/19/46/1a1946ea367cdd763748d1e077cb0cff.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/creanting-loader-fud.html">
           <h1>Criando um Carregador</h1>
         </a>
-
         <p class="meta-info">Posted Sep 13, 2024, 13 min read</p>
         <div class="text">
           <p>Bom, acredito que um dos objetivos ao criar um malware é que seu arquivo não seja detectado, por exemplo,
             no...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -313,16 +437,19 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 11 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/47/df/f7/47dff7a829ac6b73901c17f14e5d4fe9.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/building-shellcode.html">
           <h1>Writing and Compiling Shellcode in C</h1>
         </a>
-
         <p class="meta-info">Posted Jul 23, 2024, 4 min read</p>
         <div class="text">
-          <p>Bom nesse post vou mostrar rapidamente como utilizar o projeto masm_shc...</p>
+          <p>Bom nesse post vou mostrar rapidamente como utilizar o projeto masm_shc primeiro deixamos na mesma pasta o
+            peb_lookup.h e nosso código em C...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">shellcode</span>
@@ -330,17 +457,19 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 12 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/27/d7/95/27d795013f12d2c6d8dcf7d0424e84a8.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/creating-simple-loader-2.html">
           <h1>Criando Um Carregador Simples Part-2</h1>
         </a>
-
         <p class="meta-info">Posted jul 22, 2024, 30 min read</p>
         <div class="text">
           <p>Bom nesse post vamos melhorar e aprimorar nosso shellcode loader, já que vimos no post passado que esse
             nosso código está muito simples...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -349,16 +478,18 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 13 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/c6/fd/07/c6fd0744fc2f29c7593e37e9b093c667.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/creating-simple-loader-1.html">
           <h1>Criando Um Carregador Simples Part-1</h1>
         </a>
-
         <p class="meta-info">Posted Jul 22, 2024, 11 min read</p>
         <div class="text">
           <p>Bom, neste post vamos criar um shellcode loader simples, esse post é mais focado para iniciantes...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
@@ -367,84 +498,99 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 14 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/e2/16/ca/e216ca9328db2fa5cfd92d7a2e3e413f.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/malware-analysis-3.html">
           <h1>Análise de Malware 3</h1>
         </a>
-
         <p class="meta-info">Posted Apr 25, 2024. 4 min read</p>
         <div class="text">
           <p>Em alguns casos, quando vamos analisar um programa, pode ser de nosso interesse ver quais importações ele
-            utiliza.</p>
+            utiliza. Isso pode facilitar muito na hora da análise.
+            Nesse exemplo, vamos utilizar o Detect-It-Easy para visualizar as importações que o programa utiliza.</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">Malware-Analysis</span>
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 15 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/19/11/fb/1911fba9f030b2bdf1d135c3d3902d4c.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/malware-analysis-2.html">
           <h1>Análise de Malware 2</h1>
         </a>
-
         <p class="meta-info">Posted Apr 23, 2024. 4 min read</p>
         <div class="text">
-          <p>Neste post eu vou criar e analisar um malware simples, para isso vamos estar "sequestrando" uma Dll...</p>
+          <p>Neste post eu vou criar e analisar um malware simples, para isso vamos estar "sequestrando" uma Dll do
+            Notepad++ Para sequestrar a DLL do Notepad++, primeiro precisamos identificar quais DLLs presentes nos
+            arquivos do Notepad++ são carregadas</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">Malware-Analysis</span>
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 16 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/60/30/b7/6030b7bb674b00815328e7d2d5186530.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/malware-analysis-1.html">
           <h1>Análise de Malware 1</h1>
         </a>
-
         <p class="meta-info">Posted Apr 23, 2024. 4 min read</p>
         <div class="text">
           <p>Eu já baixei muitos programas crackeados na internet, então é normal que a grande maioria esteja infectada
-            com algum malware...</p>
+            com algum malware. Neste post, vou mostrar a análise de um desses malwares que eu já encontrei pela
+            internet...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">Malware-Analysis</span>
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 17 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/e2/5c/58/e25c581531ed724d64a150e55d5be95e.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/dll-loader.html">
           <h1>Creating DLL LOADER</h1>
         </a>
-
         <p class="meta-info">Posted Sep 13, 2024, 13 min read</p>
         <div class="text">
           <p>Podemos transformar um executável em uma DLL?
-            A resposta é sim, podemos fazer isso, e não é muito difícil, Para isso, podemos usar um projeto...</p>
+            A resposta é sim, podemos fazer isso, e não é muito difícil, Para isso, podemos usar um projeto que
+            transforma nosso executável .NET em um binário. O nome do projeto é Donut...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">malware</span>
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
+      <!-- Post 18 -->
+      <div class="post-card"
+        style="background: linear-gradient(to bottom right, #161B22 10%, transparent 195%), url('https://i.pinimg.com/736x/d0/cd/24/d0cd248bd006da6cde178d34b35067f1.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <a href="blog/api-hooking.html">
           <h1>API-Hooking</h1>
         </a>
-
         <p class="meta-info">Posted Jan 13, 2023. 8 min read</p>
         <div class="text">
           <p>Neste post irei compartilhar um artigo meu feito em 2023 para um site que não está mais online, mas que
             salvei no meu HD. Neste post, vou abordar como ocultar um processo utilizando a libMinHook...</p>
         </div>
-
         <div class="posts-content">
           <div class="tags">
             <span class="tag">hooking</span>
@@ -452,22 +598,14 @@
             <span class="tag">windows</span>
           </div>
         </div>
+      </div>
 
-      </article>
-    </main>
-    <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
-      <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
-    </footer>
-    <script>
-      function isMobileDevice() {
-        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
-      }
-
-      if (isMobileDevice()) {
-        alert("Este site não é compatível com dispositivos móveis. Você será redirecionado para o Google.");
-        window.location.href = "https://www.google.com";
-      }
-    </script>
+    </div>
   </body>
+  <div style="flex: 1;"></div>
+  <br>
+  <footer style="background-color: rgba(27, 27, 27, 0.7); text-align: center; padding: 5px 0;">
+    <h6 style="color: rgba(255, 255, 255, 0.4) !important;">Copyright © Vithor 2023/2024</h6>
+  </footer>
 
 </html>

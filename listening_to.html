@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="131">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listening to</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .music-box {
+      background-color: #000;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      opacity: 0.8;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      padding: 5px;
+      color: #eff0f1;
+      width: 95%;
+      min-height: 80%;
+    }
+    .music-header {
+      font-size: 12px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+    }
+    .notification-content {
+      display: flex;
+      align-items: center;
+      padding: 5px 7px 0 0;
+    }
+    .album-cover {
+      width: 100px;
+      height: 100px;
+      margin-right: 10px;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    .song-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    .song-title {
+      font-weight: bold;
+      font-size: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .song-artist {
+      font-size: 12px;
+    }
+    .song-progress {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    .current-progress {
+      display: flex;
+      align-items: center;
+    }
+    .minutes-progress,
+    .seconds-progress {
+      width: 2ch;
+      display: inline-block;
+      text-align: right;
+    }
+    /* Barra de progresso */
+    .progress-bar {
+      width: 100%;
+      height: 5px;
+      background-color: #333;
+      position: relative;
+      margin: -2px 7px 0 5px;
+    }
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background-color: white;
+      animation: progressAnimation 131s linear forwards;
+    }
+    @keyframes progressAnimation {
+      to { width: 100%; }
+    }
+    .song-length::before {
+      content: "2:11";
+    }
+    .paused {
+      margin-top: 5px;
+      color: #666;
+      font-size: 15px;
+      visibility: hidden;
+    }
+    .open-song {
+      display: inline-block;
+      text-decoration: none;
+      position: absolute;
+      right: 10px;
+      bottom: 7px;
+    }
+    .open-song div {
+      background-color: white;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .open-song div:hover {
+      background-color: #d6d6d6;
+    }
+    .overwrite-div {
+      background-color: black;
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      right: 10px;
+      bottom: 7px;
+    }
+    /* Conteúdo estático dos textos */
+    .song-title::before {
+      content: "Where Is My Mind";
+    }
+    .song-artist::before {
+      content: "Pixies";
+    }
+    .album-cover {
+      background-image: url(https://i.pinimg.com/736x/2a/43/ce/2a43ced2525c74aa057f4c174038a3da.jpg);
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="music-box">
+    <div class="music-header">
+      <img src="./images/spotify.svg" alt="Spotify logo" width="15" height="15" style="margin-right: 5px;">
+      <p>Listening to</p>
+    </div>
+    <div class="notification-content">
+      <div class="album-cover"></div>
+      <div class="song-info">
+        <div class="song-title"></div>
+        <div class="song-artist"></div>
+        <div class="song-progress">
+          <div class="current-progress">
+            <div class="minutes-progress">0</div>:<div class="seconds-progress">00</div>
+          </div>
+          <div class="progress-bar"></div>
+          <div class="song-length"></div>
+        </div>
+        <div class="paused">
+          <img src="./images/paused.svg" alt="Paused" width="15" height="15" style="vertical-align: middle; margin-right: 5px;">Paused
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="overwrite-div"></div>
+  <a href="https://www.youtube.com/watch?v=N3oCS85HvpY" class="open-song" target="_blank">
+    <div><img src="./images/open.svg" alt="Open"></div>
+  </a>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const totalDuration = 131;
+      let currentTime = 0;
+      const minutesElem = document.querySelector('.minutes-progress');
+      const secondsElem = document.querySelector('.seconds-progress');
+      
+      function updateTimer() {
+        const minutes = Math.floor(currentTime / 60);
+        let seconds = currentTime % 60;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        
+        minutesElem.textContent = minutes;
+        secondsElem.textContent = seconds;
+        
+        if (currentTime < totalDuration) {
+          currentTime++;
+        } else {
+          clearInterval(timerInterval);
+        }
+      }
+      
+      updateTimer();
+      const timerInterval = setInterval(updateTimer, 1000);
+    });
+  </script>
+</body>
+</html>

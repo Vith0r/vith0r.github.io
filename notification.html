@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Box</title>
+    <style>
+        html {
+            overflow: hidden;
+            width: fit-content;
+            height: 100%;
+            color: #eff0f1;
+        }
+        * {
+            margin: 2px;
+            padding: 0;
+        }
+
+        .notification-box {
+            background-color: #000000;
+            border: 1px solid rgba(139, 92, 246, 0.4);;
+            opacity: 0.8;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);;
+            font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, "Courier New", monospace;
+            padding: 5px;
+            position: fixed;
+            bottom: 30px;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            margin: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 20px;
+            height: 20px;
+            background-color: #f1605c;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .close-btn:hover {
+            border: 1px solid white;
+            margin: 1px;
+        }
+
+        .close-btn::before, .close-btn::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 2px;
+            background-color: #eff0f1;
+        }
+
+        .close-btn::before {
+            transform: rotate(45deg);
+        }
+
+        .close-btn::after {
+            transform: rotate(-45deg);
+        }
+
+        .notification-content h2 {
+            font-size: 18px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .notification-content p {
+            margin-top: 0;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .action-buttons * {
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 8px 14px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .read-btn {
+            background-color: #1482aa;
+            text-decoration: none;
+            margin-right: 10px;
+            color: #eff0f1;
+        }
+
+        .no-thanks-btn {
+            background-color: #151515;
+        }
+
+        .read-btn:hover, .no-thanks-btn:hover {
+            border: 1px solid #fff;
+        }
+    </style>
+<style id="PHTStyle" type="text/css">.qtip-content { font-family: "Times New Roman"; font-size: 17px; line-height: 19px; white-space: pre-wrap; } .qtip-max-width { max-width: 700px; }</style></head>
+<body data-hasqtip="0">
+
+    <div class="notification-box">
+
+        <div class="notification-header">
+            <span>New blog post</span>
+        </div>
+
+        <form id="close-form" method="POST" action="./blog/Reverse-Shell.html">
+            <input type="hidden" name="url_name" value="german-isps-block-terrorist-content">
+
+            <button type="submit" id="submit-btn" hidden=""></button>
+
+            <label for="submit-btn" class="close-btn"></label>
+        </form>
+
+        <div class="notification-content">
+            <h2>Reverse Shell Simples</h2>
+            <p>Neste post, vamos explorar a criação de um Reverse Shell simples, com o objetivo de contornar alguns AVs/EDRs.</p>
+            <div class="action-buttons">
+                <a href="./blog/Reverse-Shell.html" class="read-btn" target="_top">Read</a>
+
+                <label for="submit-btn" class="no-thanks-btn">No Thanks</label>
+            </div>
+        </div>
+    </div>
+
+
+</body></html>

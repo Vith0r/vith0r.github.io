@@ -216,7 +216,6 @@ a:hover {
 }
 
 .about-image-topbar {
-    /* float above the image */
     position: absolute;
     top: 0;
     left: 0;
@@ -261,9 +260,7 @@ a:hover {
 
 #pgp {
     display: none;
-    /* make double click to select everything work */
     user-select: all;
-    /* Smaller font size */
     font-size: 0.8em;
 }
 
@@ -272,7 +269,6 @@ a:hover {
 }
 
 #blinking_cursor::after {
-    /* Blinking square */
     animation: typing 1.5s steps(1, end) infinite;
     content: "\a0";
     background-color: #fff;
@@ -300,7 +296,6 @@ a:hover {
 }
 
 #downloadPgp {
-    /* Align to the right side of the terminal */
     float: right;
     margin-top: -0.5em;
     user-select: none;
@@ -318,7 +313,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Make the icon jump up and down if it isn't checked */
 #showPgp:not(:checked) ~ #showPgpLabel #showPgpSvg {
     animation: bounce 4s ease infinite;
 }
@@ -347,7 +341,6 @@ a:hover {
     }
 }
 
-/* Make the SVG icon rotate when the checkbox is checked */
 #showPgp:checked ~ #showPgpLabel #showPgpSvg {
     transition: transform 0.3s;
 }
@@ -356,7 +349,6 @@ a:hover {
     transform: rotate(180deg);
 }
 
-/* Make the SVG icon rotate back when the checkbox is unchecked */
 #showPgp:not(:checked) ~ #showPgpLabel #showPgpSvg {
     transition: transform 0.3s;
 }
@@ -381,7 +373,6 @@ a:hover {
     background: #fff;
 }
 
-/* Make it so when you double click a command, it only selects the command and not the prefix */
 .terminal .prefix {
     user-select: none;
 }
@@ -414,7 +405,7 @@ table td img {
     padding: 10px;
     width: 100%;
     max-width: 100%;
-    font-family: serif; /* this somehow fixes spacing issues in freakmode */
+    font-family: serif;
     flex-wrap: wrap;
     justify-content: center;
     gap: 5px;
@@ -464,7 +455,6 @@ section {
 }
 
 @media (max-width: 627px) {
-    /* Replace the curl command with the alternative command */
     #curlPgpCommand {
         display: none;
     }
@@ -578,7 +568,6 @@ section {
     margin: -1px;
 }
 
-/* Terminal styled input box */
 #inputThingy input[type="text"], #inputThingy input[type="text"]:focus {
     background-color: #000000;
     color: #fff;
@@ -722,7 +711,7 @@ section {
     max-width: 100%;
     height: 350px;
 }
-/* Hide notification if width < 1000px */
+
 @media (max-width: 1000px) {
     .notification {
         display: none;
@@ -917,4 +906,12 @@ section {
 #show-btc:checked ~ #btc-popup,
 #show-xmr:checked ~ #xmr-popup {
     display: block;
+}
+
+@media screen and (max-width: 480px) {
+
+.terminal {
+    margin-top: 30px;
+}
+
 }

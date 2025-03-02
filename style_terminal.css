@@ -913,5 +913,10 @@ section {
 .terminal {
     margin-top: 30px;
 }
+    
+.logo {
+    justify-content: center;
+    transform: translateX(-22%);
+}
 
 }
